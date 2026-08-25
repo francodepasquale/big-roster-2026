@@ -31,16 +31,14 @@ CATEGORIES = ["Mujeres", "Hombres"]
 SECTIONS = [
     dict(
         slug="mujeres", name="Mujeres", split=("Muje", "res"),
-        subtitle="Moda, humor y estilo de vida — las creadoras que más conectan con sus audiencias en cada plataforma.",
-        collage=["juli_savioli", "pauli_veltrano", "sabri_ludmila"],
+        collage=["juli_savioli", "pia_scarnato", "dulce_pink", "renata_blasevich"],
         order=["juli_savioli", "pia_scarnato", "dulce_pink", "renata_blasevich", "giuli_bellicoso",
                "pauli_veltrano", "agustina_cambra", "eve_vidal", "inez", "mumy",
                "giuli_lourdes", "mely_francano", "martu_morales", "nanu_yael", "sabri_ludmila", "yo_soy_brisa"],
     ),
     dict(
         slug="hombres", name="Hombres", split=("Hom", "bres"),
-        subtitle="Carisma, humor y personalidad — los creadores que más conectan con audiencias masivas en cada plataforma.",
-        collage=["pelao_khe_collage", "pablo_bruschi_collage", "benja_calero_collage"],
+        collage=["pelao_khe_collage", "benja_calero_collage", "cris_pierri"],
         order=["pelao_khe", "benja_calero", "tiago_bergallo", "cris_pierri", "hablemos_de_cine",
                "ber_scarnato", "mariano_bondar", "inachomer", "santi_gallo", "pablo_bruschi",
                "joselo_marquez", "bruno_rondini", "lubru_invierte", "los_arias_brothers",
@@ -48,6 +46,60 @@ SECTIONS = [
                "lucas_monopoli", "soy_dalto"],
     ),
 ]
+
+# secondary categories from BIG_AGENCY_Roster_2026.pdf ("Por categoría" index).
+# Same exclusion list as above applies. No collage on these — cover is just
+# the headline (client decision: no photos on category covers, only Mujeres/
+# Hombres get the portrait collage).
+CATEGORY_SECTIONS = [
+    dict(
+        slug="lifestyle", name="Lifestyle", split=("Lifestyle", ""),
+        order=["pia_scarnato", "cris_pierri", "dulce_pink", "ber_scarnato", "renata_blasevich",
+               "giuli_bellicoso", "inachomer", "santi_gallo", "tiago_bergallo", "pauli_veltrano",
+               "agustina_cambra", "eve_vidal", "inez", "mumy", "joselo_marquez", "giuli_lourdes",
+               "mely_francano", "martu_morales", "tomas_alvarez", "agus_benca", "yo_soy_brisa",
+               "lucas_monopoli", "nanu_yael", "sabri_ludmila"],
+    ),
+    dict(
+        slug="beauty-makeup", name="Beauty & Makeup", split=("Beauty & Makeup", ""),
+        order=["pia_scarnato", "dulce_pink", "giuli_bellicoso", "giuli_lourdes", "mely_francano", "yo_soy_brisa"],
+    ),
+    dict(
+        slug="trends", name="Trends", split=("Trends", ""),
+        order=["pia_scarnato", "dulce_pink", "giuli_bellicoso", "giuli_lourdes", "mely_francano",
+               "martu_morales", "tiago_bergallo"],
+    ),
+    dict(
+        slug="fitness", name="Fitness", split=("Fitness", ""),
+        order=["pelao_khe", "juli_savioli", "lucas_monopoli"],
+    ),
+    dict(
+        slug="humor-sketches", name="Humor & Sketches", split=("Humor & Sketches", ""),
+        order=["pelao_khe", "juli_savioli", "benja_calero", "cris_pierri", "dulce_pink", "ber_scarnato",
+               "renata_blasevich", "giuli_bellicoso", "mariano_bondar", "inachomer", "santi_gallo",
+               "tiago_bergallo", "pablo_bruschi", "inez", "mumy", "joselo_marquez", "los_arias_brothers",
+               "giuli_lourdes", "mely_francano", "tomas_alvarez", "el_capo_willy", "agus_benca",
+               "nanu_yael", "bruno_rondini"],
+    ),
+    dict(
+        slug="entretenimiento", name="Entretenimiento", split=("Entretenimiento", ""),
+        order=["pelao_khe", "juli_savioli", "pia_scarnato", "benja_calero", "cris_pierri", "dulce_pink",
+               "ber_scarnato", "renata_blasevich", "giuli_bellicoso", "mariano_bondar", "inachomer",
+               "santi_gallo", "tiago_bergallo", "pablo_bruschi", "inez", "mumy", "joselo_marquez",
+               "bruno_rondini", "los_arias_brothers", "giuli_lourdes", "nanu_yael", "mely_francano",
+               "tomas_alvarez", "el_capo_willy", "agus_benca", "hablemos_de_cine", "facu_garcia"],
+    ),
+    dict(
+        slug="youtube", name="Youtube", split=("Youtube", ""),
+        order=["benja_calero", "mariano_bondar", "lean_riccio"],
+    ),
+    dict(
+        slug="tecnologia-crypto", name="Tecnología & Crypto", split=("Tecnología & Crypto", ""),
+        order=["lubru_invierte", "lean_riccio", "soy_dalto"],
+    ),
+]
+
+ALL_SECTIONS = SECTIONS + CATEGORY_SECTIONS
 
 def isotipo_svg(size=28, color="#FFFFFF", cls=""):
     return f'<svg class="{cls}" width="{size}" height="{size}" viewBox="{ISOTIPO_VIEWBOX}" style="color:{color}"><path fill="currentColor" d="{ISOTIPO_PATH}"/></svg>'
@@ -104,39 +156,51 @@ def collage_html(ids):
         for i, cid in enumerate(ids)
     )
 
-def category_section(cat):
+def category_section(cat, collapsible=False):
     slug = cat["slug"]
     head, tail = cat["split"]
     cards = "".join(card_html(pid, i) for i, pid in enumerate(cat["order"]))
+    has_collage = bool(cat.get("collage"))
+    collage_cls = " collage-4" if has_collage and len(cat["collage"]) == 4 else ""
+    collage_block = f'''
+        <div class="cat-collage{collage_cls}">
+          {collage_html(cat["collage"])}
+        </div>''' if has_collage else ""
+    inner_cls = "" if has_collage else " no-collage"
+    section_cls = " collapsible" if collapsible else ""
+    # mobile-only accordion toggle — a no-op on desktop (hidden via CSS),
+    # tapping it (or the cat-cover, see JS) expands/collapses the card grid
+    toggle_html = f'''
+      <button class="cat-toggle" aria-expanded="false">
+        <span>{len(cat["order"])} creadores</span>
+        <svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>''' if collapsible else ""
     return f'''
-  <section class="category" data-cat="{cat["name"]}" data-slug="{slug}" id="cat-{slug}">
+  <section class="category{section_cls}" data-cat="{cat["name"]}" data-slug="{slug}" id="cat-{slug}">
     <div class="cat-cover">
-      <div class="section-inner">
+      <div class="section-inner{inner_cls}">
         <div>
           <h1>{head}{tail}</h1>
-          <p>{cat["subtitle"]}</p>
-        </div>
-        <div class="cat-collage">
-          {collage_html(cat["collage"])}
-        </div>
+        </div>{collage_block}
       </div>
+      {toggle_html}
     </div>
     <div class="cat-rail">
       <div class="rail-head">
         <div class="rail-eyebrow">{len(cat["order"])} creadores en nuestro equipo</div>
       </div>
-      <div class="rail-pin-spacer">
-        <div class="rail-sticky">
-          <div class="rail-wrap">
-            <button class="rail-arrow prev" aria-label="Anterior">‹</button>
-            <button class="rail-arrow next" aria-label="Siguiente">›</button>
-            <div class="rail" tabindex="0" role="region" aria-label="Creadores de {cat["name"]}, deslizar o scrollear para navegar">
-              {cards}
-            </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de {cat["name"]}, pasar el mouse y scrollear para deslizar">
+            {cards}
           </div>
-          <div class="progress-track">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
         </div>
       </div>
     </div>
@@ -154,10 +218,19 @@ font_faces = "\n".join(f'''
 def fondo_svg():
     return f'<svg viewBox="{FONDO_VIEWBOX}" preserveAspectRatio="xMidYMid slice">{FONDO_INNER}</svg>'
 
-sections_html = "\n".join(category_section(cat) for cat in SECTIONS)
-slug_map = json.dumps({cat["name"]: cat["slug"] for cat in SECTIONS})
+sections_html = (
+    "\n".join(category_section(cat) for cat in SECTIONS)
+    + "\n" + "\n".join(category_section(cat, collapsible=True) for cat in CATEGORY_SECTIONS)
+)
+slug_map = json.dumps({cat["name"]: cat["slug"] for cat in ALL_SECTIONS})
+category_slugs_json = json.dumps([cat["slug"] for cat in CATEGORY_SECTIONS])
+cat_menu_links = "\n".join(
+    f'<a href="#cat-{cat["slug"]}" class="cat-menu-link" data-slug="{cat["slug"]}">{cat["name"]}</a>'
+    for cat in CATEGORY_SECTIONS
+)
 
-html = f'''<title>BIG Roster 2026</title>
+html = f'''<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIG Roster 2026</title>
 <style>
 {font_faces}
 
@@ -188,7 +261,7 @@ body {{
 /* ---------- NAV ---------- */
 .nav {{
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 18px 32px;
 }}
 .nav-brand {{
@@ -197,6 +270,40 @@ body {{
   transition: background .25s ease;
 }}
 .nav-brand:hover {{ background: var(--azul); }}
+
+/* "explorar por categorías" — separate from the Mujeres/Hombres dock on
+   purpose, sits up in the nav so it reads as a distinct, secondary way to
+   navigate (the 9 categories from the PDF) rather than a third main tab */
+.cat-menu {{ position: relative; }}
+.cat-menu-btn {{
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--fondo); color: var(--naranja); cursor: pointer;
+  border: 1.5px solid var(--naranja); border-radius: 999px;
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  letter-spacing: .02em; text-transform: uppercase;
+  padding: 9px 16px;
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}}
+.cat-menu-btn:hover, .cat-menu.open .cat-menu-btn, .cat-menu-btn.in-category {{
+  background: var(--naranja); color: var(--blanco); border-color: transparent;
+}}
+.cat-menu-chevron {{ transition: transform .25s ease; flex-shrink: 0; }}
+.cat-menu.open .cat-menu-chevron {{ transform: rotate(180deg); }}
+.cat-menu-panel {{
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 50;
+  min-width: 250px; background: var(--blanco); border-radius: 20px; padding: 10px;
+  display: flex; flex-direction: column; gap: 2px;
+  box-shadow: 0 20px 45px rgba(13,13,23,.22);
+  opacity: 0; transform: translateY(-8px) scale(.98); pointer-events: none;
+  transition: opacity .22s ease, transform .22s ease;
+}}
+.cat-menu.open .cat-menu-panel {{ opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }}
+.cat-menu-link {{
+  display: block; padding: 11px 14px; border-radius: 12px; text-decoration: none;
+  color: var(--azul); font-weight: 700; font-size: 14.5px; letter-spacing: -0.01em;
+  transition: background .2s ease, color .2s ease;
+}}
+.cat-menu-link:hover, .cat-menu-link.active {{ background: var(--fondo); color: var(--naranja); }}
 
 /* floating tab dock — pinned to the bottom of the screen, always reachable
    mid-scroll so you can jump straight from Mujeres to Hombres (or back)
@@ -229,7 +336,8 @@ body {{
   background: var(--naranja); color: var(--blanco); border-color: transparent; font-weight: 800;
 }}
 
-.tab:focus-visible, .nav-brand:focus-visible, .rail-arrow:focus-visible, .rail:focus-visible, .scroll-cue:focus-visible {{
+.tab:focus-visible, .nav-brand:focus-visible, .rail-arrow:focus-visible, .rail:focus-visible, .scroll-cue:focus-visible,
+.cat-menu-btn:focus-visible, .cat-menu-link:focus-visible {{
   outline: 2px solid var(--lima); outline-offset: 3px;
 }}
 
@@ -287,11 +395,24 @@ body {{
   opacity: 0; transform: translateY(18px);
   animation: riseIn .7s cubic-bezier(.16,1,.3,1) .38s forwards;
 }}
+/* category covers with no collage (all the secondary PDF categories) get
+   the full width back and a slightly smaller, wrap-friendly headline since
+   names like "Tecnología & Crypto" are much longer than "MUJERES" */
+.section-inner.no-collage {{ grid-template-columns: 1fr; }}
+.section-inner.no-collage h1 {{ font-size: clamp(48px, 7vw, 120px); max-width: 1100px; text-wrap: balance; }}
 .cat-collage {{ position: relative; height: 680px; opacity: 0; animation: riseIn .9s cubic-bezier(.16,1,.3,1) .5s forwards; }}
 .collage-tile {{ position: absolute; display: block; border-radius: 32px; width: auto; height: auto; object-fit: cover; object-position: center; }}
 .ct-1 {{ width: 40%; height: 47%; left: 0; top: 2%; }}
 .ct-2 {{ width: 40%; height: 47%; left: 0; bottom: 2%; }}
 .ct-3 {{ width: 44%; height: 88%; right: 0; top: 8%; }}
+#cat-hombres .ct-3 {{ object-position: 30% center; }}
+
+/* 4-photo collage: a staggered 2x2 (right column dropped lower than the
+   left) instead of a rigid grid, so it doesn't read as too static */
+.cat-collage.collage-4 .ct-1 {{ width: 40%; height: 43%; left: 0; top: 2%; }}
+.cat-collage.collage-4 .ct-2 {{ width: 40%; height: 43%; left: 0; top: 47%; }}
+.cat-collage.collage-4 .ct-3 {{ width: 40%; height: 43%; right: 0; left: auto; top: 8%; }}
+.ct-4 {{ width: 40%; height: 43%; right: 0; top: 53%; }}
 
 .cat-rail {{ position: relative; padding: 40px 0 0; }}
 .rail-head {{
@@ -302,14 +423,14 @@ body {{
 .rail-head.inview {{ opacity: 1; transform: translateY(0); }}
 .rail-eyebrow {{ color: var(--naranja); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }}
 
-/* the rail is "pinned" via a tall spacer + position:sticky viewport — vertical
-   scroll through the spacer's extra height drives a horizontal translateX on
-   the rail itself (JS computes progress from the spacer's scroll position),
-   so wheel/trackpad scroll doubles as the carousel's slide gesture */
-.rail-pin-spacer {{ position: relative; }}
-.rail-sticky {{
-  position: sticky; top: 0; height: 100vh;
-  display: flex; flex-direction: column; justify-content: center; gap: 20px;
+/* the wheel/trackpad only drives the horizontal slide while the pointer is
+   actually over this viewport (JS intercepts 'wheel' here and calls
+   preventDefault while there's still room to slide) — scrolling anywhere
+   else on the page (below the rail, over the dock, etc.) always scrolls
+   the page normally, never gets captured by the carousel */
+.rail-viewport {{
+  position: relative;
+  display: flex; flex-direction: column; gap: 20px;
   overflow: hidden;
 }}
 .rail-wrap {{ position: relative; z-index: 1; width: 100%; padding: 0 clamp(24px, 4vw, 64px); }}
@@ -322,7 +443,7 @@ body {{
 
 /* ---------- TARJETA TALENTO — CLEAN BLUR, CHIPS ABAJO (Figma node 97:242) ---------- */
 .bcard {{
-  flex: 0 0 clamp(230px, 17vw, 350px); aspect-ratio: 307 / 527; position: relative;
+  flex: 0 0 clamp(280px, 19vw, 380px); aspect-ratio: 307 / 527; position: relative;
   border-radius: 32px; overflow: hidden; background: #d9d9d9;
   transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s cubic-bezier(.16,1,.3,1);
 }}
@@ -353,14 +474,14 @@ body {{
 .bcard-role {{ color: rgba(255,255,255,.8); font-size: 13px; }}
 .bcard-bottom {{
   position: absolute; left: 24px; right: 24px; bottom: 24px;
-  display: flex; align-items: center; gap: 6px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
 }}
 .bcard-chip {{
-  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px 8px 12px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 4px; padding: 7px 10px 7px 8px; border-radius: 999px;
   background: rgba(255,255,255,.35); border: 1px solid rgba(255,255,255,.25);
   -webkit-backdrop-filter: blur(2.5px); backdrop-filter: blur(2.5px);
-  color: var(--blanco); font-size: 13px; font-weight: 700; letter-spacing: -0.03em;
-  text-decoration: none; white-space: nowrap;
+  color: var(--blanco); font-size: 12px; font-weight: 700; letter-spacing: -0.02em;
+  text-decoration: none; white-space: nowrap; flex-shrink: 0;
   transition: background .2s ease, transform .2s ease;
 }}
 .bcard-chip:hover {{ background: rgba(255,255,255,.5); transform: translateY(-2px); }}
@@ -390,10 +511,58 @@ body {{
 .progress-bar {{ height: 3px; background: rgba(51,65,154,.18); border-radius: 3px; overflow: hidden; }}
 .progress-fill {{ height: 100%; width: 25%; background: var(--naranja); border-radius: 3px; transition: width .1s linear; }}
 
+.cat-toggle {{ display: none; }}
+
 @media (max-width: 860px) {{
+  .cat-cover {{ min-height: 0; padding: 56px 0 20px; }}
   .cat-cover .section-inner {{ grid-template-columns: 1fr; }}
-  .cat-collage {{ height: 320px; order: -1; }}
+  .cat-cover h1, .section-inner.no-collage h1 {{ font-size: clamp(38px, 13vw, 64px); }}
+  .cat-collage {{ height: 280px; order: -1; }}
   .portada {{ border-radius: 0 0 32px 32px; }}
+
+  /* the 8 secondary (PDF) categories collapse into a tappable accordion row
+     so the page reads as a short scannable list first — Mujeres/Hombres stay
+     open since they're the two primary sections */
+  .category.collapsible .cat-cover {{
+    flex-direction: column; align-items: stretch;
+    padding-bottom: 0; cursor: pointer;
+  }}
+  .category.collapsible .rail-head {{ display: none; }}
+  .category.collapsible .cat-rail {{ padding-top: 0; }}
+  .cat-toggle {{
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; margin-top: 22px; padding: 16px 32px;
+    background: none; border: none; border-top: 1.5px solid rgba(243,111,44,.3);
+    color: var(--naranja); font-family: inherit; font-weight: 700; font-size: 13px;
+    letter-spacing: .04em; text-transform: uppercase; cursor: pointer;
+  }}
+  .cat-toggle svg {{ transition: transform .3s ease; flex-shrink: 0; }}
+  .category.collapsible.open .cat-toggle svg {{ transform: rotate(180deg); }}
+  .category.collapsible .cat-rail {{
+    max-height: 0; overflow: hidden; padding-top: 0;
+    transition: max-height .4s cubic-bezier(.4,0,.2,1);
+  }}
+
+  /* the scroll-pinned horizontal rail is a desktop (mouse-wheel/trackpad)
+     trick — on touch it's a native swipeable, snap-to-card row instead,
+     full-bleed with overlaid arrow buttons (one card in view at a time) */
+  .rail-viewport {{ height: auto !important; display: block !important; }}
+  .rail-wrap {{ padding: 0 22px; }}
+  .rail {{
+    transform: none !important;
+    overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    padding: 4px 0 8px; gap: 14px;
+  }}
+  .bcard {{ flex: 0 0 min(82vw, 420px); scroll-snap-align: center; }}
+  .progress-track {{ display: none; }}
+  .rail-arrow {{
+    display: flex; width: 38px; height: 38px; top: 45%;
+    background: rgba(13,13,23,.4); color: var(--blanco);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  }}
+  .rail-arrow:hover {{ background: rgba(13,13,23,.6); }}
+  .rail-arrow.prev {{ left: 10px; }}
+  .rail-arrow.next {{ right: 10px; }}
 }}
 
 @media (prefers-reduced-motion: reduce) {{
@@ -410,6 +579,17 @@ body {{
     <button class="nav-brand" id="navBrand">
       {isotipo_svg(24, "#FFFFFF")}
     </button>
+    <div class="cat-menu" id="catMenu">
+      <button class="cat-menu-btn" id="catMenuBtn" aria-expanded="false">
+        Explorar por categorías
+        <svg class="cat-menu-chevron" width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L5.5 5.5L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="cat-menu-panel" id="catMenuPanel">
+        {cat_menu_links}
+      </div>
+    </div>
   </nav>
 
   <div class="tabs-dock">
@@ -452,16 +632,60 @@ function movePill(el) {{
   pill.classList.add('show');
 }}
 
+const SLUG_MAP = {slug_map};
+const CATEGORY_SLUGS = {category_slugs_json};
+const catMenu = document.getElementById('catMenu');
+const catMenuBtn = document.getElementById('catMenuBtn');
+const catMenuLinks = Array.from(document.querySelectorAll('.cat-menu-link'));
+
 function setActive(cat) {{
   currentActive = cat;
   tabEls.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
   const el = cat ? tabEls.find(t => t.dataset.cat === cat) : null;
   movePill(el);
+  const slug = cat ? SLUG_MAP[cat] : null;
+  catMenuLinks.forEach(l => l.classList.toggle('active', l.dataset.slug === slug));
+  catMenuBtn.classList.toggle('in-category', CATEGORY_SLUGS.includes(slug));
 }}
 
-const SLUG_MAP = {slug_map};
 const catSections = {{}};
 document.querySelectorAll('.category').forEach(el => {{ catSections[el.dataset.slug] = el; }});
+
+// ---------- mobile accordion (secondary/PDF categories only) ----------
+const MOBILE_QUERY = window.matchMedia('(max-width: 860px)');
+
+function openCategory(section) {{
+  if (!section.classList.contains('collapsible') || section.classList.contains('open')) return;
+  const railEl = section.querySelector('.cat-rail');
+  const toggle = section.querySelector('.cat-toggle');
+  section.classList.add('open');
+  toggle.setAttribute('aria-expanded', 'true');
+  railEl.style.maxHeight = railEl.scrollHeight + 'px';
+}}
+function closeCategory(section) {{
+  const railEl = section.querySelector('.cat-rail');
+  const toggle = section.querySelector('.cat-toggle');
+  section.classList.remove('open');
+  toggle.setAttribute('aria-expanded', 'false');
+  railEl.style.maxHeight = '0px';
+}}
+function syncAccordionState() {{
+  document.querySelectorAll('.category.collapsible').forEach(section => {{
+    const railEl = section.querySelector('.cat-rail');
+    if (!MOBILE_QUERY.matches) {{ railEl.style.maxHeight = ''; return; }}
+    railEl.style.maxHeight = section.classList.contains('open') ? railEl.scrollHeight + 'px' : '0px';
+  }});
+}}
+syncAccordionState();
+MOBILE_QUERY.addEventListener('change', syncAccordionState);
+window.addEventListener('resize', () => {{ if (MOBILE_QUERY.matches) syncAccordionState(); }});
+
+document.querySelectorAll('.category.collapsible .cat-toggle').forEach(toggle => {{
+  toggle.addEventListener('click', () => {{
+    const section = toggle.closest('.category');
+    section.classList.contains('open') ? closeCategory(section) : openCategory(section);
+  }});
+}});
 
 tabEls.forEach(t => {{
   t.addEventListener('mouseenter', () => movePill(t));
@@ -472,6 +696,33 @@ tabEls.forEach(t => {{
 }});
 tabsEl.addEventListener('mouseleave', () => movePill(currentActive ? tabEls.find(t => t.dataset.cat === currentActive) : null));
 document.getElementById('navBrand').addEventListener('click', () => document.getElementById('portada').scrollIntoView({{ behavior: 'smooth' }}));
+
+catMenuBtn.addEventListener('click', () => {{
+  const open = catMenu.classList.toggle('open');
+  catMenuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}});
+catMenuLinks.forEach(link => {{
+  link.addEventListener('click', (e) => {{
+    e.preventDefault();
+    const section = catSections[link.dataset.slug];
+    if (MOBILE_QUERY.matches) openCategory(section);
+    section.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    catMenu.classList.remove('open');
+    catMenuBtn.setAttribute('aria-expanded', 'false');
+  }});
+}});
+document.addEventListener('click', (e) => {{
+  if (!catMenu.contains(e.target)) {{
+    catMenu.classList.remove('open');
+    catMenuBtn.setAttribute('aria-expanded', 'false');
+  }}
+}});
+document.addEventListener('keydown', (e) => {{
+  if (e.key === 'Escape') {{
+    catMenu.classList.remove('open');
+    catMenuBtn.setAttribute('aria-expanded', 'false');
+  }}
+}});
 
 // scrollspy: highlight whichever category section (Mujeres / Hombres, both
 // stacked in the same continuous page) currently sits in the viewport centre
@@ -499,91 +750,121 @@ const io = new IntersectionObserver((entries) => {{
 }}, {{ threshold: .2 }});
 document.querySelectorAll('.rail-head').forEach(el => io.observe(el));
 
-// ---------- scroll-pinned horizontal rail ----------
-// each .cat-rail's .rail-pin-spacer is tall enough (100vh + the rail's own
-// overflow width) that, while its .rail-sticky child is pinned via
-// position:sticky, continued vertical wheel/trackpad scroll is translated
-// 1:1 into horizontal progress across the cards — once the spacer's extra
-// height is consumed the section releases and normal page scroll continues
-// into whatever comes next (next category, or the following section).
-const pinRails = Array.from(document.querySelectorAll('.cat-rail')).map(catRail => {{
-  const spacer = catRail.querySelector('.rail-pin-spacer');
-  const sticky = catRail.querySelector('.rail-sticky');
+// ---------- horizontal rail: hover edges + trackpad swipe ----------
+// plain vertical scroll (mouse wheel, or a trackpad swipe with no horizontal
+// component) is NEVER captured — the page just scrolls normally no matter
+// where the pointer is. Two ways to move the carousel instead:
+//   1. resting the pointer over the left/right half of the rail auto-slides
+//      slowly in that direction, for as long as it stays there;
+//   2. a trackpad's native horizontal swipe (wheel events with a deltaX)
+//      slides the rail directly, same direction as any other horizontally
+//      scrollable page content (swipe right -> content moves toward the end).
+const HOVER_SLIDE_SPEED = 4.5; // px per animation frame while parked on an edge
+
+document.querySelectorAll('.cat-rail').forEach(catRail => {{
+  const viewport = catRail.querySelector('.rail-viewport');
+  const wrap = catRail.querySelector('.rail-wrap');
   const rail = catRail.querySelector('.rail');
   const progressFill = catRail.querySelector('.progress-fill');
-  let scrollDistance = 0;
+  const prevBtn = catRail.querySelector('.rail-arrow.prev');
+  const nextBtn = catRail.querySelector('.rail-arrow.next');
+  let maxDistance = 0;
+  let progress = 0;
+  let hoverDir = 0;
+  let hoverRafId = null;
+  let isDown = false, startX = 0, moved = false;
+
+  function isDesktop() {{ return window.matchMedia('(min-width: 861px)').matches; }}
 
   function measure() {{
-    const trackWidth = rail.scrollWidth;
-    const viewportWidth = sticky.clientWidth;
-    scrollDistance = Math.max(0, trackWidth - viewportWidth);
-    spacer.style.height = (window.innerHeight + scrollDistance) + 'px';
+    // .rail itself has no padding — the left/right inset lives on .rail-wrap
+    // — so it has to be added back in, otherwise the carousel stops short
+    // and the last card's far edge gets clipped by the viewport's overflow
+    const wrapStyle = getComputedStyle(wrap);
+    const padX = (parseFloat(wrapStyle.paddingLeft) || 0) + (parseFloat(wrapStyle.paddingRight) || 0);
+    maxDistance = Math.max(0, rail.scrollWidth + padX - viewport.clientWidth);
+    progress = Math.min(1, progress);
     update();
   }}
   function update() {{
-    const rect = spacer.getBoundingClientRect();
-    const progress = scrollDistance > 0 ? Math.min(1, Math.max(0, -rect.top / scrollDistance)) : 0;
-    rail.style.transform = `translateX(${{-progress * scrollDistance}}px)`;
-    progressFill.style.width = (progress * 100) + '%';
+    rail.style.transform = `translateX(${{-progress * maxDistance}}px)`;
+    progressFill.style.width = (maxDistance > 0 ? progress * 100 : 0) + '%';
   }}
-  return {{
-    measure, update,
-    scrollByCards(dir) {{
-      const first = rail.firstElementChild;
-      const gap = parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || '26');
-      const step = (first ? first.getBoundingClientRect().width : 300) + gap;
-      window.scrollBy({{ top: dir * step, behavior: 'smooth' }});
-    }},
-  }};
-}});
+  function nudge(deltaPx) {{
+    if (maxDistance <= 0) return;
+    progress = Math.min(1, Math.max(0, progress + deltaPx / maxDistance));
+    update();
+  }}
 
-function measureAllRails() {{ pinRails.forEach(p => p.measure()); }}
-measureAllRails();
-window.addEventListener('resize', measureAllRails);
-document.querySelectorAll('.bcard-photo').forEach(img => {{
-  if (!img.complete) img.addEventListener('load', measureAllRails, {{ once: true }});
-}});
+  function hoverStep() {{
+    if (hoverDir === 0 || isDown) {{ clearInterval(hoverRafId); hoverRafId = null; return; }}
+    nudge(hoverDir * HOVER_SLIDE_SPEED);
+  }}
+  viewport.addEventListener('mousemove', (e) => {{
+    if (!isDesktop() || maxDistance <= 0) return;
+    // only the card sitting right at the left/right edge triggers auto-slide —
+    // every other card in the middle is a dead zone so it stays clickable
+    const rect = viewport.getBoundingClientRect();
+    const first = rail.firstElementChild;
+    const edgeZone = first ? first.getBoundingClientRect().width : 100;
+    const x = e.clientX - rect.left;
+    let dir = 0;
+    if (x < edgeZone) dir = -1;
+    else if (x > rect.width - edgeZone) dir = 1;
+    if (dir !== hoverDir) {{
+      hoverDir = dir;
+      if (dir !== 0 && !hoverRafId) hoverRafId = setInterval(hoverStep, 16);
+    }}
+  }});
+  viewport.addEventListener('mouseleave', () => {{ hoverDir = 0; }});
 
-let scrollTicking = false;
-window.addEventListener('scroll', () => {{
-  if (scrollTicking) return;
-  scrollTicking = true;
-  requestAnimationFrame(() => {{ pinRails.forEach(p => p.update()); scrollTicking = false; }});
-}}, {{ passive: true }});
+  viewport.addEventListener('wheel', (e) => {{
+    if (!isDesktop() || Math.abs(e.deltaX) < 1) return; // no horizontal component -> let the page scroll
+    const goingRight = e.deltaX > 0;
+    const canConsume = (goingRight && progress < 1) || (!goingRight && progress > 0);
+    if (!canConsume) return;
+    e.preventDefault();
+    nudge(e.deltaX);
+  }}, {{ passive: false }});
 
-document.querySelectorAll('.cat-rail').forEach((catRail, idx) => {{
-  const rail = catRail.querySelector('.rail');
-  const prevBtn = catRail.querySelector('.rail-arrow.prev');
-  const nextBtn = catRail.querySelector('.rail-arrow.next');
-  const pin = pinRails[idx];
-
-  let isDown = false, startX = 0, startY = 0, moved = false, pendingDx = 0, rafScheduled = false;
   rail.addEventListener('pointerdown', (e) => {{
-    if (e.target.closest('a')) return;
-    isDown = true; moved = false;
+    if (e.target.closest('a') || e.pointerType === 'touch' || !isDesktop()) return;
+    isDown = true; moved = false; hoverDir = 0;
     rail.classList.add('dragging');
-    startX = e.clientX; startY = window.scrollY;
+    startX = e.clientX;
     rail.setPointerCapture(e.pointerId);
   }});
   rail.addEventListener('pointermove', (e) => {{
     if (!isDown) return;
-    pendingDx = e.clientX - startX;
-    if (Math.abs(pendingDx) > 4) moved = true;
-    if (!rafScheduled) {{
-      rafScheduled = true;
-      requestAnimationFrame(() => {{
-        window.scrollTo({{ top: startY - pendingDx }});
-        rafScheduled = false;
-      }});
-    }}
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    nudge(-dx);
+    startX = e.clientX;
   }});
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev =>
     rail.addEventListener(ev, () => {{ isDown = false; rail.classList.remove('dragging'); }})
   );
   rail.addEventListener('click', (e) => {{ if (moved) e.preventDefault(); }}, true);
 
-  prevBtn.addEventListener('click', () => pin.scrollByCards(-1));
-  nextBtn.addEventListener('click', () => pin.scrollByCards(1));
+  function scrollByCards(dir) {{
+    const first = rail.firstElementChild;
+    const gap = parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap || '26');
+    const step = (first ? first.getBoundingClientRect().width : 300) + gap;
+    if (isDesktop()) {{
+      nudge(dir * step);
+    }} else {{
+      // mobile rail is native overflow-x scroll, not transform-driven
+      rail.scrollBy({{ left: dir * step, behavior: 'smooth' }});
+    }}
+  }}
+  prevBtn.addEventListener('click', () => scrollByCards(-1));
+  nextBtn.addEventListener('click', () => scrollByCards(1));
+
+  measure();
+  window.addEventListener('resize', measure);
+  catRail.querySelectorAll('.bcard-photo').forEach(img => {{
+    if (!img.complete) img.addEventListener('load', measure, {{ once: true }});
+  }});
 }});
 </script>
 '''
