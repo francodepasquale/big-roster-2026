@@ -42,6 +42,7 @@
   --lima: #E8F29C;
   --negro: #0D0D14;
   --blanco: #FFFFFF;
+  --intro-progress: 0;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,26 +71,13 @@ body {
   }
 }
 @keyframes fondoParallax { from { transform: translateY(-4%); } to { transform: translateY(4%); } }
-/* sits 80px down from the page top; once it scrolls above the viewport the
-   observer below (plain viewport root, no rootMargin) reports isIntersecting
-   false and the nav switches to its compact/blurred state */
-#nav-sentinel { position: absolute; top: 80px; left: 0; width: 1px; height: 1px; pointer-events: none; }
 
 /* ---------- NAV ---------- */
+/* always transparent, no background bar at any scroll position */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 32px;
-  transition: background .3s ease, backdrop-filter .3s ease, padding .3s ease, box-shadow .3s ease;
-}
-/* once scrolled past the hero — detected via a 1px sentinel + IntersectionObserver,
-   not a scroll listener — the nav gets a compact translucent bar so it stays
-   legible over whatever section is currently underneath it */
-.nav.scrolled {
-  background: rgba(13,13,23,.5);
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  padding: 12px 32px;
-  box-shadow: 0 8px 30px rgba(13,13,23,.15);
 }
 .nav-brand {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; border: none;
@@ -97,6 +85,19 @@ body {
   transition: background .25s ease;
 }
 .nav-brand:hover { background: var(--azul); }
+
+/* ---------- INTRO LOGO ---------- */
+/* big, centered copy of the nav logo shown on load; JS drives a scroll-linked
+   FLIP (transform only, no layout thrash) that shrinks/moves it exactly onto
+   the real .nav-brand — position/size are measured live via
+   getBoundingClientRect, not hardcoded, so it holds up at any breakpoint.
+   Skipped entirely for prefers-reduced-motion (see JS). */
+.intro-logo {
+  position: fixed; z-index: 150; top: 0; left: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--naranja); pointer-events: none;
+}
+.intro-logo svg { width: 56%; height: 56%; display: block; }
 
 /* "explorar por categorías" — separate from the Mujeres/Hombres dock on
    purpose, sits up in the nav so it reads as a distinct, secondary way to
@@ -171,33 +172,42 @@ body {
 .section-inner { position: relative; z-index: 1; width: 100%; max-width: min(1600px, 90vw); margin: 0 auto; padding: 0 32px; }
 
 /* ---------- PORTADA ---------- */
+/* pinned (position: sticky) for the duration of the scroll-linked intro
+   (see JS: portadaPinWrap's height is set to portada's own height + the
+   intro's scroll distance) so the headline has time to fully rise/grow
+   into place before the page actually scrolls past it — without this, the
+   hero's own content would scroll out from under the reveal before it
+   finished, since a plain (non-pinned) section moves at 1:1 with scroll. */
+.portada-pin-wrap { position: relative; }
 .portada {
-  position: relative; min-height: 82vh; overflow: hidden;
+  position: sticky; top: 0; height: 100vh; overflow: hidden;
   display: flex; align-items: center; padding: 140px 0 100px;
   border-radius: 0 0 64px 64px;
   background: var(--naranja);
   border-bottom: 2px solid var(--fondo);
 }
 .portada .section-inner { max-width: 900px; }
+/* the headline rises up from below and grows to full size as the page
+   scrolls through the intro (tied to --intro-progress, set by JS in lockstep
+   with the logo FLIP below) — not IntersectionObserver-gated like the other
+   sections' headlines, since portada is already in view on load */
 .portada h1 {
   color: var(--blanco);
   font-weight: 900; line-height: .85; letter-spacing: -0.07em; text-transform: uppercase;
   font-size: clamp(56px, 8vw, 128px);
-  opacity: 0; transform: translateY(24px);
+  transform-origin: left bottom;
+  transform: translateY(calc((1 - var(--intro-progress)) * 70px)) scale(calc(.78 + var(--intro-progress) * .22));
+  opacity: var(--intro-progress);
 }
 .portada h1 .lima { color: var(--fondo); display: block; }
+/* rides in right alongside the headline, off the same --intro-progress, just
+   a beat behind (its own translateY is smaller so it settles slightly sooner) */
 .portada p {
   margin-top: 26px; max-width: 520px; font-size: 20px; font-weight: 500;
   line-height: 1.5; color: rgba(255,255,255,.78);
-  opacity: 0; transform: translateY(18px);
+  transform: translateY(calc((1 - var(--intro-progress)) * 40px));
+  opacity: var(--intro-progress);
 }
-/* headline/paragraph entrances only fire once the section is actually in
-   view (JS adds .inview via IntersectionObserver) — before this fix they
-   were plain unconditional CSS animations that fired once on page load, so
-   anything below the fold had already "finished" animating before you
-   scrolled to it and just looked static */
-.portada.inview h1 { animation: riseIn .8s cubic-bezier(.16,1,.3,1) .18s forwards; }
-.portada.inview p { animation: riseIn .7s cubic-bezier(.16,1,.3,1) .34s forwards; }
 @keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
 
 .scroll-cue {
@@ -460,9 +470,11 @@ body {
 </style>
 
 <div class="page-flow" id="pageFlow">
-  <div id="nav-sentinel" aria-hidden="true"></div>
+  <div class="intro-logo" id="introLogo" aria-hidden="true">
+    <svg class="" width="60" height="60" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+  </div>
   <nav class="nav">
-    <button class="nav-brand" id="navBrand">
+    <button class="nav-brand" id="navBrand" style="opacity:0">
       <svg class="" width="24" height="24" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
     </button>
     <div class="cat-menu" id="catMenu">
@@ -493,15 +505,17 @@ body {
     </div>
   </div>
 
-  <section class="portada" id="portada">
-    <div class="section-inner">
-      <h1>Roster<span class="lima">de Talentos</span></h1>
-      <p>Creadores y creadoras que conectan marcas con audiencias reales, en cada categoría y en cada red.</p>
-    </div>
-    <button class="scroll-cue" onclick="document.getElementById('catViewport').scrollIntoView({behavior:'smooth'})">
-      Explorar más <span class="chev">↓</span>
-    </button>
-  </section>
+  <div class="portada-pin-wrap" id="portadaPinWrap">
+    <section class="portada" id="portada">
+      <div class="section-inner">
+        <h1>Roster<span class="lima">de Talentos</span></h1>
+        <p>Creadores y creadoras que conectan marcas con audiencias reales, en cada categoría y en cada red.</p>
+      </div>
+      <button class="scroll-cue" onclick="document.getElementById('catViewport').scrollIntoView({behavior:'smooth'})">
+        Explorar más <span class="chev">↓</span>
+      </button>
+    </section>
+  </div>
 
   <div class="below-hero">
     <div class="bg-fondo" aria-hidden="true"><svg viewBox="0 0 1464 1080" preserveAspectRatio="xMidYMid slice">
@@ -4045,14 +4059,74 @@ const coverObserver = new IntersectionObserver((entries) => {
 }, { threshold: .25 });
 document.querySelectorAll('.portada, .cat-cover, .categorias-divider').forEach(el => coverObserver.observe(el));
 
-// compact/blurred nav bar once scrolled past the hero — a 1px sentinel +
-// IntersectionObserver instead of a scroll listener, so there's no per-frame JS
-const navEl = document.querySelector('.nav');
-const navSentinel = document.getElementById('nav-sentinel');
-const navObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => navEl.classList.toggle('scrolled', !e.isIntersecting));
-}, { threshold: 0 });
-navObserver.observe(navSentinel);
+// ---------- hero intro: big centered logo FLIPs onto the nav, headline rises ----------
+// FLIP technique: measure the logo's natural (big, centered) rect and the
+// real nav-brand's rect, then on scroll interpolate a translate+scale between
+// them — pure transform/opacity per frame, no layout thrash. --intro-progress
+// (0 to 1, smoothstep-eased) also drives the headline's rise/grow in the CSS
+// above, so both stay perfectly in lockstep off the same scroll math.
+const introLogo = document.getElementById('introLogo');
+const navBrandEl = document.getElementById('navBrand');
+const portadaEl = document.getElementById('portada');
+const portadaPinWrap = document.getElementById('portadaPinWrap');
+const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const INTRO_DISTANCE = 480; // px of scroll over which the intro completes
+const INTRO_FADE_FROM = 0.97; // logo/nav-brand crossfade — kept short and late so the two logos barely overlap
+
+let introStart, introEnd;
+function layoutIntroLogo() {
+  // pin-wrap is exactly portada's own height + the intro distance, so the
+  // sticky release lines up perfectly with the moment the intro finishes
+  portadaPinWrap.style.height = REDUCE_MOTION
+    ? portadaEl.offsetHeight + 'px'
+    : (portadaEl.offsetHeight + INTRO_DISTANCE) + 'px';
+
+  let size = Math.max(220, window.innerWidth * 0.28);
+  size = Math.min(size, 440, window.innerHeight * 0.48);
+  introLogo.style.width = size + 'px';
+  introLogo.style.height = size + 'px';
+  introLogo.style.borderRadius = (size * 0.2857) + 'px'; // same radius:size ratio as .nav-brand
+  introLogo.style.left = (window.innerWidth / 2 - size / 2) + 'px';
+  introLogo.style.top = (window.innerHeight * 0.4 - size / 2) + 'px';
+  introLogo.style.transform = 'none';
+  introStart = introLogo.getBoundingClientRect();
+  introEnd = navBrandEl.getBoundingClientRect();
+  updateIntro();
+}
+
+function updateIntro() {
+  const raw = Math.min(1, Math.max(0, window.scrollY / INTRO_DISTANCE));
+  const p = raw * raw * (3 - 2 * raw); // smoothstep
+  document.documentElement.style.setProperty('--intro-progress', p.toFixed(4));
+
+  const scale = 1 + (introEnd.width / introStart.width - 1) * p;
+  const startCx = introStart.left + introStart.width / 2;
+  const startCy = introStart.top + introStart.height / 2;
+  const endCx = introEnd.left + introEnd.width / 2;
+  const endCy = introEnd.top + introEnd.height / 2;
+  const tx = (endCx - startCx) * p;
+  const ty = (endCy - startCy) * p;
+  introLogo.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+
+  introLogo.style.opacity = p < INTRO_FADE_FROM ? 1 : Math.max(0, 1 - (p - INTRO_FADE_FROM) / (1 - INTRO_FADE_FROM));
+  navBrandEl.style.opacity = p < INTRO_FADE_FROM ? 0 : Math.min(1, (p - INTRO_FADE_FROM) / (1 - INTRO_FADE_FROM));
+}
+
+if (REDUCE_MOTION) {
+  introLogo.style.display = 'none';
+  navBrandEl.style.opacity = 1;
+  document.documentElement.style.setProperty('--intro-progress', 1);
+} else {
+  let introTicking = false;
+  window.addEventListener('scroll', () => {
+    if (!introTicking) {
+      requestAnimationFrame(() => { updateIntro(); introTicking = false; });
+      introTicking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', layoutIntroLogo);
+  layoutIntroLogo();
+}
 
 // ---------- horizontal rail: hover edges + trackpad swipe ----------
 // plain vertical scroll (mouse wheel, or a trackpad swipe with no horizontal
