@@ -414,6 +414,10 @@ body {
   .cat-cover h1, .section-inner.no-collage h1 { font-size: clamp(38px, 13vw, 64px); }
   .cat-collage { height: 280px; order: -1; }
   .portada { border-radius: 0 0 32px 32px; }
+  /* portada is now a full 100vh, so on short mobile viewports the scroll-cue
+     (bottom-left) would otherwise collide with the fixed Mujeres/Hombres
+     dock (bottom-center) — push it up clear of the dock */
+  .scroll-cue { bottom: 92px; }
 
   /* the 8 secondary (PDF) categories collapse into a tappable accordion row
      so the page reads as a short scannable list first — Mujeres/Hombres stay
