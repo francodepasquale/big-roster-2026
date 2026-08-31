@@ -58,7 +58,15 @@ body {
 
 .page-flow { position: relative; }
 .below-hero { position: relative; }
-.bg-fondo { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+/* the curve artwork happens to be densest right at its own top edge, which
+   sat flush against the portada seam and read as a visibly darker peach
+   band — fading the overlay in over the first 160px hides that instead of
+   trying to recolor/reposition the art itself */
+.bg-fondo {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+}
 .bg-fondo svg { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; display: block; }
 /* slow, continuous drift tied to native scroll position (CSS scroll-driven
    animation — no JS, no scroll listener, compositor-only). The 5% overscan
