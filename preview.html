@@ -109,24 +109,48 @@ body {
 }
 .intro-logo svg { width: 56%; height: 56%; display: block; }
 
-/* "explorar por categorías" — separate from the Mujeres/Hombres dock on
-   purpose, sits up in the nav so it reads as a distinct, secondary way to
-   navigate (the 9 categories from the PDF) rather than a third main tab */
-.cat-menu { position: relative; }
-.cat-menu-btn {
-  display: inline-flex; align-items: center; gap: 9px;
-  background: var(--fondo); color: var(--naranja); cursor: pointer;
-  border: 1.5px solid var(--naranja); border-radius: 999px;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
+/* unified top-right dock: Mujeres/Hombres section switch + "explorar por
+   categorías" trigger, hand-ported from magicui's Dock (proximity-based
+   icon magnify) to vanilla JS — mouse-distance -> scale + lift instead of
+   framer-motion springs. Replaces the old separate bottom-center tabs and
+   top-right category button with one control. */
+.nav-dock {
+  position: relative; display: flex; align-items: center; gap: 2px;
+  background: var(--blanco); border-radius: 999px; padding: 10px;
+  box-shadow: 0 14px 34px rgba(13,13,23,.16);
+}
+.dock-item {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--naranja); cursor: pointer; border: none; border-radius: 999px;
+  font-family: inherit; font-size: 12.5px; font-weight: 700;
   letter-spacing: .02em; text-transform: uppercase;
-  padding: 9px 16px;
-  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  padding: 10px 18px; white-space: nowrap;
+  transition: color .25s ease, background .25s ease;
 }
-.cat-menu-btn:hover, .cat-menu.open .cat-menu-btn, .cat-menu-btn.in-category {
-  background: var(--naranja); color: var(--blanco); border-color: transparent;
+.dock-item:hover, .dock-item.active { background: var(--naranja); color: var(--blanco); }
+.dock-sep {
+  width: 1.5px; align-self: stretch; margin: 4px 5px; flex-shrink: 0;
+  background: rgba(13,13,23,.12); border-radius: 1px;
 }
-.cat-menu-chevron { transition: transform .25s ease; flex-shrink: 0; }
-.cat-menu.open .cat-menu-chevron { transform: rotate(180deg); }
+.cat-menu { position: relative; }
+.cat-menu-btn { padding: 10px 14px; }
+.cat-menu.open .cat-menu-btn, .cat-menu-btn.in-category { background: var(--naranja); color: var(--blanco); }
+.dock-tooltip {
+  position: absolute; bottom: calc(100% + 10px); left: 50%; z-index: 2;
+  transform: translateX(-50%) translateY(4px) scale(.92); transform-origin: bottom center;
+  background: #14141f; color: var(--blanco); font-size: 11px; font-weight: 700;
+  letter-spacing: .02em; text-transform: none;
+  padding: 6px 10px; border-radius: 8px; white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.dock-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: #14141f;
+}
+.cat-menu-btn:hover .dock-tooltip, .cat-menu-btn:focus-visible .dock-tooltip {
+  opacity: 1; transform: translateX(-50%) translateY(0) scale(1);
+}
 .cat-menu-panel {
   position: absolute; top: calc(100% + 10px); right: 0; z-index: 50;
   min-width: 250px; background: var(--blanco); border-radius: 20px; padding: 10px;
@@ -138,44 +162,13 @@ body {
 .cat-menu.open .cat-menu-panel { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .cat-menu-link {
   display: block; padding: 11px 14px; border-radius: 12px; text-decoration: none;
-  color: var(--azul); font-weight: 700; font-size: 14.5px; letter-spacing: -0.01em;
+  color: var(--naranja); font-weight: 700; font-size: 14.5px; letter-spacing: -0.01em;
   transition: background .2s ease, color .2s ease;
 }
 .cat-menu-link:hover, .cat-menu-link.active { background: var(--fondo); color: var(--naranja); }
 
-/* floating tab dock — pinned to the bottom of the screen, always reachable
-   mid-scroll so you can jump straight from Mujeres to Hombres (or back)
-   without scrolling all the way up to a top nav first */
-.tabs-dock {
-  position: fixed; left: 50%; bottom: 24px; z-index: 100;
-  transform: translateX(-50%);
-  display: flex;
-}
-.tabs { position: relative; display: flex; gap: 4px; }
-.tab-pill {
-  position: absolute; top: 4px; height: calc(100% - 8px);
-  border-radius: 999px; background: var(--naranja);
-  opacity: 0;
-  transition: transform .45s cubic-bezier(.16,1,.3,1), width .45s cubic-bezier(.16,1,.3,1), opacity .3s ease;
-  z-index: 0;
-}
-.tab-pill.show { opacity: 1; }
-.tab {
-  position: relative; z-index: 1;
-  background: var(--fondo); cursor: pointer; border-radius: 999px;
-  border: 1.5px solid var(--naranja);
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  letter-spacing: .02em; text-transform: uppercase;
-  color: var(--naranja);
-  padding: 9px 16px; white-space: nowrap;
-  transition: color .3s ease, background .3s ease, border-color .3s ease;
-}
-.tab:hover, .tab.active {
-  background: var(--naranja); color: var(--blanco); border-color: transparent; font-weight: 800;
-}
-
-.tab:focus-visible, .nav-brand:focus-visible, .rail-arrow:focus-visible, .rail:focus-visible, .scroll-cue:focus-visible,
-.cat-menu-btn:focus-visible, .cat-menu-link:focus-visible {
+.dock-item:focus-visible, .nav-brand:focus-visible, .rail-arrow:focus-visible, .rail:focus-visible, .scroll-cue:focus-visible,
+.cat-menu-link:focus-visible {
   outline: 2px solid var(--lima); outline-offset: 3px;
 }
 
@@ -435,16 +428,18 @@ body {
 
 .cat-toggle { display: none; }
 
+@media (max-width: 480px) {
+  .nav { padding: 14px 16px; }
+  .dock-item { padding: 9px 12px; font-size: 11px; }
+  .cat-menu-btn { padding: 9px 10px; }
+}
+
 @media (max-width: 860px) {
   .cat-cover { min-height: 0; padding: 56px 0 20px; }
   .cat-cover .section-inner { grid-template-columns: 1fr; }
   .cat-cover h1, .section-inner.no-collage h1 { font-size: clamp(38px, 13vw, 64px); }
   .cat-collage { height: 280px; order: -1; }
   .portada { border-radius: 0 0 32px 32px; }
-  /* portada is now a full 100vh, so on short mobile viewports the scroll-cue
-     (bottom-left) would otherwise collide with the fixed Mujeres/Hombres
-     dock (bottom-center) — push it up clear of the dock */
-  .scroll-cue { bottom: 92px; }
 
   /* the 8 secondary (PDF) categories collapse into a tappable accordion row
      so the page reads as a short scannable list first — Mujeres/Hombres stay
@@ -508,15 +503,21 @@ body {
     <button class="nav-brand" id="navBrand" style="opacity:0">
       <svg class="" width="24" height="24" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
     </button>
-    <div class="cat-menu" id="catMenu">
-      <button class="cat-menu-btn" id="catMenuBtn" aria-expanded="false">
-        Explorar por categorías
-        <svg class="cat-menu-chevron" width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 1L5.5 5.5L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <div class="cat-menu-panel" id="catMenuPanel">
-        <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
+    <div class="nav-dock" id="navDock">
+      <button class="dock-item dock-tab" data-cat="Mujeres">Mujeres</button>
+      <button class="dock-item dock-tab" data-cat="Hombres">Hombres</button>
+      <div class="dock-sep"></div>
+      <div class="cat-menu" id="catMenu">
+        <button class="dock-item cat-menu-btn" id="catMenuBtn" aria-expanded="false" aria-label="Explorar por categorías">
+          <span class="dock-tooltip">Categorías</span>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect y="0" width="16" height="2" rx="1" fill="currentColor"/>
+            <rect y="5" width="16" height="2" rx="1" fill="currentColor"/>
+            <rect y="10" width="16" height="2" rx="1" fill="currentColor"/>
+          </svg>
+        </button>
+        <div class="cat-menu-panel" id="catMenuPanel">
+          <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
 <a href="#cat-beauty-makeup" class="cat-menu-link" data-slug="beauty-makeup">Beauty & Makeup</a>
 <a href="#cat-humor-sketches" class="cat-menu-link" data-slug="humor-sketches">Humor & Sketches</a>
 <a href="#cat-tecnologia-crypto" class="cat-menu-link" data-slug="tecnologia-crypto">Tecnología & Crypto</a>
@@ -524,17 +525,10 @@ body {
 <a href="#cat-entretenimiento" class="cat-menu-link" data-slug="entretenimiento">Entretenimiento</a>
 <a href="#cat-fitness" class="cat-menu-link" data-slug="fitness">Fitness</a>
 <a href="#cat-trends" class="cat-menu-link" data-slug="trends">Trends</a>
+        </div>
       </div>
     </div>
   </nav>
-
-  <div class="tabs-dock">
-    <div class="tabs" id="tabs">
-      <div class="tab-pill" id="tabPill"></div>
-      <button class="tab" data-cat="Mujeres">Mujeres</button>
-<button class="tab" data-cat="Hombres">Hombres</button>
-    </div>
-  </div>
 
   <div class="portada-pin-wrap" id="portadaPinWrap">
     <section class="portada" id="portada">
@@ -4231,19 +4225,8 @@ body {
 </div>
 
 <script>
-const tabsEl = document.getElementById('tabs');
-const pill = document.getElementById('tabPill');
-const tabEls = Array.from(document.querySelectorAll('.tab'));
+const tabEls = Array.from(document.querySelectorAll('.dock-tab'));
 let currentActive = null;
-
-function movePill(el) {
-  if (!el) { pill.classList.remove('show'); return; }
-  const r = el.getBoundingClientRect();
-  const navR = tabsEl.getBoundingClientRect();
-  pill.style.width = r.width + 'px';
-  pill.style.transform = `translateX(${r.left - navR.left + tabsEl.scrollLeft}px)`;
-  pill.classList.add('show');
-}
 
 const SLUG_MAP = {"Mujeres": "mujeres", "Hombres": "hombres", "Lifestyle": "lifestyle", "Beauty & Makeup": "beauty-makeup", "Humor & Sketches": "humor-sketches", "Tecnolog\u00eda & Crypto": "tecnologia-crypto", "Youtube": "youtube", "Entretenimiento": "entretenimiento", "Fitness": "fitness", "Trends": "trends"};
 const CATEGORY_SLUGS = ["lifestyle", "beauty-makeup", "humor-sketches", "tecnologia-crypto", "youtube", "entretenimiento", "fitness", "trends"];
@@ -4254,8 +4237,6 @@ const catMenuLinks = Array.from(document.querySelectorAll('.cat-menu-link'));
 function setActive(cat) {
   currentActive = cat;
   tabEls.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
-  const el = cat ? tabEls.find(t => t.dataset.cat === cat) : null;
-  movePill(el);
   const slug = cat ? SLUG_MAP[cat] : null;
   catMenuLinks.forEach(l => l.classList.toggle('active', l.dataset.slug === slug));
   catMenuBtn.classList.toggle('in-category', CATEGORY_SLUGS.includes(slug));
@@ -4301,13 +4282,11 @@ document.querySelectorAll('.category.collapsible .cat-toggle').forEach(toggle =>
 });
 
 tabEls.forEach(t => {
-  t.addEventListener('mouseenter', () => movePill(t));
   t.addEventListener('click', () => {
     const slug = SLUG_MAP[t.dataset.cat];
     catSections[slug].scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
-tabsEl.addEventListener('mouseleave', () => movePill(currentActive ? tabEls.find(t => t.dataset.cat === currentActive) : null));
 document.getElementById('navBrand').addEventListener('click', () => document.getElementById('portada').scrollIntoView({ behavior: 'smooth' }));
 
 catMenuBtn.addEventListener('click', () => {
@@ -4348,8 +4327,6 @@ const sectionObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) setActive(e.target.dataset.cat); });
 }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
 Object.values(catSections).forEach(el => sectionObserver.observe(el));
-
-window.addEventListener('resize', () => movePill(currentActive ? tabEls.find(t => t.dataset.cat === currentActive) : null));
 
 // observing .category (never display:none, even for collapsed mobile
 // accordions — only its .cat-rail height collapses) rather than .rail-head
