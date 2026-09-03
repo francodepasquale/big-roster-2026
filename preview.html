@@ -111,7 +111,9 @@ body {
 /* "explorar por categorías" — separate from the Mujeres/Hombres dock on
    purpose, sits up in the nav so it reads as a distinct, secondary way to
    navigate (the 9 categories from the PDF) rather than a third main tab */
+.nav-right { display: flex; align-items: center; gap: 10px; }
 .cat-menu { position: relative; }
+.nav-medialab-link { text-decoration: none; }
 .cat-menu-btn {
   display: inline-flex; align-items: center; gap: 9px;
   background: var(--fondo); color: var(--naranja); cursor: pointer;
@@ -507,15 +509,16 @@ body {
     <button class="nav-brand" id="navBrand" style="opacity:0">
       <svg class="" width="24" height="24" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
     </button>
-    <div class="cat-menu" id="catMenu">
-      <button class="cat-menu-btn" id="catMenuBtn" aria-expanded="false">
-        Explorar por categorías
-        <svg class="cat-menu-chevron" width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 1L5.5 5.5L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <div class="cat-menu-panel" id="catMenuPanel">
-        <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
+    <div class="nav-right">
+      <div class="cat-menu" id="catMenu">
+        <button class="cat-menu-btn" id="catMenuBtn" aria-expanded="false">
+          Explorar por categorías
+          <svg class="cat-menu-chevron" width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L5.5 5.5L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="cat-menu-panel" id="catMenuPanel">
+          <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
 <a href="#cat-beauty-makeup" class="cat-menu-link" data-slug="beauty-makeup">Beauty & Makeup</a>
 <a href="#cat-humor-sketches" class="cat-menu-link" data-slug="humor-sketches">Humor & Sketches</a>
 <a href="#cat-tecnologia-crypto" class="cat-menu-link" data-slug="tecnologia-crypto">Tecnología & Crypto</a>
@@ -523,7 +526,9 @@ body {
 <a href="#cat-entretenimiento" class="cat-menu-link" data-slug="entretenimiento">Entretenimiento</a>
 <a href="#cat-fitness" class="cat-menu-link" data-slug="fitness">Fitness</a>
 <a href="#cat-trends" class="cat-menu-link" data-slug="trends">Trends</a>
+        </div>
       </div>
+      <a class="cat-menu-btn nav-medialab-link" href="/medialab">Media Kit</a>
     </div>
   </nav>
 
