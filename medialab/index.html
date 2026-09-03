@@ -6624,6 +6624,16 @@ if (REDUCE_MOTION) {
   }, { passive: true });
   window.addEventListener('resize', layoutIntroLogo);
   layoutIntroLogo();
+  // logomedialab.avif is a real network request, not inlined -- if it hasn't
+  // finished loading yet when layoutIntroLogo() first measures the lockup's
+  // width, the <img> contributes ~0px (width:auto, no image data yet), so the
+  // box gets centered too narrow and then grows rightward once the image
+  // actually loads, without ever re-centering. Re-running layout once it
+  // loads (or immediately if it's already cached/loaded) fixes that.
+  const lockupImg = introLogo.querySelector('.lockup-media');
+  if (lockupImg && !lockupImg.complete) {
+    lockupImg.addEventListener('load', layoutIntroLogo, { once: true });
+  }
 }
 
 // ---------- card tilt (ported from the roster site, itself adapted from
