@@ -49,7 +49,10 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* stops the trackpad/scroll rubber-band bounce, which otherwise displaces
+   the page and reveals the plain body background above the blue portada
+   (and below the last section) as a mismatched-color strip */
+html { scroll-behavior: smooth; overscroll-behavior-y: none; }
 body {
   font-family: 'Inter', -apple-system, sans-serif;
   background: var(--fondo);
