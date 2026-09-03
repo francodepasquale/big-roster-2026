@@ -59,7 +59,15 @@ body {
 
 .page-flow { position: relative; }
 .below-hero { position: relative; }
-.bg-fondo { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+/* the curve artwork is densest right at its own top edge, which sits flush
+   against the portada seam and reads as a visibly darker band right below it
+   -- fading the overlay in over the first 160px hides that instead of trying
+   to recolor/reposition the art itself (same fix as the roster site) */
+.bg-fondo {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+}
 .bg-fondo svg { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; display: block; }
 @media (prefers-reduced-motion: no-preference) {
   .bg-fondo svg {
@@ -166,7 +174,7 @@ body {
 @keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
 
 .scroll-cue {
-  position: absolute; bottom: 36px; left: 32px; z-index: 2;
+  position: absolute; bottom: 76px; left: 32px; z-index: 2;
   display: flex; align-items: center; gap: 10px;
   font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
   color: rgba(255,255,255,.55); cursor: pointer; border: none; background: none; font-family: inherit;
