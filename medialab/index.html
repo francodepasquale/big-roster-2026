@@ -84,20 +84,29 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 32px;
 }
+/* isotipo × Media Lab lockup, sized purely via font-size (em) -- see
+   .lockup-* below. .nav-brand is the small permanent version in the corner;
+   .intro-logo (further down) is the big scroll-linked one that FLIPs into it. */
 .nav-brand {
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; border: none;
-  background: var(--naranja); border-radius: 12px; padding: 9px;
+  display: inline-flex; align-items: center; flex-shrink: 0; cursor: pointer; border: none;
+  background: var(--naranja); border-radius: 0.34em; gap: 0.32em;
+  padding: 0.3em 0.56em 0.3em 0.3em; font-size: 44px;
   transition: background .25s ease;
 }
 .nav-brand:hover { background: var(--azul); }
+.lockup-isotipo { width: 0.5em; height: 0.5em; display: block; flex-shrink: 0; }
+.lockup-x { color: var(--blanco); font-weight: 900; font-size: 0.4em; opacity: .75; flex-shrink: 0; }
+.lockup-media { height: 0.5em; width: auto; display: block; flex-shrink: 0; }
 
 /* ---------- INTRO LOGO ---------- */
+/* same isotipo × Media Lab lockup as .nav-brand, just at whatever font-size
+   layoutIntroLogo() sets in JS (content-sized, not forced into a square) */
 .intro-logo {
   position: fixed; z-index: 150; top: 0; left: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; gap: 0.32em;
+  border-radius: 0.34em; padding: 0.3em 0.56em 0.3em 0.3em;
   background: var(--naranja); pointer-events: none;
 }
-.intro-logo svg { width: 56%; height: 56%; display: block; }
 
 /* "Explorar marcas" — dropdown scrollspy over the 21+ brand sections */
 .cat-menu { position: relative; }
@@ -149,13 +158,6 @@ body {
   border-bottom: 2px solid var(--fondo);
 }
 .portada .section-inner { max-width: 900px; }
-.brand-badge-row {
-  display: inline-flex; align-items: center; gap: 20px;
-  background: var(--azul); border-radius: 18px; padding: 14px 26px 14px 14px; margin-bottom: 28px;
-  opacity: var(--intro-progress);
-}
-.brand-badge-x { color: var(--blanco); font-weight: 900; font-size: 22px; opacity: .75; }
-.brand-badge-logo { height: 28px; width: auto; display: block; }
 .portada h1 {
   color: var(--blanco);
   font-weight: 900; line-height: .85; letter-spacing: -0.07em; text-transform: uppercase;
@@ -409,11 +411,11 @@ body {
 
 <div class="page-flow" id="pageFlow">
   <div class="intro-logo" id="introLogo" aria-hidden="true">
-    <svg class="" width="60" height="60" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+    <svg class="lockup-isotipo" width="28" height="28" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg><span class="lockup-x">×</span><img class="lockup-media" src="assets/logomedialab.avif" alt="Media Lab">
   </div>
   <nav class="nav">
     <button class="nav-brand" id="navBrand" style="opacity:0">
-      <svg class="" width="24" height="24" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+      <svg class="lockup-isotipo" width="28" height="28" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg><span class="lockup-x">×</span><img class="lockup-media" src="assets/logomedialab.avif" alt="Media Lab">
     </button>
     <div class="cat-menu" id="catMenu">
       <button class="cat-menu-btn" id="catMenuBtn" aria-expanded="false">
@@ -452,11 +454,6 @@ body {
   <div class="portada-pin-wrap" id="portadaPinWrap">
     <section class="portada" id="portada">
       <div class="section-inner">
-        <div class="brand-badge-row">
-          <svg class="" width="28" height="28" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
-          <span class="brand-badge-x">×</span>
-          <img class="brand-badge-logo" src="assets/logomedialab.avif" alt="Media Lab">
-        </div>
         <h1>Matching<span class="lima">de Marcas</span></h1>
         <p>Para cada marca, el equipo de creadores del roster BIG que mejor conecta con su audiencia — match principal y alternativas sugeridas.</p>
       </div>
@@ -6903,14 +6900,19 @@ function layoutIntroLogo() {
     ? portadaEl.offsetHeight + 'px'
     : (portadaEl.offsetHeight + INTRO_DISTANCE) + 'px';
 
-  let size = Math.max(220, window.innerWidth * 0.28);
-  size = Math.min(size, 440, window.innerHeight * 0.48);
-  introLogo.style.width = size + 'px';
-  introLogo.style.height = size + 'px';
-  introLogo.style.borderRadius = (size * 0.2857) + 'px';
-  introLogo.style.left = (window.innerWidth / 2 - size / 2) + 'px';
-  introLogo.style.top = (window.innerHeight * 0.4 - size / 2) + 'px';
+  // the lockup (isotipo × Media Lab) isn't square like a single icon, so its
+  // size is driven by font-size (em) instead of forcing an explicit
+  // width/height -- measure the resulting natural content box, then position
+  // it dead-centered in the viewport with explicit pixel left/top.
+  let fontSize = Math.max(64, window.innerWidth * 0.075);
+  fontSize = Math.min(fontSize, 130, window.innerHeight * 0.16);
+  introLogo.style.fontSize = fontSize + 'px';
+  introLogo.style.left = '0px';
+  introLogo.style.top = '0px';
   introLogo.style.transform = 'none';
+  const w = introLogo.offsetWidth, h = introLogo.offsetHeight;
+  introLogo.style.left = (window.innerWidth / 2 - w / 2) + 'px';
+  introLogo.style.top = (window.innerHeight / 2 - h / 2) + 'px';
   introStart = introLogo.getBoundingClientRect();
   introEnd = navBrandEl.getBoundingClientRect();
   updateIntro();
