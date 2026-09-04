@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MEDIALAB → Matching de marcas</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNC41NSwzKSBzY2FsZSgwLjA1NTgpIj48cGF0aCBkPSJNNDA5LjUyLDI0NS42NGwtLjQ2LTIuNThjLTkuMjYtNjAuODgtODAuNjMtOTkuNC0xMzcuMTQtNzEuNzQtODguNDUsMzUuNS0xNTEuMjIsMTIzLjU3LTE1MS4xNCwyMjMuNDUsMCwzLjQ5LS43OCw2Ljk4LTIuNiw5Ljk2LTkuMDMsMTQuOC0zNC45MSwxMS45Mi0zOS42Ny01LjMtLjgxLTIuOTItLjgyLTYtLjI2LTguOTcsMjEuOTQtMTE3Ljg2LDExMi41My0yMTguMDksMjIzLjYyLTI2MC43Ny43MS0uMzEsMS40MS0uNjQsMi4xLTEsNTIuMDUtMzAuODUsMzUuMTYtMTE5LjA4LTI1LjU1LTEyNy41Mi00LjEyLS43Ni04LjM1LTEuMTYtMTIuNjgtMS4xNkgwdjQ2Ni4zM2g0MTAuNDljLS43My05LjE4LDEuNDgtMjA3LjUtLjk3LTIyMC42OVoiIGZpbGw9IiNGRjc2MUUiLz48L2c+PC9zdmc+">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzNDNTFCNSIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQuNTUsMykgc2NhbGUoMC4wNTU4KSI+PHBhdGggZD0iTTQwOS41MiwyNDUuNjRsLS40Ni0yLjU4Yy05LjI2LTYwLjg4LTgwLjYzLTk5LjQtMTM3LjE0LTcxLjc0LTg4LjQ1LDM1LjUtMTUxLjIyLDEyMy41Ny0xNTEuMTQsMjIzLjQ1LDAsMy40OS0uNzgsNi45OC0yLjYsOS45Ni05LjAzLDE0LjgtMzQuOTEsMTEuOTItMzkuNjctNS4zLS44MS0yLjkyLS44Mi02LS4yNi04Ljk3LDIxLjk0LTExNy44NiwxMTIuNTMtMjE4LjA5LDIyMy42Mi0yNjAuNzcuNzEtLjMxLDEuNDEtLjY0LDIuMS0xLDUyLjA1LTMwLjg1LDM1LjE2LTExOS4wOC0yNS41NS0xMjcuNTItNC4xMi0uNzYtOC4zNS0xLjE2LTEyLjY4LTEuMTZIMHY0NjYuMzNoNDEwLjQ5Yy0uNzMtOS4xOCwxLjQ4LTIwNy41LS45Ny0yMjAuNjlaIiBmaWxsPSIjREFFMEZGIi8+PC9nPjwvc3ZnPg==">
 <style>
 
 @font-face {
@@ -106,10 +106,25 @@ body {
 /* same isotipo × Media Lab lockup as .nav-brand, just at whatever font-size
    layoutIntroLogo() sets in JS (content-sized, not forced into a square) */
 .intro-logo {
-  position: fixed; z-index: 150; top: 0; left: 0;
-  display: inline-flex; align-items: center; gap: 0.32em;
+  position: fixed; z-index: 150; top: 0; left: 0; perspective: 800px;
+  display: inline-flex; align-items: center;
   border-radius: 0.34em; padding: 0.3em 0.4em;
-  background: var(--naranja); pointer-events: none;
+  background: var(--naranja); pointer-events: auto;
+}
+/* mount entrance (ported from reactbits.dev's AnimatedContent, direction
+   "vertical" + reverse -- drops in from above -- same treatment as the
+   roster site's intro logo) and 3D hover tilt (same as .bcard-tilt), each
+   on their own layer so neither fights #introLogo's own scroll-driven
+   transform/opacity above, or each other. */
+.intro-logo-enter {
+  display: inline-flex; align-items: center;
+  opacity: 0; transform: translateY(-46px);
+  animation: introLogoEnter .8s cubic-bezier(.16,1,.3,1) .1s forwards;
+}
+@keyframes introLogoEnter { to { opacity: 1; transform: translateY(0); } }
+.intro-logo-tilt {
+  display: inline-flex; align-items: center; gap: 0.32em;
+  transform-style: preserve-3d;
 }
 
 /* "Explorar marcas" — dropdown scrollspy over the 21+ brand sections */
@@ -220,12 +235,44 @@ body {
 .cat-cover.inview .cat-collage { animation: riseIn .9s cubic-bezier(.16,1,.3,1) .5s forwards; }
 
 /* the brand's "match principal" fills most of the collage slot as one big
-   card (a bit smaller than the full slot, so it reads as its own card with
-   room to tilt rather than a flat background fill), instead of the roster's
-   multi-photo tile grid */
+   card (a bit smaller than the full slot, so it reads as its own card rather
+   than a flat background fill), instead of the roster's multi-photo tile
+   grid */
 .cat-collage.hero-only .bcard.brand-hero {
   position: absolute; inset: 5%;
   aspect-ratio: auto; opacity: 1;
+  isolation: isolate;
+}
+/* cursor-tracking border glow (ported from reactbits.dev's BorderGlow:
+   npx shadcn@latest add @react-bits/BorderGlow-JS-CSS), replacing the tilt
+   effect on just the match-principal card -- see the JS below for the
+   --edge-proximity/--cursor-angle math. Simplified from the original (no
+   mesh-gradient fill layer, no light/dark surface detection, no sweep-in
+   animation) down to the one recognizable part: a soft blue/orange glow
+   that follows the cursor around the card's perimeter and brightens the
+   closer the cursor gets to an edge. Lives on a sibling <span> so it can
+   bleed outside .bcard-tilt's own overflow:hidden clip. */
+.bcard.brand-hero { --edge-proximity: 0; --cursor-angle: 45deg; }
+.glow-edge {
+  position: absolute; inset: -22px; z-index: -1; pointer-events: none;
+  border-radius: 44px;
+  mask-image: conic-gradient(from var(--cursor-angle) at center,
+    black 2.5%, transparent 18%, transparent 82%, black 97.5%);
+  -webkit-mask-image: conic-gradient(from var(--cursor-angle) at center,
+    black 2.5%, transparent 18%, transparent 82%, black 97.5%);
+  opacity: calc((var(--edge-proximity) - 20) / 80);
+  transition: opacity .3s ease-out;
+  mix-blend-mode: plus-lighter;
+}
+.bcard.brand-hero:not(:hover) .glow-edge { opacity: 0; transition: opacity .6s ease-in-out; }
+.glow-edge::before {
+  content: ''; position: absolute; inset: 22px; border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(51,65,154,.9),
+    inset 0 0 14px 2px rgba(51,65,154,.5),
+    inset 0 0 32px 4px rgba(255,118,30,.35),
+    0 0 14px 2px rgba(51,65,154,.5),
+    0 0 32px 6px rgba(255,118,30,.3);
 }
 .hero-badge {
   position: absolute; top: 26px; left: 24px; z-index: 2;
@@ -423,7 +470,11 @@ body {
 
 <div class="page-flow" id="pageFlow">
   <div class="intro-logo" id="introLogo" aria-hidden="true">
-    <svg class="lockup-isotipo" width="28" height="28" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg><span class="lockup-x">×</span><img class="lockup-media" src="assets/logomedialab.avif" alt="Media Lab">
+    <div class="intro-logo-enter">
+      <div class="intro-logo-tilt" id="introLogoTilt">
+        <svg class="lockup-isotipo" width="28" height="28" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg><span class="lockup-x">×</span><img class="lockup-media" src="assets/logomedialab.avif" alt="Media Lab">
+      </div>
+    </div>
   </div>
   <nav class="nav">
     <button class="nav-brand" id="navBrand" style="opacity:0">
@@ -491,6 +542,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/lubru_invierte.webp" alt="Lubru Invierte" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -727,6 +779,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/lubru_invierte.webp" alt="Lubru Invierte" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -963,6 +1016,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -1222,6 +1276,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -1623,6 +1678,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/ber_scarnato.webp" alt="Ber Scarnato" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -2166,6 +2222,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pelao_khe.webp" alt="Pelao Khe" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -2379,6 +2436,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/juli_savioli.webp" alt="Juli Savioli" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -2619,6 +2677,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/joselo_marquez.webp" alt="Joselo Marquez" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -3001,6 +3060,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/juli_savioli.webp" alt="Juli Savioli" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -3214,6 +3274,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/dulce_pink.webp" alt="Dulce Pink" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -3452,6 +3513,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/eve_vidal.webp" alt="Eve Vidal" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -3665,6 +3727,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/eve_vidal.webp" alt="Eve Vidal" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -3878,6 +3941,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -4114,6 +4178,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/giuli_bellicoso.webp" alt="Giuli Bellicoso" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -4327,6 +4392,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/eve_vidal.webp" alt="Eve Vidal" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -4515,6 +4581,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/los_arias_brothers.webp" alt="Los Arias Brothers" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -4705,6 +4772,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pelao_khe.webp" alt="Pelao Khe" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -5039,6 +5107,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/hilario_jose.webp" alt="Hilario José" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -5390,6 +5459,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pelao_khe.webp" alt="Pelao Khe" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -5797,6 +5867,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/cris_pierri.webp" alt="Cris Pierri" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -6104,6 +6175,7 @@ body {
         <div class="cat-collage hero-only">
           
         <article class="bcard brand-hero">
+          <span class="glow-edge" aria-hidden="true"></span>
           <div class="bcard-tilt">
             <img class="bcard-photo" src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" loading="lazy" decoding="async">
             <div class="bcard-top-scrim" aria-hidden="true"></div>
@@ -6613,6 +6685,41 @@ function updateIntro() {
   navBrandEl.style.opacity = p < INTRO_FADE_FROM ? 0 : Math.min(1, (p - INTRO_FADE_FROM) / (1 - INTRO_FADE_FROM));
 }
 
+// same 3D tilt as the talent cards, ported onto the intro logo -- lives on
+// its own .intro-logo-tilt wrapper so it never fights #introLogo's
+// scroll-driven transform above for the same property
+if (!REDUCE_MOTION && window.matchMedia('(hover: hover)').matches) {
+  const logoTilt = document.getElementById('introLogoTilt');
+  const LOGO_ROTATE_AMPLITUDE = 16;
+  const LOGO_SCALE_ON_HOVER = 1.06;
+  const LOGO_LERP = 0.18;
+  let logoCurX = 0, logoCurY = 0, logoCurScale = 1;
+  let logoTargetX = 0, logoTargetY = 0, logoTargetScale = 1;
+  let logoRaf = null;
+  function renderLogoTilt() {
+    logoCurX += (logoTargetX - logoCurX) * LOGO_LERP;
+    logoCurY += (logoTargetY - logoCurY) * LOGO_LERP;
+    logoCurScale += (logoTargetScale - logoCurScale) * LOGO_LERP;
+    logoTilt.style.transform = `rotateX(${logoCurX.toFixed(2)}deg) rotateY(${logoCurY.toFixed(2)}deg) scale(${logoCurScale.toFixed(3)})`;
+    const settled = Math.abs(logoTargetX - logoCurX) < 0.03 && Math.abs(logoTargetY - logoCurY) < 0.03 && Math.abs(logoTargetScale - logoCurScale) < 0.001;
+    if (settled) { logoRaf = null; } else { logoRaf = requestAnimationFrame(renderLogoTilt); }
+  }
+  function ensureLogoLoop() { if (!logoRaf) logoRaf = requestAnimationFrame(renderLogoTilt); }
+  introLogo.addEventListener('pointermove', (e) => {
+    const rect = logoTilt.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    logoTargetX = (offsetY / (rect.height / 2)) * -LOGO_ROTATE_AMPLITUDE;
+    logoTargetY = (offsetX / (rect.width / 2)) * LOGO_ROTATE_AMPLITUDE;
+    logoTargetScale = LOGO_SCALE_ON_HOVER;
+    ensureLogoLoop();
+  });
+  introLogo.addEventListener('pointerleave', () => {
+    logoTargetX = 0; logoTargetY = 0; logoTargetScale = 1;
+    ensureLogoLoop();
+  });
+}
+
 if (REDUCE_MOTION) {
   introLogo.style.display = 'none';
   navBrandEl.style.opacity = 1;
@@ -6646,9 +6753,9 @@ if (REDUCE_MOTION) {
 // scroller, so pointer input there belongs entirely to scrolling, not tilt.
 // And even on desktop, if the rail is being dragged (see .dragging toggled
 // below), pointermove on a card is ignored — otherwise dragging the carousel
-// would also spin every card it passes under. Applies to both the rail cards
-// and the brand-hero card (which isn't inside a .rail, so the dragging guard
-// is simply a no-op for it).
+// would also spin every card it passes under. The brand-hero ("match
+// principal") card is excluded -- it gets the border-glow effect below
+// instead of tilt.
 function initCardTilt(card) {
   const tilt = card.querySelector('.bcard-tilt');
   if (!tilt) return;
@@ -6692,7 +6799,38 @@ function initCardTilt(card) {
   });
 }
 if (!REDUCE_MOTION && window.matchMedia('(hover: hover)').matches) {
-  document.querySelectorAll('.bcard').forEach(initCardTilt);
+  document.querySelectorAll('.bcard:not(.brand-hero)').forEach(initCardTilt);
+}
+
+// ---------- border glow on the "match principal" card (ported from
+// reactbits.dev's BorderGlow: npx shadcn@latest add
+// @react-bits/BorderGlow-JS-CSS) -- tracks the cursor's angle from the
+// card's center and how close it is to an edge, driving the --cursor-angle/
+// --edge-proximity custom properties the .glow-edge CSS above reads. ----------
+if (!REDUCE_MOTION && window.matchMedia('(hover: hover)').matches) {
+  function glowEdgeProximity(w, h, x, y) {
+    const cx = w / 2, cy = h / 2;
+    const dx = x - cx, dy = y - cy;
+    let kx = Infinity, ky = Infinity;
+    if (dx !== 0) kx = cx / Math.abs(dx);
+    if (dy !== 0) ky = cy / Math.abs(dy);
+    return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+  }
+  function glowCursorAngle(w, h, x, y) {
+    const dx = x - w / 2, dy = y - h / 2;
+    if (dx === 0 && dy === 0) return 0;
+    let degrees = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+    if (degrees < 0) degrees += 360;
+    return degrees;
+  }
+  document.querySelectorAll('.bcard.brand-hero').forEach(card => {
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      card.style.setProperty('--edge-proximity', (glowEdgeProximity(rect.width, rect.height, x, y) * 100).toFixed(3));
+      card.style.setProperty('--cursor-angle', glowCursorAngle(rect.width, rect.height, x, y).toFixed(3) + 'deg');
+    });
+  });
 }
 
 // ---------- horizontal rail: hover edges, drag, trackpad swipe ----------
