@@ -281,7 +281,7 @@ body {
 .mk-trend-tooltip span { display: block; opacity: .7; font-size: 10px; margin-top: 1px; }
 .mk-trend-days { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10.5px; font-weight: 700; color: var(--naranja-oscuro); opacity: .55; }
 
-@media (max-width: 1000px) {
+@media (max-width: 1000px) and (min-width: 641px) {
   .mk-pd-charts { grid-template-columns: 1fr; }
 }
 
@@ -454,35 +454,54 @@ body {
    reads like a native app screen instead of a shrunk desktop layout ---------- */
 @media (max-width: 640px) {
   .mk-shell { padding: 28px 12px 56px; }
-  .mk-name-first { font-size: 22px; }
-  .mk-name-last { font-size: 40px; }
-  .mk-bio { font-size: 15.5px; }
+  .mk-name-first { font-size: 20px; }
+  .mk-name-last { font-size: 36px; }
+  .mk-bio { font-size: 14.5px; line-height: 1.42; }
+  /* photo stays tall (this one's meant to read as a portrait), everything
+     else below packs into rows instead of one long vertical stack so the
+     page isn't 6 full-width slabs deep */
   .mk-photo-panel { aspect-ratio: 3 / 4; border-radius: 24px; }
-  .mk-info-panel { padding: 22px; border-radius: 24px; }
-  .mk-info-reach { flex-wrap: wrap; }
-  .mk-info-reach-value { font-size: 36px; }
-  .mk-cta { padding: 16px; font-size: 14px; }
-  .mk-collab-wide { padding: 18px; border-radius: 24px; }
-  .mk-card-title { font-size: 20px; }
-  .mk-collab-socials--big { gap: 18px; padding: 11px 18px; }
-  .mk-collab-socials--big .mk-social-btn { font-size: 14px; }
-  .mk-collab-socials--big .mk-social-btn svg { width: 20px; height: 20px; }
-  .mk-platform-detail { padding: 20px; border-radius: 24px; }
-  .mk-pd-window { flex-basis: 100%; text-align: left; }
-  .mk-pd-hero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 12px; }
+  .mk-info-panel { padding: 20px; border-radius: 24px; gap: 14px; }
+  .mk-info-reach { padding: 12px 14px; gap: 12px; }
+  .mk-info-reach-value { font-size: 30px; }
+  .mk-info-reach-label { font-size: 10.5px; }
+  .mk-contact { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; }
+  .mk-contact .mk-cta { grid-column: 1 / -1; }
+  .mk-cta { padding: 15px; font-size: 13.5px; }
+
+  /* the video module: no squeeze, let it breathe taller since it's not
+     competing with other content for width */
+  .mk-collab-wide { padding: 16px; border-radius: 24px; }
+  .mk-card-title { font-size: 19px; }
+  .mk-depth-carousel { min-height: 460px; }
+  .mk-collab-socials--big { gap: 16px; padding: 10px 16px; }
+  .mk-collab-socials--big .mk-social-btn { font-size: 13px; }
+  .mk-collab-socials--big .mk-social-btn svg { width: 18px; height: 18px; }
+
+  .mk-platform-detail { padding: 18px; border-radius: 24px; }
+  .mk-pd-window { flex-basis: 100%; text-align: left; margin-top: -2px; }
+  .mk-pd-hero-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 10px; margin-top: 18px; }
   .mk-pd-hero-row .mk-stat { flex: none; padding-right: 0; }
-  .mk-stat-value { font-size: 32px; }
-  .mk-stat-value small { font-size: 17px; }
-  .mk-stat-label { font-size: 12px; }
-  .mk-pd-delta { font-size: 12px; }
-  .mk-pd-section-title { font-size: 14px; flex-wrap: wrap; }
-  .mk-pd-title-note { font-size: 11.5px; }
-  .mk-barlist-row { grid-template-columns: 84px 1fr 54px; gap: 8px; }
-  .mk-barlist-label { font-size: 13px; }
-  .mk-barlist-value { font-size: 13px; }
-  .mk-barlist-track { height: 10px; }
-  .mk-pd-activity-row { font-size: 13.5px; padding: 13px 14px; }
-  .mk-trend { height: 220px; }
+  .mk-stat-value { font-size: 22px; }
+  .mk-stat-value small { font-size: 13px; }
+  .mk-stat-label { font-size: 10px; line-height: 1.2; }
+  .mk-pd-delta { font-size: 10px; }
+
+  .mk-pd-charts { grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; padding-top: 20px; }
+  .mk-pd-section-title { font-size: 12px; flex-direction: column; align-items: flex-start; gap: 2px; margin-bottom: 10px; }
+  .mk-pd-title-note { font-size: 10px; }
+  .mk-barlist { gap: 9px; }
+  /* label on its own line, track+value sharing the next — grid's 3-across
+     layout is too tight to stay legible once the chart is a half-width column */
+  .mk-barlist-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .mk-barlist-label { flex: 1 0 100%; font-size: 11px; }
+  .mk-barlist-track { flex: 1; }
+  .mk-barlist-value { flex: 0 0 auto; font-size: 11px; text-align: left; }
+  .mk-barlist-track { height: 7px; }
+
+  .mk-pd-activity-row { font-size: 12.5px; padding: 11px 13px; }
+  .mk-trend-wrap { margin-top: 22px; padding-top: 20px; }
+  .mk-trend { height: 200px; }
 }
 </style>
 
