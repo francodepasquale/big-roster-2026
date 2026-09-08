@@ -444,28 +444,45 @@ body {
   .mk-audience-cols { grid-template-columns: 1fr; gap: 20px; }
   /* single-column now: each panel is its own grid row, so align-items:stretch
      has nothing to stretch against — give photo/info a real height instead
-     of the 100% they inherit from the desktop 3-up row */
-  .mk-photo-panel { height: 60vw; max-height: 460px; min-height: 320px; }
+     of the 100% they inherit from the desktop 3-up row. Portrait aspect-ratio
+     (not a short vw-based slice) so the photo stack shows her, not just backdrop */
+  .mk-photo-panel { height: auto; aspect-ratio: 4 / 5; }
   .mk-info-panel { height: auto; }
 }
 
-/* ---------- phones ---------- */
+/* ---------- phones: bigger type, taller photo, tighter outer margins —
+   reads like a native app screen instead of a shrunk desktop layout ---------- */
 @media (max-width: 640px) {
-  .mk-shell { padding: 32px 16px 56px; }
-  .mk-name-last { font-size: 32px; }
-  .mk-photo-panel { height: 78vw; max-height: 420px; }
-  .mk-info-panel { padding: 24px; }
+  .mk-shell { padding: 28px 12px 56px; }
+  .mk-name-first { font-size: 22px; }
+  .mk-name-last { font-size: 40px; }
+  .mk-bio { font-size: 15.5px; }
+  .mk-photo-panel { aspect-ratio: 3 / 4; border-radius: 24px; }
+  .mk-info-panel { padding: 22px; border-radius: 24px; }
   .mk-info-reach { flex-wrap: wrap; }
-  .mk-collab-wide { padding: 20px; }
-  .mk-collab-socials--big { gap: 16px; padding: 10px 16px; }
-  .mk-collab-socials--big .mk-social-btn { font-size: 13px; }
-  .mk-collab-socials--big .mk-social-btn svg { width: 18px; height: 18px; }
-  .mk-platform-detail { padding: 22px; }
-  .mk-pd-hero-row .mk-stat { flex-basis: 45%; }
-  .mk-barlist-row { grid-template-columns: 78px 1fr 48px; gap: 6px; }
-  .mk-barlist-label { font-size: 11px; }
-  .mk-stat-value { font-size: 24px; }
-  .mk-pd-activity-row { font-size: 12px; padding: 10px 12px; }
+  .mk-info-reach-value { font-size: 36px; }
+  .mk-cta { padding: 16px; font-size: 14px; }
+  .mk-collab-wide { padding: 18px; border-radius: 24px; }
+  .mk-card-title { font-size: 20px; }
+  .mk-collab-socials--big { gap: 18px; padding: 11px 18px; }
+  .mk-collab-socials--big .mk-social-btn { font-size: 14px; }
+  .mk-collab-socials--big .mk-social-btn svg { width: 20px; height: 20px; }
+  .mk-platform-detail { padding: 20px; border-radius: 24px; }
+  .mk-pd-window { flex-basis: 100%; text-align: left; }
+  .mk-pd-hero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 12px; }
+  .mk-pd-hero-row .mk-stat { flex: none; padding-right: 0; }
+  .mk-stat-value { font-size: 32px; }
+  .mk-stat-value small { font-size: 17px; }
+  .mk-stat-label { font-size: 12px; }
+  .mk-pd-delta { font-size: 12px; }
+  .mk-pd-section-title { font-size: 14px; flex-wrap: wrap; }
+  .mk-pd-title-note { font-size: 11.5px; }
+  .mk-barlist-row { grid-template-columns: 84px 1fr 54px; gap: 8px; }
+  .mk-barlist-label { font-size: 13px; }
+  .mk-barlist-value { font-size: 13px; }
+  .mk-barlist-track { height: 10px; }
+  .mk-pd-activity-row { font-size: 13.5px; padding: 13px 14px; }
+  .mk-trend { height: 220px; }
 }
 </style>
 
