@@ -1,5 +1,6 @@
 <meta charset="utf-8">
-<title>Agustina Cambra — Media Kit — BIG Roster 2026</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNC41NSwzKSBzY2FsZSgwLjA1NTgpIj48cGF0aCBkPSJNNDA5LjUyLDI0NS42NGwtLjQ2LTIuNThjLTkuMjYtNjAuODgtODAuNjMtOTkuNC0xMzcuMTQtNzEuNzQtODguNDUsMzUuNS0xNTEuMjIsMTIzLjU3LTE1MS4xNCwyMjMuNDUsMCwzLjQ5LS43OCw2Ljk4LTIuNiw5Ljk2LTkuMDMsMTQuOC0zNC45MSwxMS45Mi0zOS42Ny01LjMtLjgxLTIuOTItLjgyLTYtLjI2LTguOTcsMjEuOTQtMTE3Ljg2LDExMi41My0yMTguMDksMjIzLjYyLTI2MC43Ny43MS0uMzEsMS40MS0uNjQsMi4xLTEsNTIuMDUtMzAuODUsMzUuMTYtMTE5LjA4LTI1LjU1LTEyNy41Mi00LjEyLS43Ni04LjM1LTEuMTYtMTIuNjgtMS4xNkgwdjQ2Ni4zM2g0MTAuNDljLS43My05LjE4LDEuNDgtMjA3LjUtLjk3LTIyMC42OVoiIGZpbGw9IiNGRjc2MUUiLz48L2c+PC9zdmc+">
+<title>Dulce Pink — Media Kit — BIG Roster 2026</title>
 <style>
 
 @font-face {
@@ -116,11 +117,8 @@ body {
 }
 
 .mk-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-  grid-template-areas:
-    "ig tt"
-    "audience audience"
-    "paises paises";
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;
+  grid-template-areas: "ig tt yt";
   align-items: start;
 }
 
@@ -130,19 +128,48 @@ body {
 
 /* ---------- profile sidebar ---------- */
 .mk-photo-panel {
-  position: relative; overflow: hidden; height: 100%; min-height: 480px;
-  border-radius: 32px; background: var(--negro);
+  position: relative; overflow: hidden; height: 100%;
+  border-radius: 32px;
 }
 .mk-photo {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: center top; display: block;
 }
+
+/* ---------- Photo Stack (ported from reacticx's Stack Cards: npx reacticx add
+   stack-cards) -- native gesture-handler/reanimated drag swapped for pointer
+   events + a rAF/lerp spring-back, same trick used for the Depth Carousel
+   above. visibleCount:4 default kept; the vertical-fling gesture is loosened
+   to "any direction, biggest axis wins" since a mouse drag isn't a phone
+   fling. */
+.mk-photostack { position: absolute; inset: 0; touch-action: none; outline: none; }
+.mk-photostack-card {
+  position: absolute; inset: 0; border-radius: 32px; overflow: hidden;
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
+}
+.mk-photostack-card img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center top;
+  display: block; pointer-events: none; user-select: none; -webkit-user-select: none;
+}
+.mk-photostack-card.is-front { cursor: grab; }
+.mk-photostack-card.is-front:active { cursor: grabbing; }
+
 .mk-info-panel {
-  height: 100%; min-height: 480px;
+  height: 100%;
   background: var(--blanco); border-radius: 32px; padding: 32px;
-  display: flex; flex-direction: column; gap: 20px;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
   color: var(--naranja-oscuro);
 }
+.mk-info-reach {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--fondo); border-radius: 16px; padding: 16px 18px;
+}
+.mk-info-reach-value {
+  font-weight: 900; font-size: 32px; letter-spacing: -0.03em; color: var(--naranja); line-height: 1; white-space: nowrap;
+}
+.mk-info-reach-value small { font-size: 16px; font-weight: 700; margin-left: 1px; }
+.mk-info-reach-label { font-size: 11.5px; font-weight: 700; color: var(--naranja-oscuro); opacity: .75; line-height: 1.35; }
 .mk-name {
   display: flex; flex-direction: column;
   font-weight: 900; text-transform: uppercase;
@@ -162,7 +189,7 @@ body {
 }
 .mk-bio { color: var(--naranja-oscuro); opacity: .75; font-size: 14.5px; line-height: 1.5; margin-top: 6px; }
 .mk-contact {
-  margin-top: auto; padding-top: 18px; border-top: 1px solid rgba(138,58,22,.15);
+  padding-top: 18px; border-top: 1px solid rgba(138,58,22,.15);
   display: flex; flex-direction: column; gap: 10px;
 }
 .mk-contact-row { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: rgba(138,58,22,.65); }
@@ -193,6 +220,69 @@ body {
 .mk-stat-label {
   font-size: 10.5px; font-weight: 600; color: var(--naranja-oscuro); opacity: .65;
   line-height: 1.25; margin-top: 8px;
+}
+
+/* ---------- platform detail modules (Instagram / TikTok, full real stats) ---------- */
+.mk-platform-detail { grid-column: 1 / -1; }
+.mk-pd-window {
+  margin-left: auto; font-size: 11px; font-weight: 700; color: var(--naranja-oscuro); opacity: .55;
+  text-transform: uppercase; letter-spacing: .03em; text-align: right;
+}
+.mk-pd-hero-row { display: flex; flex-wrap: wrap; gap: 18px 0; margin-top: 24px; }
+.mk-pd-hero-row .mk-stat { flex: 1 1 130px; padding-right: 16px; }
+.mk-pd-delta { display: block; margin-top: 3px; font-size: 10.5px; font-weight: 800; color: #2E8B4F; }
+
+.mk-pd-section-title {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  font-weight: 800; font-size: 12.5px; color: var(--naranja-oscuro); opacity: .75;
+  text-transform: uppercase; letter-spacing: .03em; margin-bottom: 14px;
+}
+.mk-pd-title-note {
+  font-weight: 600; font-size: 10.5px; text-transform: none; letter-spacing: 0; opacity: .75;
+  white-space: nowrap;
+}
+.mk-pd-charts {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 30px; padding-top: 26px; border-top: 1px solid rgba(138,58,22,.1);
+}
+
+.mk-barlist { display: flex; flex-direction: column; gap: 12px; }
+.mk-barlist-row { display: grid; grid-template-columns: 96px 1fr 52px; align-items: center; gap: 10px; }
+.mk-barlist-label { font-size: 12px; font-weight: 700; color: var(--naranja-oscuro); opacity: .75; }
+.mk-barlist-track { height: 8px; border-radius: 999px; background: var(--fondo); overflow: hidden; }
+.mk-barlist-fill { height: 100%; border-radius: 999px; background: var(--naranja); min-width: 3px; }
+.mk-barlist-value { font-size: 12px; font-weight: 800; color: var(--naranja-oscuro); text-align: right; }
+
+.mk-pd-activity-rows { display: flex; flex-direction: column; gap: 10px; }
+.mk-pd-activity-row {
+  display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+  padding: 12px 16px; background: var(--fondo); border-radius: 12px;
+}
+.mk-pd-activity-row span { color: var(--naranja-oscuro); opacity: .75; font-weight: 600; }
+.mk-pd-activity-row b { color: var(--naranja-oscuro); font-weight: 800; }
+
+.mk-trend-wrap {
+  position: relative;
+  margin-top: 30px; padding-top: 26px; border-top: 1px solid rgba(138,58,22,.1);
+}
+.mk-trend { width: 100%; height: 190px; display: block; cursor: crosshair; }
+.mk-trend-grid { stroke: rgba(138,58,22,.12); stroke-width: 1; }
+.mk-trend-area { fill: rgba(243,111,44,.14); }
+.mk-trend-line { fill: none; stroke: var(--naranja); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.mk-trend-dot { fill: var(--blanco); stroke: var(--naranja); stroke-width: 2.5; }
+.mk-trend-crosshair { stroke: var(--naranja-oscuro); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0; }
+.mk-trend-hoverdot { fill: var(--naranja); stroke: var(--blanco); stroke-width: 2; opacity: 0; }
+.mk-trend-tooltip {
+  position: absolute; top: 26px; transform: translate(-50%, -100%); pointer-events: none; opacity: 0;
+  background: var(--negro); color: var(--blanco); padding: 7px 11px; border-radius: 9px;
+  font-size: 11px; white-space: nowrap; transition: opacity .12s ease; z-index: 10;
+}
+.mk-trend-tooltip b { display: block; font-size: 13.5px; font-weight: 800; }
+.mk-trend-tooltip span { display: block; opacity: .7; font-size: 10px; margin-top: 1px; }
+.mk-trend-days { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10.5px; font-weight: 700; color: var(--naranja-oscuro); opacity: .55; }
+
+@media (max-width: 1000px) {
+  .mk-pd-charts { grid-template-columns: 1fr; }
 }
 
 /* ---------- audience card ---------- */
@@ -239,7 +329,9 @@ body {
   background: var(--negro); border-radius: 32px; padding: 28px;
 }
 .mk-collab-wide .mk-card-title { color: var(--blanco); }
-.mk-collab-wide .mk-collab-link { color: var(--naranja-claro); }
+.mk-collab-socials { display: flex; gap: 14px; }
+.mk-social-btn { display: flex; align-items: center; gap: 6px; color: var(--blanco); font-size: 12.5px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; text-decoration: none; opacity: .9; transition: opacity .2s ease; }
+.mk-social-btn:hover { opacity: 1; color: var(--naranja-claro); }
 .mk-collab-head { display: flex; align-items: center; justify-content: space-between; }
 .mk-collab-link { font-size: 12px; font-weight: 700; color: var(--naranja); text-decoration: none; }
 
@@ -295,17 +387,16 @@ body {
 .mk-depth-arrow:active { transform: translateY(-50%) scale(.94); }
 .mk-depth-arrow--prev { left: 8px; }
 .mk-depth-arrow--next { right: 8px; }
-.mk-depth-dots {
-  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 3000;
-  display: flex; gap: 8px; padding: 8px 12px; border-radius: 999px; background: var(--blanco);
+.mk-collab-socials--big {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); z-index: 3000;
+  gap: 24px; padding: 12px 24px; border-radius: 999px; background: rgba(13,13,20,.55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
-.mk-depth-dot {
-  width: 7px; height: 7px; padding: 0; border: none; border-radius: 999px;
-  background: var(--fondo); cursor: pointer; transition: width .25s ease, background .25s ease;
-}
-.mk-depth-dot.is-active { width: 20px; background: var(--naranja); }
+.mk-collab-socials--big .mk-social-btn { font-size: 15px; gap: 8px; }
+.mk-collab-socials--big .mk-social-btn svg { width: 22px; height: 22px; }
 
 .mk-card-title { font-weight: 800; font-size: 18px; color: var(--naranja-oscuro); }
+.mk-pending { font-size: 13px; color: var(--naranja-oscuro); opacity: .55; font-style: italic; padding: 10px 0 4px; }
 
 /* ---------- MAGIC BENTO ---------- */
 /* ported onto every card in the grid from reactbits.dev's MagicBento
@@ -349,10 +440,32 @@ body {
 
 @media (max-width: 1000px) {
   .mk-hero-grid { grid-template-columns: 1fr; }
-  .mk-grid {
-    grid-template-columns: 1fr; grid-template-areas: "ig" "tt" "audience" "paises";
-  }
+  .mk-grid { grid-template-columns: 1fr; }
   .mk-audience-cols { grid-template-columns: 1fr; gap: 20px; }
+  /* single-column now: each panel is its own grid row, so align-items:stretch
+     has nothing to stretch against — give photo/info a real height instead
+     of the 100% they inherit from the desktop 3-up row */
+  .mk-photo-panel { height: 60vw; max-height: 460px; min-height: 320px; }
+  .mk-info-panel { height: auto; }
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 640px) {
+  .mk-shell { padding: 32px 16px 56px; }
+  .mk-name-last { font-size: 32px; }
+  .mk-photo-panel { height: 78vw; max-height: 420px; }
+  .mk-info-panel { padding: 24px; }
+  .mk-info-reach { flex-wrap: wrap; }
+  .mk-collab-wide { padding: 20px; }
+  .mk-collab-socials--big { gap: 16px; padding: 10px 16px; }
+  .mk-collab-socials--big .mk-social-btn { font-size: 13px; }
+  .mk-collab-socials--big .mk-social-btn svg { width: 18px; height: 18px; }
+  .mk-platform-detail { padding: 22px; }
+  .mk-pd-hero-row .mk-stat { flex-basis: 45%; }
+  .mk-barlist-row { grid-template-columns: 78px 1fr 48px; gap: 6px; }
+  .mk-barlist-label { font-size: 11px; }
+  .mk-stat-value { font-size: 24px; }
+  .mk-pd-activity-row { font-size: 12px; padding: 10px 12px; }
 }
 </style>
 
@@ -369,13 +482,13 @@ body {
 </div>
 
 <nav class="mk-nav">
-  <a class="mk-badge" id="navBrand" style="opacity:0" href="index.html" aria-label="BIG Agency"><svg class="" width="22" height="22" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg></a>
+  <a class="mk-badge" id="navBrand" style="opacity:0" href="../index.html" aria-label="BIG Agency"><svg class="" width="22" height="22" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg></a>
 </nav>
 
 <div class="portada-pin-wrap" id="portadaPinWrap">
   <section class="portada" id="portada">
     <div class="section-inner">
-      <h1>Agustina Cambra<span class="lima">Mediakit</span></h1>
+      <h1>Dulce Pink<span class="lima">Mediakit</span></h1>
     </div>
   </section>
 </div>
@@ -383,21 +496,34 @@ body {
 <div class="mk-shell">
   <div class="mk-hero-grid">
     <div class="mk-photo-panel mk-bento">
-      <img class="mk-photo" src="assets/photos/agustina_cambra.webp" alt="Agustina Cambra">
+      <div class="mk-photostack" id="photoStack" tabindex="0" role="group" aria-label="Fotos de Dulce Pink (arrastrá para cambiar)">
+        <div class="mk-photostack-card" data-index="0"><img src="assets/photos/stack_01.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="1"><img src="assets/photos/stack_02.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="2"><img src="assets/photos/stack_03.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="3"><img src="assets/photos/stack_04.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="4"><img src="assets/photos/stack_05.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="5"><img src="assets/photos/stack_06.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="6"><img src="assets/photos/stack_07.webp" alt="Dulce Pink" draggable="false"></div>
+        <div class="mk-photostack-card" data-index="7"><img src="assets/photos/stack_08.webp" alt="Dulce Pink" draggable="false"></div>
+      </div>
     </div>
 
     <div class="mk-info-panel mk-bento">
       <div>
-        <div class="mk-name"><span class="mk-name-first">Agustina</span><span class="mk-name-last">Cambra</span></div>
-        <div class="mk-pilares"><span class="chip">Lifestyle</span><span class="chip">Música</span><span class="chip">Actuación</span><span class="chip">Moda</span></div>
+        <div class="mk-name"><span class="mk-name-first">Dulce</span><span class="mk-name-last">Pink</span></div>
+        <div class="mk-pilares"><span class="chip">Humor</span><span class="chip">Lifestyle</span></div>
       </div>
       <div>
         <div class="mk-vibe-label">Her Vibe</div>
-        <p class="mk-bio">Agustina combina música, actuación y lifestyle para crear contenido auténtico. Su comunidad destaca por su cercanía e interacción, convirtiéndola en una creadora versátil para campañas de moda, belleza, entretenimiento y experiencias.</p>
+        <p class="mk-bio">Dulce combina humor y lifestyle en contenido cercano y espontáneo, construyendo una comunidad activa y participativa. Ideal para campañas que buscan humor auténtico, cercanía real y alto engagement.</p>
+      </div>
+      <div class="mk-info-reach">
+        <div class="mk-info-reach-value">3.5<small>M</small></div>
+        <div class="mk-info-reach-label">Alcance combinado<br>Instagram + TikTok + YouTube</div>
       </div>
       <div class="mk-contact">
         <div class="mk-contact-row">Contacto agencia<b>contacto@bigagency.com.ar</b></div>
-        <div class="mk-contact-row">Handle<b>@agusfc_</b></div>
+        <div class="mk-contact-row">Handle<b>@_dulcepink_</b></div>
         <a class="mk-cta" href="mailto:contacto@bigagency.com.ar">Contactar</a>
       </div>
     </div>
@@ -405,32 +531,31 @@ body {
     <section class="mk-collab-wide mk-bento">
       <div class="mk-collab-head">
         <div class="mk-card-title">Colaboraciones</div>
-        <a class="mk-collab-link" href="#">Ver todas →</a>
       </div>
       <div class="mk-depth-carousel" id="collabDepth" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Colaboraciones">
         <div class="mk-depth-stage" id="collabDepthStage">
-          <div class="mk-depth-card" data-index="0">
-            <video src="assets/videos/collab_01.mp4" autoplay muted loop playsinline></video>
+          <div class="mk-depth-card" data-index="0" data-href="https://www.instagram.com/_dulcepink_/">
+            <video src="../assets/videos/collab_01.mp4" autoplay muted loop playsinline></video>
             <span class="mk-depth-tint"></span>
             <span class="mk-collab-platform"><svg width="15" height="15" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/>
 <path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/>
 </svg></span>
-            <a class="mk-collab-view" href="#" target="_blank" rel="noopener">Ver en Instagram</a>
+            <a class="mk-collab-view" href="https://www.instagram.com/_dulcepink_/" target="_blank" rel="noopener">Ver en Instagram</a>
           </div>
-          <div class="mk-depth-card" data-index="1">
-            <video src="assets/videos/collab_02.mp4" autoplay muted loop playsinline></video>
+          <div class="mk-depth-card" data-index="1" data-href="https://www.instagram.com/_dulcepink_/">
+            <video src="../assets/videos/collab_02.mp4" autoplay muted loop playsinline></video>
             <span class="mk-depth-tint"></span>
             <span class="mk-collab-platform"><svg width="15" height="15" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/>
 <path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/>
 </svg></span>
-            <a class="mk-collab-view" href="#" target="_blank" rel="noopener">Ver en Instagram</a>
+            <a class="mk-collab-view" href="https://www.instagram.com/_dulcepink_/" target="_blank" rel="noopener">Ver en Instagram</a>
           </div>
-          <div class="mk-depth-card" data-index="2">
-            <video src="assets/videos/collab_03.mp4" autoplay muted loop playsinline></video>
+          <div class="mk-depth-card" data-index="2" data-href="https://www.tiktok.com/@_dulcepink_?lang=es-419">
+            <video src="../assets/videos/collab_03.mp4" autoplay muted loop playsinline></video>
             <span class="mk-depth-tint"></span>
             <span class="mk-collab-platform"><svg width="15" height="15" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12.9314 6.22392C12.5107 5.76167 12.2578 5.15893 12.2578 4.5H11.7306C11.8664 5.22023 12.3137 5.83829 12.9314 6.22392Z" fill="white"/>
@@ -438,156 +563,83 @@ body {
 <path d="M14.4249 7.07184V8.54038C13.4026 8.54038 12.4548 8.22626 11.6826 7.69501V11.5387C11.6826 13.4568 10.0559 15.0199 8.05377 15.0199C7.28168 15.0199 6.56283 14.7849 5.97444 14.389C6.63737 15.0709 7.58253 15.5 8.62887 15.5C10.6283 15.5 12.2577 13.9395 12.2577 12.0189V8.17516C13.0298 8.70641 13.9776 9.02051 15 9.02051V7.13061C14.8003 7.13061 14.6086 7.11016 14.4249 7.07184Z" fill="white"/>
 <path d="M11.6826 11.5387V7.69501C12.4548 8.22626 13.4026 8.54038 14.4249 8.54038V7.07184C13.8339 6.95183 13.3148 6.64535 12.9314 6.22392C12.3137 5.83829 11.869 5.22023 11.7279 4.5H10.2849L10.2822 12.0776C10.2503 12.9256 9.52076 13.6075 8.62887 13.6075C8.07507 13.6075 7.58785 13.3444 7.28434 12.946C6.75718 12.6778 6.3951 12.1492 6.3951 11.5387C6.3951 10.6628 7.13791 9.95017 8.05111 9.95017C8.2215 9.95017 8.38657 9.97828 8.541 10.0243V8.54293C6.58147 8.5838 5 10.1264 5 12.0189C5 12.9332 5.37008 13.7658 5.97444 14.389C6.56283 14.7849 7.28168 15.0199 8.05377 15.0199C10.0532 15.0199 11.6826 13.4568 11.6826 11.5387Z" fill="white"/>
 </svg></span>
-            <a class="mk-collab-view" href="#" target="_blank" rel="noopener">Ver en TikTok</a>
+            <a class="mk-collab-view" href="https://www.tiktok.com/@_dulcepink_?lang=es-419" target="_blank" rel="noopener">Ver en TikTok</a>
           </div>
         </div>
         <button type="button" class="mk-depth-arrow mk-depth-arrow--prev" aria-label="Anterior">‹</button>
         <button type="button" class="mk-depth-arrow mk-depth-arrow--next" aria-label="Siguiente">›</button>
-        <div class="mk-depth-dots">
-          <button class="mk-depth-dot is-active" aria-label="Ir al video 1"></button>
-          <button class="mk-depth-dot" aria-label="Ir al video 2"></button>
-          <button class="mk-depth-dot" aria-label="Ir al video 3"></button>
+        <div class="mk-collab-socials mk-collab-socials--big">
+          <a class="mk-social-btn" href="https://www.instagram.com/_dulcepink_/" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="7" fill="#FFFFFF" fill-opacity="0.12"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="#FFFFFF"/><path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="#FFFFFF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="#FFFFFF"/></svg><span>1 M</span></a>
+          <a class="mk-social-btn" href="https://www.tiktok.com/@_dulcepink_?lang=es-419" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="7" fill="#FFFFFF" fill-opacity="0.12"/><path d="M12.9314 6.22392C12.5107 5.76167 12.2578 5.15893 12.2578 4.5H11.7306C11.8664 5.22023 12.3137 5.83829 12.9314 6.22392Z" fill="#FFFFFF"/><path d="M8.05382 9.94764C7.14061 9.94764 6.3978 10.6602 6.3978 11.5362C6.3978 12.1467 6.75989 12.6778 7.28704 12.9434C7.09003 12.683 6.97288 12.3637 6.97288 12.0164C6.97288 11.1404 7.71569 10.4278 8.62891 10.4278C8.7993 10.4278 8.96435 10.4558 9.11879 10.5018V8.57106C8.95902 8.5506 8.79663 8.53782 8.62891 8.53782C8.59961 8.53782 8.57299 8.54038 8.5437 8.54038V10.0217C8.38662 9.97569 8.22421 9.94764 8.05382 9.94764Z" fill="#FFFFFF"/><path d="M14.4249 7.07184V8.54038C13.4026 8.54038 12.4548 8.22626 11.6826 7.69501V11.5387C11.6826 13.4568 10.0559 15.0199 8.05377 15.0199C7.28168 15.0199 6.56283 14.7849 5.97444 14.389C6.63737 15.0709 7.58253 15.5 8.62887 15.5C10.6283 15.5 12.2577 13.9395 12.2577 12.0189V8.17516C13.0298 8.70641 13.9776 9.02051 15 9.02051V7.13061C14.8003 7.13061 14.6086 7.11016 14.4249 7.07184Z" fill="#FFFFFF"/><path d="M11.6826 11.5387V7.69501C12.4548 8.22626 13.4026 8.54038 14.4249 8.54038V7.07184C13.8339 6.95183 13.3148 6.64535 12.9314 6.22392C12.3137 5.83829 11.869 5.22023 11.7279 4.5H10.2849L10.2822 12.0776C10.2503 12.9256 9.52076 13.6075 8.62887 13.6075C8.07507 13.6075 7.58785 13.3444 7.28434 12.946C6.75718 12.6778 6.3951 12.1492 6.3951 11.5387C6.3951 10.6628 7.13791 9.95017 8.05111 9.95017C8.2215 9.95017 8.38657 9.97828 8.541 10.0243V8.54293C6.58147 8.5838 5 10.1264 5 12.0189C5 12.9332 5.37008 13.7658 5.97444 14.389C6.56283 14.7849 7.28168 15.0199 8.05377 15.0199C10.0532 15.0199 11.6826 13.4568 11.6826 11.5387Z" fill="#FFFFFF"/></svg><span>2.5 M</span></a>
+          <a class="mk-social-btn" href="https://www.youtube.com/@Dulcepink22" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="7" fill="#FFFFFF" fill-opacity="0.12"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7,5 H13 A3,3 0 0 1 16,8 V12 A3,3 0 0 1 13,15 H7 A3,3 0 0 1 4,12 V8 A3,3 0 0 1 7,5 Z M9,8.3 L9,11.7 L12.3,10 Z" fill="#FFFFFF"/></svg><span>9.16 K</span></a>
         </div>
       </div>
     </section>
   </div>
 
   <div class="mk-grid">
-    <article class="mk-card mk-platform mk-bento">
+    <article class="mk-card mk-platform-detail mk-bento">
       <div class="mk-platform-head">
-        <div class="mk-mono">IG</div>
+        <div class="mk-mono"><svg width="18" height="18" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/><path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/></svg></div>
         <div class="mk-platform-name">Instagram</div>
+        <div class="mk-pd-window">Últimos 30 días</div>
       </div>
-      <div class="mk-platform-stats">
-        <div class="mk-stat"><div class="mk-stat-value">35.4<small>K</small></div><div class="mk-stat-label">Seguidores</div></div>
-        <div class="mk-stat"><div class="mk-stat-value">4.8<small>%</small></div><div class="mk-stat-label">Engagement</div></div>
-        <div class="mk-stat"><div class="mk-stat-value">128<small>K</small></div><div class="mk-stat-label">Alcance · 30 días</div></div>
+      <div class="mk-pd-hero-row">
+        <div class="mk-stat"><div class="mk-stat-value">1<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
+        <div class="mk-stat"><div class="mk-stat-value">2.68<small>M</small></div><div class="mk-stat-label">Alcance (espectadores)</div></div>
+        <div class="mk-stat"><div class="mk-stat-value">36.1<small>M</small></div><div class="mk-stat-label">Reproducciones</div></div>
+        <div class="mk-stat"><div class="mk-stat-value">+5.3<small>K</small></div><div class="mk-stat-label">Seguidores netos</div></div>
+        <div class="mk-stat"><div class="mk-stat-value">340<small>K</small></div><div class="mk-stat-label">Visitas al perfil</div></div>
+      </div>
+
+      <div class="mk-pd-charts">
+        <div>
+          <div class="mk-pd-section-title">Visualizaciones por tipo de contenido</div>
+          <div class="mk-barlist"><div class="mk-barlist-row" title="21.000.000 visualizaciones"><span class="mk-barlist-label">Reels</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:100%"></div></div><span class="mk-barlist-value">21 M</span></div><div class="mk-barlist-row" title="14.000.000 visualizaciones"><span class="mk-barlist-label">Historias</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:66.7%"></div></div><span class="mk-barlist-value">14 M</span></div><div class="mk-barlist-row" title="34.000 visualizaciones"><span class="mk-barlist-label">Publicaciones</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.16%"></div></div><span class="mk-barlist-value">34 K</span></div></div>
+        </div>
+        <div>
+          <div class="mk-pd-section-title">Interacciones por tipo de contenido<span class="mk-pd-title-note">68.7% seguidores · 31.3% no seguidores</span></div>
+          <div class="mk-barlist"><div class="mk-barlist-row" title="991.000 interacciones"><span class="mk-barlist-label">Reels</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:100%"></div></div><span class="mk-barlist-value">991 K</span></div><div class="mk-barlist-row" title="170.000 interacciones"><span class="mk-barlist-label">Historias</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:17.2%"></div></div><span class="mk-barlist-value">170 K</span></div><div class="mk-barlist-row" title="146 interacciones"><span class="mk-barlist-label">Publicaciones</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.015%"></div></div><span class="mk-barlist-value">146</span></div></div>
+        </div>
+      </div>
+
+      <div class="mk-pd-charts" style="margin-top:26px; padding-top:0; border-top:none; grid-template-columns:1fr;">
+        <div>
+          <div class="mk-pd-section-title">Actividad del perfil</div>
+          <div class="mk-pd-activity-rows">
+            <div class="mk-pd-activity-row"><span>Visitas al perfil</span><b>340 K</b></div>
+            <div class="mk-pd-activity-row"><span>Toques en el enlace de la presentación</span><b>1.3 K</b></div>          </div>
+        </div>
       </div>
     </article>
-    <article class="mk-card mk-platform mk-bento">
+    <article class="mk-card mk-platform-detail mk-bento">
       <div class="mk-platform-head">
-        <div class="mk-mono">TT</div>
+        <div class="mk-mono"><svg width="18" height="18" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9314 6.22392C12.5107 5.76167 12.2578 5.15893 12.2578 4.5H11.7306C11.8664 5.22023 12.3137 5.83829 12.9314 6.22392Z" fill="white"/><path d="M8.05382 9.94764C7.14061 9.94764 6.3978 10.6602 6.3978 11.5362C6.3978 12.1467 6.75989 12.6778 7.28704 12.9434C7.09003 12.683 6.97288 12.3637 6.97288 12.0164C6.97288 11.1404 7.71569 10.4278 8.62891 10.4278C8.7993 10.4278 8.96435 10.4558 9.11879 10.5018V8.57106C8.95902 8.5506 8.79663 8.53782 8.62891 8.53782C8.59961 8.53782 8.57299 8.54038 8.5437 8.54038V10.0217C8.38662 9.97569 8.22421 9.94764 8.05382 9.94764Z" fill="white"/><path d="M14.4249 7.07184V8.54038C13.4026 8.54038 12.4548 8.22626 11.6826 7.69501V11.5387C11.6826 13.4568 10.0559 15.0199 8.05377 15.0199C7.28168 15.0199 6.56283 14.7849 5.97444 14.389C6.63737 15.0709 7.58253 15.5 8.62887 15.5C10.6283 15.5 12.2577 13.9395 12.2577 12.0189V8.17516C13.0298 8.70641 13.9776 9.02051 15 9.02051V7.13061C14.8003 7.13061 14.6086 7.11016 14.4249 7.07184Z" fill="white"/><path d="M11.6826 11.5387V7.69501C12.4548 8.22626 13.4026 8.54038 14.4249 8.54038V7.07184C13.8339 6.95183 13.3148 6.64535 12.9314 6.22392C12.3137 5.83829 11.869 5.22023 11.7279 4.5H10.2849L10.2822 12.0776C10.2503 12.9256 9.52076 13.6075 8.62887 13.6075C8.07507 13.6075 7.58785 13.3444 7.28434 12.946C6.75718 12.6778 6.3951 12.1492 6.3951 11.5387C6.3951 10.6628 7.13791 9.95017 8.05111 9.95017C8.2215 9.95017 8.38657 9.97828 8.541 10.0243V8.54293C6.58147 8.5838 5 10.1264 5 12.0189C5 12.9332 5.37008 13.7658 5.97444 14.389C6.56283 14.7849 7.28168 15.0199 8.05377 15.0199C10.0532 15.0199 11.6826 13.4568 11.6826 11.5387Z" fill="white"/></svg></div>
         <div class="mk-platform-name">TikTok</div>
+        <div class="mk-pd-window">Últimos 7 días · 31 ago – 6 sep</div>
       </div>
-      <div class="mk-platform-stats">
-        <div class="mk-stat"><div class="mk-stat-value">2<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
-        <div class="mk-stat"><div class="mk-stat-value">7.2<small>%</small></div><div class="mk-stat-label">Engagement</div></div>
-        <div class="mk-stat"><div class="mk-stat-value">540<small>K</small></div><div class="mk-stat-label">Alcance · 30 días</div></div>
+      <div class="mk-pd-hero-row">
+        <div class="mk-stat"><div class="mk-stat-value">2.5<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
+        <div class="mk-stat"><div class="mk-stat-value">6.8<small>M</small></div><div class="mk-stat-label">Visualizaciones<span class="mk-pd-delta">↑ 14.1%</span></div></div>
+        <div class="mk-stat"><div class="mk-stat-value">346.4<small>K</small></div><div class="mk-stat-label">Visitas al perfil<span class="mk-pd-delta">↑ 262.4%</span></div></div>
+        <div class="mk-stat"><div class="mk-stat-value">877.4<small>K</small></div><div class="mk-stat-label">Me gusta<span class="mk-pd-delta">↑ 33%</span></div></div>
+        <div class="mk-stat"><div class="mk-stat-value">3.8<small>K</small></div><div class="mk-stat-label">Comentarios<span class="mk-pd-delta">↑ 30.9%</span></div></div>
+        <div class="mk-stat"><div class="mk-stat-value">9.5<small>K</small></div><div class="mk-stat-label">Compartidos<span class="mk-pd-delta">↑ 49.7%</span></div></div>
+      </div>
+
+      <div class="mk-trend-wrap">
+        <div class="mk-pd-section-title">Visualizaciones por día</div>
+        <svg id="ttTrend" class="mk-trend" viewBox="0 0 640 190" role="img" aria-label="Visualizaciones diarias del 31 de agosto al 6 de septiembre"></svg>
+        <div class="mk-trend-days"><span>31 ago</span><span>6 sep</span></div>
+      </div>
+
+      <div class="mk-pd-charts" style="grid-template-columns:1fr;">
+        <div>
+          <div class="mk-pd-section-title">Fuente de tráfico</div>
+          <div class="mk-barlist"><div class="mk-barlist-row" title="85.8%"><span class="mk-barlist-label">Para ti</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:85.8%"></div></div><span class="mk-barlist-value">85.8%</span></div><div class="mk-barlist-row" title="9.9%"><span class="mk-barlist-label">Perfil personal</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:9.9%"></div></div><span class="mk-barlist-value">9.9%</span></div><div class="mk-barlist-row" title="2.4%"><span class="mk-barlist-label">Buscar</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:2.4%"></div></div><span class="mk-barlist-value">2.4%</span></div><div class="mk-barlist-row" title="1.9%"><span class="mk-barlist-label">Siguiendo</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:1.9%"></div></div><span class="mk-barlist-value">1.9%</span></div><div class="mk-barlist-row" title="0.0%"><span class="mk-barlist-label">Sonido</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0%"></div></div><span class="mk-barlist-value">0.0%</span></div></div>
+        </div>
       </div>
     </article>
-
-    <section class="mk-card mk-audience mk-bento">
-      <div class="mk-audience-headrow">
-        <div class="mk-audience-title">Audiencia</div>
-        <div class="mk-toggle"><button class="mk-toggle-btn active" data-platform="instagram">Instagram</button><button class="mk-toggle-btn" data-platform="tiktok">TikTok</button></div>
-      </div>
-      
-    <div class="mk-audience-panel" data-platform-panel="instagram" >
-      <div class="mk-audience-cols">
-        <div>
-          <div class="mk-audience-subhead">Género</div>
-          
-    <div class="mk-gender">
-      <div class="mk-gender-labels"><span>Mujeres</span><span>Hombres</span></div>
-      <div class="mk-gender-bar">
-        <div class="mk-gender-seg mk-seg-m" style="width:60%"></div>
-        <div class="mk-gender-seg mk-seg-h" style="width:40%"></div>
-      </div>
-      <div class="mk-gender-values"><span>60%</span><span>40%</span></div>
-    </div>
-        </div>
-        <div>
-          <div class="mk-audience-subhead">Edad</div>
-          <div class="mk-age">
-      <div class="mk-age-row">
-        <span class="mk-age-label">18-24</span>
-        <div class="mk-age-track"><div class="mk-age-fill" style="width:38%"></div></div>
-        <span class="mk-age-value">38%</span>
-      </div>
-      <div class="mk-age-row">
-        <span class="mk-age-label">25-34</span>
-        <div class="mk-age-track"><div class="mk-age-fill" style="width:34%"></div></div>
-        <span class="mk-age-value">34%</span>
-      </div>
-      <div class="mk-age-row">
-        <span class="mk-age-label">35+</span>
-        <div class="mk-age-track"><div class="mk-age-fill" style="width:28%"></div></div>
-        <span class="mk-age-value">28%</span>
-      </div></div>
-        </div>
-      </div>
-    </div>
-    <div class="mk-audience-panel" data-platform-panel="tiktok" style="display:none">
-      <div class="mk-audience-cols">
-        <div>
-          <div class="mk-audience-subhead">Género</div>
-          
-    <div class="mk-gender">
-      <div class="mk-gender-labels"><span>Mujeres</span><span>Hombres</span></div>
-      <div class="mk-gender-bar">
-        <div class="mk-gender-seg mk-seg-m" style="width:70%"></div>
-        <div class="mk-gender-seg mk-seg-h" style="width:30%"></div>
-      </div>
-      <div class="mk-gender-values"><span>70%</span><span>30%</span></div>
-    </div>
-        </div>
-        <div>
-          <div class="mk-audience-subhead">Edad</div>
-          <div class="mk-age">
-      <div class="mk-age-row">
-        <span class="mk-age-label">18-24</span>
-        <div class="mk-age-track"><div class="mk-age-fill" style="width:45%"></div></div>
-        <span class="mk-age-value">45%</span>
-      </div>
-      <div class="mk-age-row">
-        <span class="mk-age-label">25-34</span>
-        <div class="mk-age-track"><div class="mk-age-fill" style="width:33%"></div></div>
-        <span class="mk-age-value">33%</span>
-      </div>
-      <div class="mk-age-row">
-        <span class="mk-age-label">35+</span>
-        <div class="mk-age-track"><div class="mk-age-fill" style="width:22%"></div></div>
-        <span class="mk-age-value">22%</span>
-      </div></div>
-        </div>
-      </div>
-    </div>
-    </section>
-
-    <section class="mk-card mk-countries mk-bento">
-      <div class="mk-card-title">Top países</div>
-      
-      <div class="mk-country-row">
-        <span class="mk-country-flag">🇦🇷</span>
-        <span class="mk-country-name">Argentina</span>
-        <div class="mk-country-track"><div class="mk-country-fill" style="width:42%"></div></div>
-        <span class="mk-country-value">42%</span>
-      </div>
-      <div class="mk-country-row">
-        <span class="mk-country-flag">🇨🇱</span>
-        <span class="mk-country-name">Chile</span>
-        <div class="mk-country-track"><div class="mk-country-fill" style="width:15%"></div></div>
-        <span class="mk-country-value">15%</span>
-      </div>
-      <div class="mk-country-row">
-        <span class="mk-country-flag">🇺🇾</span>
-        <span class="mk-country-name">Uruguay</span>
-        <div class="mk-country-track"><div class="mk-country-fill" style="width:11%"></div></div>
-        <span class="mk-country-value">11%</span>
-      </div>
-      <div class="mk-country-row">
-        <span class="mk-country-flag">🇲🇽</span>
-        <span class="mk-country-name">México</span>
-        <div class="mk-country-track"><div class="mk-country-fill" style="width:9%"></div></div>
-        <span class="mk-country-value">9%</span>
-      </div>
-      <div class="mk-country-row">
-        <span class="mk-country-flag">🇪🇸</span>
-        <span class="mk-country-name">España</span>
-        <div class="mk-country-track"><div class="mk-country-fill" style="width:8%"></div></div>
-        <span class="mk-country-value">8%</span>
-      </div>
-    </section>
   </div>
 </div>
 
@@ -847,11 +899,6 @@ if (REDUCE_MOTION) {
       const tint = card.querySelector('.mk-depth-tint');
       if (tint) tint.style.opacity = clamp(back * CFG.falloff * 1.25, 0, 0.86).toFixed(3);
     });
-    updateDots();
-  }
-
-  function updateDots() {
-    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === focus));
   }
 
   function tweenTo(target, animate) {
@@ -952,8 +999,6 @@ if (REDUCE_MOTION) {
 
   root.querySelector('.mk-depth-arrow--prev').addEventListener('click', () => navigateBy(-1));
   root.querySelector('.mk-depth-arrow--next').addEventListener('click', () => navigateBy(1));
-  const dots = Array.from(root.querySelectorAll('.mk-depth-dot'));
-  dots.forEach((dot, i) => dot.addEventListener('click', () => setFocus(i, true)));
 
   // autoplay, paused on hover/focus
   if (!REDUCE_MOTION && n > 1) {
@@ -969,5 +1014,241 @@ if (REDUCE_MOTION) {
   }
 
   layout(pos);
+})();
+
+// ---------- Photo Stack (ported from reacticx's Stack Cards: npx reacticx add
+// stack-cards) -- native gesture-handler/reanimated drag swapped for pointer
+// events + CSS transitions, same porting trick used above. visibleCount:4
+// kept from the component's default; the "vertical fling" gesture is loosened
+// to any direction (biggest-distance wins) since a mouse drag isn't a phone
+// fling, and a plain click/tap on the top card also advances the stack. ----------
+(function () {
+  const root = document.getElementById('photoStack');
+  if (!root) return;
+  const cards = Array.from(root.querySelectorAll('.mk-photostack-card'));
+  const n = cards.length;
+  if (!n) return;
+
+  const VISIBLE = 4;
+  const OFFSET_Y = 10;
+  const SCALE_STEP = 0.025;
+  const FADE_STEP = 0.16;
+  const THROW_DIST = 900;
+  const DRAG_THRESHOLD = 90;
+  const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+  let pos = 0;
+  let drag = null;
+  let flying = null;
+
+  function rankOf(i) {
+    const r = i - pos;
+    return ((r % n) + n) % n;
+  }
+
+  function frontCard() {
+    return cards.find(c => rankOf(Number(c.dataset.index)) === 0);
+  }
+
+  function render() {
+    cards.forEach((card, i) => {
+      if (card === flying || (drag && drag.active && card === drag.card)) return;
+      const r = rankOf(i);
+      card.style.zIndex = String(n - r);
+      card.classList.toggle('is-front', r === 0);
+      card.style.transition = REDUCE_MOTION ? 'none'
+        : 'transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s ease, filter .35s ease';
+      const shown = r < VISIBLE;
+      card.style.opacity = shown ? String(Math.max(0, 1 - r * FADE_STEP)) : '0';
+      card.style.pointerEvents = r === 0 ? 'auto' : 'none';
+      card.style.transform = `translateY(${Math.min(r, VISIBLE) * OFFSET_Y}px) scale(${1 - Math.min(r, VISIBLE) * SCALE_STEP})`;
+      card.style.filter = `brightness(${Math.max(0.55, 1 - r * 0.12)})`;
+    });
+  }
+
+  root.addEventListener('pointerdown', (e) => {
+    if (flying || !e.isPrimary) return;
+    const card = frontCard();
+    if (!card) return;
+    card.setPointerCapture(e.pointerId);
+    card.style.transition = 'none';
+    drag = { card, id: e.pointerId, x0: e.clientX, y0: e.clientY, x: 0, y: 0, active: true, moved: false };
+  });
+
+  root.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    drag.x = e.clientX - drag.x0;
+    drag.y = e.clientY - drag.y0;
+    if (!drag.moved && Math.hypot(drag.x, drag.y) > 4) drag.moved = true;
+    const rot = clamp(drag.x / 18, -18, 18);
+    drag.card.style.transform = `translate(${drag.x}px, ${drag.y}px) rotate(${rot}deg)`;
+  });
+
+  function endDrag(e) {
+    if (!drag) return;
+    const { card, x, y, moved } = drag;
+    drag = null;
+    if (!moved) { advance(1); return; }
+    const dist = Math.hypot(x, y);
+    if (dist > DRAG_THRESHOLD) {
+      const angle = Math.atan2(y, x);
+      const tx = Math.cos(angle) * THROW_DIST;
+      const ty = Math.sin(angle) * THROW_DIST;
+      const rot = clamp(x / 18, -24, 24);
+      flying = card;
+      card.style.transition = REDUCE_MOTION ? 'none' : 'transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease';
+      card.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg)`;
+      card.style.opacity = '0';
+      pos = (pos + 1) % n;
+      render();
+      setTimeout(() => {
+        card.style.transition = 'none';
+        flying = null;
+        render();
+      }, REDUCE_MOTION ? 0 : 420);
+    } else {
+      card.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)';
+      render();
+    }
+  }
+  root.addEventListener('pointerup', endDrag);
+  root.addEventListener('pointercancel', endDrag);
+
+  function advance(step) {
+    if (flying) return;
+    pos = ((pos + step) % n + n) % n;
+    render();
+  }
+
+  root.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); advance(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); advance(-1); }
+  });
+
+  if (!REDUCE_MOTION && n > 1) {
+    let hovered = false, focused = false, timer = null;
+    const AUTOPLAY_DELAY = 4000;
+    function stop() { if (timer) clearInterval(timer); timer = null; }
+    function start() { stop(); timer = setInterval(() => { if (!hovered && !focused && !drag) advance(1); }, AUTOPLAY_DELAY); }
+    root.addEventListener('mouseenter', () => { hovered = true; });
+    root.addEventListener('mouseleave', () => { hovered = false; });
+    root.addEventListener('focusin', () => { focused = true; });
+    root.addEventListener('focusout', () => { focused = false; });
+    start();
+  }
+
+  render();
+})();
+
+// ---------- TikTok trend chart: built from data (not a static image), with a
+// hover crosshair + tooltip so the daily figure reads exactly instead of by eye.
+// The viewBox is re-matched to the SVG's own rendered pixel size on every
+// resize (instead of a fixed abstract 640x190 box stretched with
+// preserveAspectRatio="none"), so circles stay circles instead of turning
+// into ellipses when the card is much wider than it is tall. ----------
+(function () {
+  const svg = document.getElementById('ttTrend');
+  if (!svg) return;
+  const wrap = svg.parentElement;
+
+  // approximate daily visualizaciones read off the TikTok Analytics sparkline
+  // (31 ago - 6 sep), scaled so the 7-day sum matches the real 6.8M total stat
+  const data = [
+    { day: '31 ago', value: 735000 },
+    { day: '1 sep', value: 540000 },
+    { day: '2 sep', value: 1005000 },
+    { day: '3 sep', value: 580000 },
+    { day: '4 sep', value: 620000 },
+    { day: '5 sep', value: 1160000 },
+    { day: '6 sep', value: 2165000 },
+  ];
+
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function fmt(v) {
+    return v >= 1000000 ? (v / 1000000).toFixed(2).replace(/0$/, '').replace(/\.$/, '') + ' M'
+      : Math.round(v / 1000) + ' K';
+  }
+
+  let W = 640, H = 190, pts = [];
+  let crosshair, hoverDot, tooltip;
+
+  function build(w, h) {
+    W = w; H = h;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = '';
+
+    const PAD_L = 4, PAD_R = 4, PAD_T = 20, PAD_B = 20;
+    const plotW = W - PAD_L - PAD_R, plotH = H - PAD_T - PAD_B;
+    const maxV = Math.max(...data.map(d => d.value)) * 1.15;
+    const xAt = i => PAD_L + (i / (data.length - 1)) * plotW;
+    const yAt = v => PAD_T + plotH - (v / maxV) * plotH;
+    pts = data.map((d, i) => [xAt(i), yAt(d.value)]);
+
+    [0.18, 0.52, 0.86].forEach(f => {
+      const gy = (PAD_T + plotH * f).toFixed(1);
+      svg.appendChild(el('line', { class: 'mk-trend-grid', x1: PAD_L, y1: gy, x2: W - PAD_R, y2: gy }));
+    });
+
+    const linePath = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const areaPath = linePath
+      + ` L${pts[pts.length - 1][0].toFixed(1)},${(PAD_T + plotH).toFixed(1)}`
+      + ` L${pts[0][0].toFixed(1)},${(PAD_T + plotH).toFixed(1)} Z`;
+    svg.appendChild(el('path', { class: 'mk-trend-area', d: areaPath }));
+    svg.appendChild(el('path', { class: 'mk-trend-line', d: linePath }));
+
+    pts.forEach((p, i) => {
+      svg.appendChild(el('circle', {
+        class: 'mk-trend-dot', cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: i === pts.length - 1 ? 5 : 4,
+      }));
+    });
+
+    crosshair = el('line', { class: 'mk-trend-crosshair', x1: 0, y1: PAD_T, x2: 0, y2: PAD_T + plotH });
+    hoverDot = el('circle', { class: 'mk-trend-hoverdot', r: 6 });
+    svg.appendChild(crosshair);
+    svg.appendChild(hoverDot);
+  }
+
+  tooltip = document.createElement('div');
+  tooltip.className = 'mk-trend-tooltip';
+  wrap.appendChild(tooltip);
+
+  function showAt(i) {
+    const [px, py] = pts[i];
+    crosshair.setAttribute('x1', px); crosshair.setAttribute('x2', px);
+    crosshair.style.opacity = 1;
+    hoverDot.setAttribute('cx', px); hoverDot.setAttribute('cy', py);
+    hoverDot.style.opacity = 1;
+    tooltip.style.left = (px / W * 100) + '%';
+    tooltip.style.opacity = 1;
+    tooltip.innerHTML = `<b>${fmt(data[i].value)}</b><span>${data[i].day}</span>`;
+  }
+  function hide() {
+    crosshair.style.opacity = 0;
+    hoverDot.style.opacity = 0;
+    tooltip.style.opacity = 0;
+  }
+  function nearestIndex(clientX) {
+    const rect = svg.getBoundingClientRect();
+    const relX = (clientX - rect.left) / rect.width * W;
+    let best = 0, bestDist = Infinity;
+    pts.forEach((p, i) => { const d = Math.abs(p[0] - relX); if (d < bestDist) { bestDist = d; best = i; } });
+    return best;
+  }
+
+  svg.addEventListener('pointermove', (e) => showAt(nearestIndex(e.clientX)));
+  svg.addEventListener('pointerdown', (e) => showAt(nearestIndex(e.clientX)));
+  svg.addEventListener('pointerleave', hide);
+
+  const ro = new ResizeObserver(entries => {
+    const { width, height } = entries[0].contentRect;
+    if (width > 0 && height > 0) build(width, height);
+  });
+  ro.observe(svg);
 })();
 </script>
