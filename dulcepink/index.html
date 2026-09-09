@@ -158,6 +158,11 @@ body {
 }
 .mk-photostack-card.is-front { cursor: grab; }
 .mk-photostack-card.is-front:active { cursor: grabbing; }
+.mk-photostack-counter {
+  position: absolute; z-index: 50; bottom: 14px; right: 14px; pointer-events: none;
+  background: rgba(13,13,20,.55); color: var(--blanco); font-size: 11.5px; font-weight: 700;
+  padding: 5px 10px; border-radius: 999px; letter-spacing: .02em;
+}
 
 .mk-info-panel {
   height: 100%;
@@ -225,12 +230,22 @@ body {
   font-size: 10.5px; font-weight: 600; color: var(--naranja-oscuro); opacity: .65;
   line-height: 1.25; margin-top: 8px;
 }
+/* Seguidores is the one number people actually scan for first — give it the
+   hero treatment so it reads before the rest of the row, not at the same
+   weight as every other metric */
+.mk-stat--hero .mk-stat-value { font-size: 40px; }
+.mk-stat--hero .mk-stat-value small { font-size: 19px; }
+.mk-stat--hero .mk-stat-label { opacity: .85; font-weight: 800; }
 
 /* ---------- platform detail modules (Instagram / TikTok, full real stats) ---------- */
 .mk-platform-detail { grid-column: 1 / -1; }
 .mk-pd-window {
   margin-left: auto; font-size: 11px; font-weight: 700; color: var(--naranja-oscuro); opacity: .55;
   text-transform: uppercase; letter-spacing: .03em; text-align: right;
+}
+.mk-pd-updated {
+  display: block; margin-top: 2px; font-size: 10px; font-weight: 600;
+  text-transform: none; letter-spacing: 0; opacity: .85;
 }
 .mk-pd-hero-row { display: flex; flex-wrap: wrap; gap: 18px 0; margin-top: 24px; }
 .mk-pd-hero-row .mk-stat { flex: 1 1 130px; padding-right: 16px; }
@@ -289,43 +304,6 @@ body {
   .mk-pd-charts { grid-template-columns: 1fr; }
 }
 
-/* ---------- audience card ---------- */
-.mk-audience { grid-area: audience; }
-.mk-audience-headrow { display: flex; align-items: center; justify-content: space-between; }
-.mk-audience-title { font-weight: 800; font-size: 18px; color: var(--naranja-oscuro); }
-.mk-toggle { display: flex; gap: 4px; background: var(--fondo); border-radius: 999px; padding: 4px; }
-.mk-toggle-btn {
-  border: none; background: none; cursor: pointer; border-radius: 999px;
-  font-family: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em;
-  color: var(--naranja); padding: 7px 14px; transition: background .25s ease, color .25s ease;
-}
-.mk-toggle-btn.active { background: var(--naranja); color: var(--blanco); }
-.mk-audience-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 22px; }
-.mk-audience-subhead { font-weight: 700; font-size: 13px; color: var(--naranja-oscuro); opacity: .7; margin-bottom: 12px; }
-
-.mk-gender-labels, .mk-gender-values {
-  display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: var(--naranja-oscuro);
-}
-.mk-gender-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 6px 0; }
-.mk-seg-m { background: var(--naranja); }
-.mk-seg-h { background: var(--naranja-oscuro); }
-
-.mk-age-row { display: grid; grid-template-columns: 48px 1fr 40px; align-items: center; gap: 10px; margin-top: 10px; }
-.mk-age-label { font-size: 12px; font-weight: 700; color: var(--naranja-oscuro); opacity: .7; }
-.mk-age-track { height: 8px; border-radius: 999px; background: var(--fondo); overflow: hidden; }
-.mk-age-fill { height: 100%; background: var(--naranja); border-radius: 999px; }
-.mk-age-value { font-size: 12.5px; font-weight: 800; color: var(--negro); text-align: right; }
-
-/* ---------- countries ---------- */
-.mk-countries { grid-area: paises; }
-.mk-country-row { display: grid; grid-template-columns: 22px 84px 1fr 36px; align-items: center; gap: 10px; margin-top: 12px; }
-.mk-country-row:first-of-type { margin-top: 18px; }
-.mk-country-flag { font-size: 16px; }
-.mk-country-name { font-size: 12.5px; font-weight: 700; color: var(--naranja-oscuro); }
-.mk-country-track { height: 8px; border-radius: 999px; background: var(--fondo); overflow: hidden; }
-.mk-country-fill { height: 100%; background: var(--naranja); border-radius: 999px; }
-.mk-country-value { font-size: 12.5px; font-weight: 800; color: var(--negro); text-align: right; }
-
 /* ---------- collaborations showcase ---------- */
 /* full-width, outside the stats grid so the videos can run big. */
 .mk-collab-wide {
@@ -374,12 +352,6 @@ body {
   pointer-events: none;
 }
 .mk-collab-platform svg { width: 16px; height: 16px; }
-.mk-collab-view {
-  position: absolute; left: 0; right: 0; bottom: 0; padding: 14px;
-  background: linear-gradient(to top, rgba(13,13,20,.8), transparent);
-  color: var(--blanco); font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .02em; text-decoration: none;
-}
 .mk-depth-arrow {
   position: absolute; top: 43%; transform: translateY(-50%); z-index: 3000;
   width: 42px; height: 42px; display: grid; place-items: center;
@@ -494,6 +466,8 @@ body {
   .mk-stat-value small { font-size: 13px; }
   .mk-stat-label { font-size: 10px; line-height: 1.2; }
   .mk-pd-delta { font-size: 10px; }
+  .mk-stat--hero .mk-stat-value { font-size: 30px; }
+  .mk-stat--hero .mk-stat-value small { font-size: 15px; }
 
   .mk-pd-charts { grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; padding-top: 20px; }
   .mk-pd-section-title { font-size: 12px; flex-direction: column; align-items: flex-start; gap: 2px; margin-bottom: 10px; }
@@ -550,6 +524,7 @@ body {
         <div class="mk-photostack-card" data-index="6"><img src="assets/photos/stack_07.webp" alt="Dulce Pink" draggable="false"></div>
         <div class="mk-photostack-card" data-index="7"><img src="assets/photos/stack_08.webp" alt="Dulce Pink" draggable="false"></div>
       </div>
+      <div class="mk-photostack-counter" id="photoStackCounter" aria-hidden="true">1 / 8</div>
     </div>
 
     <div class="mk-info-panel mk-bento">
@@ -579,27 +554,25 @@ body {
       <div class="mk-depth-carousel" id="collabDepth" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Colaboraciones">
         <div class="mk-depth-stage" id="collabDepthStage">
           <div class="mk-depth-card" data-index="0" data-href="https://www.instagram.com/_dulcepink_/">
-            <video src="../assets/videos/collab_01.mp4" autoplay muted loop playsinline></video>
+            <video src="../assets/videos/collab_01.mp4" muted loop playsinline></video>
             <span class="mk-depth-tint"></span>
             <span class="mk-collab-platform"><svg width="15" height="15" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/>
 <path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/>
 </svg></span>
-            <a class="mk-collab-view" href="https://www.instagram.com/_dulcepink_/" target="_blank" rel="noopener">Ver en Instagram</a>
           </div>
           <div class="mk-depth-card" data-index="1" data-href="https://www.instagram.com/_dulcepink_/">
-            <video src="../assets/videos/collab_02.mp4" autoplay muted loop playsinline></video>
+            <video src="../assets/videos/collab_02.mp4" muted loop playsinline></video>
             <span class="mk-depth-tint"></span>
             <span class="mk-collab-platform"><svg width="15" height="15" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/>
 <path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/>
 </svg></span>
-            <a class="mk-collab-view" href="https://www.instagram.com/_dulcepink_/" target="_blank" rel="noopener">Ver en Instagram</a>
           </div>
           <div class="mk-depth-card" data-index="2" data-href="https://www.tiktok.com/@_dulcepink_?lang=es-419">
-            <video src="../assets/videos/collab_03.mp4" autoplay muted loop playsinline></video>
+            <video src="../assets/videos/collab_03.mp4" muted loop playsinline></video>
             <span class="mk-depth-tint"></span>
             <span class="mk-collab-platform"><svg width="15" height="15" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12.9314 6.22392C12.5107 5.76167 12.2578 5.15893 12.2578 4.5H11.7306C11.8664 5.22023 12.3137 5.83829 12.9314 6.22392Z" fill="white"/>
@@ -607,7 +580,6 @@ body {
 <path d="M14.4249 7.07184V8.54038C13.4026 8.54038 12.4548 8.22626 11.6826 7.69501V11.5387C11.6826 13.4568 10.0559 15.0199 8.05377 15.0199C7.28168 15.0199 6.56283 14.7849 5.97444 14.389C6.63737 15.0709 7.58253 15.5 8.62887 15.5C10.6283 15.5 12.2577 13.9395 12.2577 12.0189V8.17516C13.0298 8.70641 13.9776 9.02051 15 9.02051V7.13061C14.8003 7.13061 14.6086 7.11016 14.4249 7.07184Z" fill="white"/>
 <path d="M11.6826 11.5387V7.69501C12.4548 8.22626 13.4026 8.54038 14.4249 8.54038V7.07184C13.8339 6.95183 13.3148 6.64535 12.9314 6.22392C12.3137 5.83829 11.869 5.22023 11.7279 4.5H10.2849L10.2822 12.0776C10.2503 12.9256 9.52076 13.6075 8.62887 13.6075C8.07507 13.6075 7.58785 13.3444 7.28434 12.946C6.75718 12.6778 6.3951 12.1492 6.3951 11.5387C6.3951 10.6628 7.13791 9.95017 8.05111 9.95017C8.2215 9.95017 8.38657 9.97828 8.541 10.0243V8.54293C6.58147 8.5838 5 10.1264 5 12.0189C5 12.9332 5.37008 13.7658 5.97444 14.389C6.56283 14.7849 7.28168 15.0199 8.05377 15.0199C10.0532 15.0199 11.6826 13.4568 11.6826 11.5387Z" fill="white"/>
 </svg></span>
-            <a class="mk-collab-view" href="https://www.tiktok.com/@_dulcepink_?lang=es-419" target="_blank" rel="noopener">Ver en TikTok</a>
           </div>
         </div>
         <button type="button" class="mk-depth-arrow mk-depth-arrow--prev" aria-label="Anterior">‹</button>
@@ -626,24 +598,23 @@ body {
       <div class="mk-platform-head">
         <div class="mk-mono"><svg width="18" height="18" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/><path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/><path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/></svg></div>
         <div class="mk-platform-name">Instagram</div>
-        <div class="mk-pd-window">Últimos 30 días</div>
+        <div class="mk-pd-window">Últimos 30 días<span class="mk-pd-updated">Datos al 8 sep 2026</span></div>
       </div>
       <div class="mk-pd-hero-row">
-        <div class="mk-stat"><div class="mk-stat-value">1<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
+        <div class="mk-stat mk-stat--hero"><div class="mk-stat-value">1<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
         <div class="mk-stat"><div class="mk-stat-value">2.68<small>M</small></div><div class="mk-stat-label">Alcance (espectadores)</div></div>
         <div class="mk-stat"><div class="mk-stat-value">36.1<small>M</small></div><div class="mk-stat-label">Reproducciones</div></div>
         <div class="mk-stat"><div class="mk-stat-value">+5.3<small>K</small></div><div class="mk-stat-label">Seguidores netos</div></div>
-        <div class="mk-stat"><div class="mk-stat-value">340<small>K</small></div><div class="mk-stat-label">Visitas al perfil</div></div>
       </div>
 
       <div class="mk-pd-charts">
         <div>
           <div class="mk-pd-section-title">Visualizaciones por tipo de contenido</div>
-          <div class="mk-barlist"><div class="mk-barlist-row" title="21.000.000 visualizaciones"><span class="mk-barlist-label">Reels</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:100%"></div></div><span class="mk-barlist-value">21 M</span></div><div class="mk-barlist-row" title="14.000.000 visualizaciones"><span class="mk-barlist-label">Historias</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:66.7%"></div></div><span class="mk-barlist-value">14 M</span></div><div class="mk-barlist-row" title="34.000 visualizaciones"><span class="mk-barlist-label">Publicaciones</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.16%"></div></div><span class="mk-barlist-value">34 K</span></div></div>
+          <div class="mk-barlist"><div class="mk-barlist-row" title="21.000.000 visualizaciones · 59.9% del total"><span class="mk-barlist-label">Reels</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:59.9%"></div></div><span class="mk-barlist-value">21 M</span></div><div class="mk-barlist-row" title="14.000.000 visualizaciones · 40.0% del total"><span class="mk-barlist-label">Historias</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:40.0%"></div></div><span class="mk-barlist-value">14 M</span></div><div class="mk-barlist-row" title="34.000 visualizaciones · 0.1% del total"><span class="mk-barlist-label">Publicaciones</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.1%"></div></div><span class="mk-barlist-value">34 K</span></div></div>
         </div>
         <div>
           <div class="mk-pd-section-title">Interacciones por tipo de contenido<span class="mk-pd-title-note">68.7% seguidores · 31.3% no seguidores</span></div>
-          <div class="mk-barlist"><div class="mk-barlist-row" title="991.000 interacciones"><span class="mk-barlist-label">Reels</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:100%"></div></div><span class="mk-barlist-value">991 K</span></div><div class="mk-barlist-row" title="170.000 interacciones"><span class="mk-barlist-label">Historias</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:17.2%"></div></div><span class="mk-barlist-value">170 K</span></div><div class="mk-barlist-row" title="146 interacciones"><span class="mk-barlist-label">Publicaciones</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.015%"></div></div><span class="mk-barlist-value">146</span></div></div>
+          <div class="mk-barlist"><div class="mk-barlist-row" title="991.000 interacciones · 85.4% del total"><span class="mk-barlist-label">Reels</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:85.4%"></div></div><span class="mk-barlist-value">991 K</span></div><div class="mk-barlist-row" title="170.000 interacciones · 14.6% del total"><span class="mk-barlist-label">Historias</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:14.6%"></div></div><span class="mk-barlist-value">170 K</span></div><div class="mk-barlist-row" title="146 interacciones · 0.01% del total"><span class="mk-barlist-label">Publicaciones</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.01%"></div></div><span class="mk-barlist-value">146</span></div></div>
         </div>
       </div>
 
@@ -660,10 +631,10 @@ body {
       <div class="mk-platform-head">
         <div class="mk-mono"><svg width="18" height="18" viewBox="4.5 4.5 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9314 6.22392C12.5107 5.76167 12.2578 5.15893 12.2578 4.5H11.7306C11.8664 5.22023 12.3137 5.83829 12.9314 6.22392Z" fill="white"/><path d="M8.05382 9.94764C7.14061 9.94764 6.3978 10.6602 6.3978 11.5362C6.3978 12.1467 6.75989 12.6778 7.28704 12.9434C7.09003 12.683 6.97288 12.3637 6.97288 12.0164C6.97288 11.1404 7.71569 10.4278 8.62891 10.4278C8.7993 10.4278 8.96435 10.4558 9.11879 10.5018V8.57106C8.95902 8.5506 8.79663 8.53782 8.62891 8.53782C8.59961 8.53782 8.57299 8.54038 8.5437 8.54038V10.0217C8.38662 9.97569 8.22421 9.94764 8.05382 9.94764Z" fill="white"/><path d="M14.4249 7.07184V8.54038C13.4026 8.54038 12.4548 8.22626 11.6826 7.69501V11.5387C11.6826 13.4568 10.0559 15.0199 8.05377 15.0199C7.28168 15.0199 6.56283 14.7849 5.97444 14.389C6.63737 15.0709 7.58253 15.5 8.62887 15.5C10.6283 15.5 12.2577 13.9395 12.2577 12.0189V8.17516C13.0298 8.70641 13.9776 9.02051 15 9.02051V7.13061C14.8003 7.13061 14.6086 7.11016 14.4249 7.07184Z" fill="white"/><path d="M11.6826 11.5387V7.69501C12.4548 8.22626 13.4026 8.54038 14.4249 8.54038V7.07184C13.8339 6.95183 13.3148 6.64535 12.9314 6.22392C12.3137 5.83829 11.869 5.22023 11.7279 4.5H10.2849L10.2822 12.0776C10.2503 12.9256 9.52076 13.6075 8.62887 13.6075C8.07507 13.6075 7.58785 13.3444 7.28434 12.946C6.75718 12.6778 6.3951 12.1492 6.3951 11.5387C6.3951 10.6628 7.13791 9.95017 8.05111 9.95017C8.2215 9.95017 8.38657 9.97828 8.541 10.0243V8.54293C6.58147 8.5838 5 10.1264 5 12.0189C5 12.9332 5.37008 13.7658 5.97444 14.389C6.56283 14.7849 7.28168 15.0199 8.05377 15.0199C10.0532 15.0199 11.6826 13.4568 11.6826 11.5387Z" fill="white"/></svg></div>
         <div class="mk-platform-name">TikTok</div>
-        <div class="mk-pd-window">Últimos 7 días · 31 ago – 6 sep</div>
+        <div class="mk-pd-window">Últimos 7 días · 31 ago – 6 sep<span class="mk-pd-updated">Datos al 8 sep 2026</span></div>
       </div>
       <div class="mk-pd-hero-row">
-        <div class="mk-stat"><div class="mk-stat-value">2.5<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
+        <div class="mk-stat mk-stat--hero"><div class="mk-stat-value">2.5<small>M</small></div><div class="mk-stat-label">Seguidores</div></div>
         <div class="mk-stat"><div class="mk-stat-value">6.8<small>M</small></div><div class="mk-stat-label">Visualizaciones<span class="mk-pd-delta">↑ 14.1%</span></div></div>
         <div class="mk-stat"><div class="mk-stat-value">346.4<small>K</small></div><div class="mk-stat-label">Visitas al perfil<span class="mk-pd-delta">↑ 262.4%</span></div></div>
         <div class="mk-stat"><div class="mk-stat-value">877.4<small>K</small></div><div class="mk-stat-label">Me gusta<span class="mk-pd-delta">↑ 33%</span></div></div>
@@ -688,17 +659,6 @@ body {
 </div>
 
 <script>
-document.querySelectorAll('.mk-toggle-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.mk-toggle-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const plat = btn.dataset.platform;
-    document.querySelectorAll('[data-platform-panel]').forEach(p => {
-      p.style.display = p.dataset.platformPanel === plat ? '' : 'none';
-    });
-  });
-});
-
 // ---------- hero intro: big centered logo FLIPs onto the nav badge ----------
 // same FLIP technique as the roster: measure the logo's natural (big,
 // centered) rect and the real nav badge's rect, then on scroll interpolate a
@@ -968,6 +928,18 @@ if (REDUCE_MOTION) {
     if (delta > n / 2) delta -= n;
     tweenTo(pos + delta, animate);
     focus = idx;
+    syncVideoPlayback();
+  }
+
+  // only the focused clip actually decodes/plays — the other two are just
+  // sitting there dimmed behind it, no reason to burn battery/data on them
+  function syncVideoPlayback() {
+    cards.forEach((card, i) => {
+      const video = card.querySelector('video');
+      if (!video) return;
+      if (i === focus) video.play().catch(() => {});
+      else video.pause();
+    });
   }
 
   function navigateBy(step) { setFocus(focus + step, true); }
@@ -1058,6 +1030,7 @@ if (REDUCE_MOTION) {
   }
 
   layout(pos);
+  syncVideoPlayback();
 })();
 
 // ---------- Photo Stack (ported from reacticx's Stack Cards: npx reacticx add
@@ -1072,6 +1045,7 @@ if (REDUCE_MOTION) {
   const cards = Array.from(root.querySelectorAll('.mk-photostack-card'));
   const n = cards.length;
   if (!n) return;
+  const counter = document.getElementById('photoStackCounter');
 
   const VISIBLE = 4;
   const OFFSET_Y = 10;
@@ -1109,6 +1083,7 @@ if (REDUCE_MOTION) {
       card.style.transform = `translateY(${Math.min(r, VISIBLE) * OFFSET_Y}px) scale(${1 - Math.min(r, VISIBLE) * SCALE_STEP})`;
       card.style.filter = `brightness(${Math.max(0.55, 1 - r * 0.12)})`;
     });
+    if (counter) counter.textContent = `${pos + 1} / ${n}`;
   }
 
   root.addEventListener('pointerdown', (e) => {
@@ -1289,9 +1264,16 @@ if (REDUCE_MOTION) {
   svg.addEventListener('pointerdown', (e) => showAt(nearestIndex(e.clientX)));
   svg.addEventListener('pointerleave', hide);
 
+  // show the most recent day's value by default (not just on hover) — it's
+  // the natural headline point, and it doubles as a hint that this chart
+  // responds to touch/hover rather than reading as a flat, static image
+  let hinted = false;
   const ro = new ResizeObserver(entries => {
     const { width, height } = entries[0].contentRect;
-    if (width > 0 && height > 0) build(width, height);
+    if (width > 0 && height > 0) {
+      build(width, height);
+      if (!hinted) { hinted = true; showAt(data.length - 1); }
+    }
   });
   ro.observe(svg);
 })();
