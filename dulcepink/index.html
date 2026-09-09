@@ -209,7 +209,7 @@ body {
 /* ---------- platform cards ---------- */
 .mk-platform-head { display: flex; align-items: center; gap: 10px; }
 .mk-mono {
-  width: 34px; height: 34px; border-radius: 10px; background: var(--naranja-oscuro); color: var(--blanco);
+  width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; background: var(--naranja-oscuro); color: var(--blanco);
   display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;
 }
 .mk-platform-name { font-weight: 700; font-size: 14px; color: var(--naranja-oscuro); }
@@ -486,6 +486,7 @@ body {
   .mk-collab-socials--big .mk-social-btn svg { width: 18px; height: 18px; }
 
   .mk-platform-detail { padding: 18px; border-radius: 24px; }
+  .mk-platform-head { flex-wrap: wrap; }
   .mk-pd-window { flex-basis: 100%; text-align: left; margin-top: -2px; }
   .mk-pd-hero-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 10px; margin-top: 18px; }
   .mk-pd-hero-row .mk-stat { flex: none; padding-right: 0; }
