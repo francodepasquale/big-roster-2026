@@ -448,9 +448,12 @@ body {
   .mk-audience-cols { grid-template-columns: 1fr; gap: 20px; }
   /* single-column now: each panel is its own grid row, so align-items:stretch
      has nothing to stretch against — give photo/info a real height instead
-     of the 100% they inherit from the desktop 3-up row. Portrait aspect-ratio
-     (not a short vw-based slice) so the photo stack shows her, not just backdrop */
-  .mk-photo-panel { height: auto; aspect-ratio: 4 / 5; }
+     of the 100% they inherit from the desktop 3-up row. Portrait box via the
+     old padding-bottom-percentage trick rather than the `aspect-ratio`
+     property: its children are absolutely-positioned with no in-flow content
+     of their own, and some WebKit builds fail to size an aspect-ratio box
+     from width alone in that situation — this hack has no such edge case. */
+  .mk-photo-panel { height: 0; padding-bottom: 125%; }
   .mk-info-panel { height: auto; }
 }
 
@@ -464,7 +467,7 @@ body {
   /* photo stays tall (this one's meant to read as a portrait), everything
      else below packs into rows instead of one long vertical stack so the
      page isn't 6 full-width slabs deep */
-  .mk-photo-panel { aspect-ratio: 3 / 4; border-radius: 24px; }
+  .mk-photo-panel { padding-bottom: 133.3%; border-radius: 24px; }
   .mk-info-panel { padding: 20px; border-radius: 24px; gap: 14px; }
   .mk-info-reach { padding: 12px 14px; gap: 12px; }
   .mk-info-reach-value { font-size: 30px; }
