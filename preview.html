@@ -167,7 +167,7 @@ body {
   content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
   border: 5px solid transparent; border-top-color: #14141f;
 }
-.cat-menu-btn:hover .dock-tooltip, .cat-menu-btn:focus-visible .dock-tooltip {
+.dock-item:hover .dock-tooltip, .dock-item:focus-visible .dock-tooltip {
   opacity: 1; transform: translateX(-50%) translateY(0) scale(1);
 }
 .cat-menu-panel {
@@ -185,6 +185,17 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 .cat-menu-link:hover, .cat-menu-link.active { background: var(--fondo); color: var(--naranja); }
+
+/* nav-right groups the Mujeres/Hombres/categorías dock with the new
+   Argentina/España language dock, so .nav's justify-content:space-between
+   still only sees two children (brand, controls-group) and keeps everything
+   flush to the right edge. */
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.lang-dock .dock-item {
+  padding: 8px 13px; font-size: 19px; line-height: 1; filter: grayscale(.15);
+}
+.lang-dock .dock-item.active { background: var(--fondo); }
+.lang-dock .dock-item:hover, .lang-dock .dock-item.active { filter: none; }
 
 .dock-item:focus-visible, .nav-brand:focus-visible, .rail-arrow:focus-visible, .rail:focus-visible, .scroll-cue:focus-visible,
 .cat-menu-link:focus-visible {
@@ -449,8 +460,11 @@ body {
 
 @media (max-width: 480px) {
   .nav { padding: 14px 16px; }
+  .nav-right { gap: 8px; }
   .dock-item { padding: 9px 12px; font-size: 11px; }
   .cat-menu-btn { padding: 9px 10px; }
+  .lang-dock { padding: 7px; }
+  .lang-dock .dock-item { padding: 5px 8px; font-size: 16px; }
 }
 
 @media (max-width: 860px) {
@@ -526,21 +540,22 @@ body {
     <button class="nav-brand" id="navBrand" style="opacity:0">
       <svg class="" width="24" height="24" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
     </button>
-    <div class="nav-dock" id="navDock">
-      <button class="dock-item dock-tab" data-cat="Mujeres">Mujeres</button>
-      <button class="dock-item dock-tab" data-cat="Hombres">Hombres</button>
-      <div class="dock-sep"></div>
-      <div class="cat-menu" id="catMenu">
-        <button class="dock-item cat-menu-btn" id="catMenuBtn" aria-expanded="false" aria-label="Explorar por categorías">
-          <span class="dock-tooltip">Categorías</span>
-          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect y="0" width="16" height="2" rx="1" fill="currentColor"/>
-            <rect y="5" width="16" height="2" rx="1" fill="currentColor"/>
-            <rect y="10" width="16" height="2" rx="1" fill="currentColor"/>
-          </svg>
-        </button>
-        <div class="cat-menu-panel" id="catMenuPanel">
-          <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
+    <div class="nav-right">
+      <div class="nav-dock" id="navDock">
+        <button class="dock-item dock-tab" data-cat="Mujeres">Mujeres</button>
+        <button class="dock-item dock-tab" data-cat="Hombres">Hombres</button>
+        <div class="dock-sep"></div>
+        <div class="cat-menu" id="catMenu">
+          <button class="dock-item cat-menu-btn" id="catMenuBtn" aria-expanded="false" aria-label="Explorar por categorías">
+            <span class="dock-tooltip">Categorías</span>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect y="0" width="16" height="2" rx="1" fill="currentColor"/>
+              <rect y="5" width="16" height="2" rx="1" fill="currentColor"/>
+              <rect y="10" width="16" height="2" rx="1" fill="currentColor"/>
+            </svg>
+          </button>
+          <div class="cat-menu-panel" id="catMenuPanel">
+            <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
 <a href="#cat-beauty-makeup" class="cat-menu-link" data-slug="beauty-makeup">Beauty & Makeup</a>
 <a href="#cat-humor-sketches" class="cat-menu-link" data-slug="humor-sketches">Humor & Sketches</a>
 <a href="#cat-tecnologia-crypto" class="cat-menu-link" data-slug="tecnologia-crypto">Tecnología & Crypto</a>
@@ -548,7 +563,18 @@ body {
 <a href="#cat-entretenimiento" class="cat-menu-link" data-slug="entretenimiento">Entretenimiento</a>
 <a href="#cat-fitness" class="cat-menu-link" data-slug="fitness">Fitness</a>
 <a href="#cat-trends" class="cat-menu-link" data-slug="trends">Trends</a>
+          </div>
         </div>
+      </div>
+      <div class="nav-dock lang-dock" id="langDock">
+        <a class="dock-item lang-item active" href="/" aria-label="Roster Argentina">
+          <span class="dock-tooltip">Argentina</span>
+          🇦🇷
+        </a>
+        <a class="dock-item lang-item" href="/espana/" aria-label="Roster España">
+          <span class="dock-tooltip">España</span>
+          🇪🇸
+        </a>
       </div>
     </div>
   </nav>
