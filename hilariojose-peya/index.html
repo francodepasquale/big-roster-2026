@@ -415,7 +415,6 @@ body {
 /* ---------- BUDGET (real rate card, reshaped into the site's card style) ---------- */
 .budget { background: var(--blanco); padding: 120px 0 140px; }
 .budget-head { max-width: 640px; margin: 0 auto 60px; padding: 0 32px; text-align: center; }
-.budget-eyebrow { color: var(--rojo); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px; }
 .budget-head h2 { font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; font-size: clamp(28px, 4vw, 48px); line-height: 1.05; }
 .budget-grid { max-width: 620px; margin: 0 auto; padding: 0 32px; }
 .budget-card { border: 1.5px solid var(--gris-linea); border-radius: 20px; padding: 28px; background: var(--gris); }
@@ -424,6 +423,15 @@ body {
 .budget-avatar { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .budget-name { font-weight: 800; font-size: 18px; letter-spacing: -0.01em; }
 .budget-desc { margin-top: 6px; font-size: 13.5px; line-height: 1.45; color: rgba(20,20,20,.6); }
+.budget-socials { display: flex; gap: 8px; margin-top: 12px; }
+.budget-social-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--blanco); border: 1px solid var(--gris-linea); border-radius: 999px;
+  padding: 6px 14px; font-size: 12.5px; font-weight: 600; color: rgba(20,20,20,.75);
+  text-decoration: none; transition: border-color .2s ease, color .2s ease;
+}
+.budget-social-chip:hover { border-color: var(--rojo); color: var(--rojo); }
+.budget-social-chip .ico { font-size: 13px; line-height: 1; }
 
 .budget-followers { display: flex; gap: 12px; margin-top: 22px; }
 .budget-follow {
@@ -442,6 +450,7 @@ body {
 @media (max-width: 640px) {
   .budget { padding: 80px 0 90px; }
   .budget-talent { flex-direction: column; text-align: center; }
+  .budget-socials { justify-content: center; }
 }
 
 /* ---------- FOOTER "GRACIAS" (mirrored hero, closing bookend) ---------- */
@@ -769,7 +778,6 @@ body {
 
 <section class="budget" id="budget">
   <div class="budget-head">
-    <div class="budget-eyebrow">Inversión</div>
     <h2>Presupuesto</h2>
   </div>
   <div class="budget-grid">
@@ -779,6 +787,9 @@ body {
         <div>
           <div class="budget-name">Hilario José</div>
           <p class="budget-desc">Un creador de contenido de comedia y lifestyle hace tendencias y contenido visual conectando con una audiencia joven a través de una propuesta auténtica y cercana!</p>
+          <div class="budget-socials">
+            <a class="budget-social-chip" href="https://www.instagram.com/hilarioj0se/" target="_blank" rel="noopener noreferrer"><span class="ico">📷</span>Instagram</a><a class="budget-social-chip" href="https://www.tiktok.com/@hilarioj0se?lang=es" target="_blank" rel="noopener noreferrer"><span class="ico">🎵</span>TikTok</a>
+          </div>
         </div>
       </div>
       <div class="budget-followers">
