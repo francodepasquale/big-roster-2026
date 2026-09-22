@@ -342,19 +342,19 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .nav { padding-top: 10px; padding-bottom: 10px; }
 .frame-intro { height: 620svh; padding: 0; position: relative; background: #FBF6ED; }
 .frame-stage { height: 100svh; position: sticky; top: 0; overflow: hidden; --intro-progress: 0; }
-.frame-stage canvas, .frame-poster { position: absolute; inset: 0; width: 100%; height: 100%; }
-.frame-stage canvas { opacity: 0; }
-.frame-poster { object-fit: contain; background: #FBF6ED; }
-.frame-stage.is-ready canvas { opacity: 1; }
-.frame-stage.is-ready .frame-poster, .frame-stage.is-ready .frame-loading-brand { visibility: hidden; }
-.frame-loading-brand { position: absolute; inset: 0; display: grid; place-items: center; background: #FBF6ED; }
-.frame-loading-brand .big-badge { width: auto; height: auto; transform: translateY(-3svh); }
-.frame-loading-brand .big-badge img { width: auto; height: min(29vw,28svh); }
-.frame-stage.is-fallback .frame-loading-brand { display: none; }
-html.intro-is-loading, html.intro-is-loading body { overflow: hidden; }
-.frame-stage.is-buffering .frame-loading-brand { display: grid; visibility: visible; z-index: 4; }
-.intro-loading-label { display: none; position: absolute; top: 65%; left: 0; right: 0; text-align: center; font-size: 13px; font-weight: 500; letter-spacing: .04em; color: var(--tinta); }
-.is-buffering .intro-loading-label { display: block; }
+.intro-scene { position: absolute; inset: 0; perspective: 1000px; background: radial-gradient(ellipse at center, #f6e5cb 0%, #FBF6ED 70%); pointer-events: none; }
+.intro-sprite { position: absolute; left: 50%; top: 50%; width: auto; max-width: none; object-fit: contain; opacity: 0; transform: translate(-50%,-50%); will-change: transform,opacity; }
+#introLogo { opacity: 1; height: min(29vw,28svh); }
+#introBag, .intro-actor { filter: drop-shadow(0 14px 16px rgba(58,33,66,.16)); }
+.intro-actor { z-index: 2; }
+.intro-fragment:nth-of-type(1) { clip-path: polygon(0 0,50% 0,58% 50%,0 56%); }
+.intro-fragment:nth-of-type(2) { clip-path: polygon(50% 0,100% 0,100% 52%,58% 50%); }
+.intro-fragment:nth-of-type(3) { clip-path: polygon(0 56%,58% 50%,50% 100%,0 100%); }
+.intro-fragment:nth-of-type(4) { clip-path: polygon(58% 50%,100% 52%,100% 100%,50% 100%); }
+.intro-spark { position: absolute; left: 50%; top: 50%; width: 5px; height: 10px; background: #EE5809; opacity: 0; }
+.intro-spark:nth-child(3n) { background: #3A2142; }
+.intro-spark:nth-child(3n + 1) { background: #93AD42; }
+@media(prefers-reduced-motion:reduce) { .intro-scene { display: none; } }
 .frame-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: #3A2142; transform: scaleX(var(--intro-progress)); transform-origin: left; }
 .intro-finale { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 5svh 4vw 7svh; background: #EE5809; color: #FBF6ED; clip-path: inset(calc((1 - var(--finale-reveal,0)) * 100%) 0 0); }
 .intro-finale-copy { order: 1; position: relative; z-index: 1; width: 100%; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
@@ -370,7 +370,7 @@ html.intro-is-loading, html.intro-is-loading body { overflow: hidden; }
 #navBig { opacity: 1; }
 .intro-description { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 @media(max-width:600px) { .nav-brand { gap: 8px; font-size: clamp(10px,2.8vw,14px); } .nav-brand .big-badge { width: 36px; height: 36px; } .nav-brand .big-badge img { height: 30px; } .brand-client { white-space: nowrap; } }
-@media(prefers-reduced-motion:reduce) { .frame-intro { height: 100svh; } .frame-stage canvas, .frame-loading-brand, .frame-progress, .frame-poster { display: none; } .intro-finale { clip-path: none; } .intro-finale-copy, .finale-tagline, .finale-product-reveal { opacity: 1; transform: none; } .finale-product img { transform: none; transition: none; } #navBig { opacity: 1 !important; } }
+@media(prefers-reduced-motion:reduce) { .frame-intro { height: 100svh; } .frame-progress { display: none; } .intro-finale { clip-path: none; } .intro-finale-copy, .finale-tagline, .finale-product-reveal { opacity: 1; transform: none; } .finale-product img { transform: none; transition: none; } #navBig { opacity: 1 !important; } }
 /* Accessible image accordion, using the three original character cutouts. */
 .elenco-grid { display: flex; gap: 12px; }
 .elenco-card { position: relative; flex: 1 1 0; min-width: 0; height: 580px; border-radius: 22px; overflow: hidden; background: var(--crema-2); cursor: pointer; transition: flex .65s cubic-bezier(.2,.8,.2,1),opacity .6s,transform .6s; }
@@ -454,9 +454,13 @@ html.intro-is-loading, html.intro-is-loading body { overflow: hidden; }
 <main>
   <section class="frame-intro" id="intro" aria-label="BIG presenta KHEMANIS">
     <div class="frame-stage">
-      <picture><source media="(max-width:699px)" srcset="assets/intro/mobile/poster.webp?v=native-finale"><img class="frame-poster" src="assets/intro/desktop/poster.webp?v=native-finale" alt="Don Pela, Barbacacho y Parmesandro."></picture>
-      <div class="frame-loading-brand"><span class="big-badge" aria-hidden="true"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt=""></span><span class="intro-loading-label" id="introLoadingLabel" role="status" aria-live="polite">Cargando la experiencia…</span></div>
-      <canvas id="introCanvas" aria-hidden="true"></canvas>
+      <div class="intro-scene" aria-hidden="true">
+        <img class="intro-sprite" id="introLogo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt="">
+        <img class="intro-sprite" id="introBag" src="assets/packaging-transparent.png" alt="" fetchpriority="high" decoding="async">
+        <div><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"></div>
+        <img class="intro-sprite intro-actor" src="assets/personajes/barbacacho.png" alt="" loading="eager" decoding="async"><img class="intro-sprite intro-actor" src="assets/personajes/don-pela.png" alt="" loading="eager" decoding="async"><img class="intro-sprite intro-actor" src="assets/personajes/parmesandro.png" alt="" loading="eager" decoding="async">
+        <div><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i></div>
+      </div>
       <p class="intro-description">BIG presenta: la bolsa de KHE MANIS se abre y libera a Don Pela, Barbacacho y Parmesandro.</p>
       <div class="frame-progress" aria-hidden="true"></div>
       <div class="intro-finale" id="introFinale" inert aria-hidden="true">
@@ -820,60 +824,83 @@ castCards.forEach(card => {
 });
 castGallery.addEventListener('pointerleave', () => { if(!castGallery.contains(document.activeElement)) selectCast(null); });
 castGallery.addEventListener('focusout', event => { if(!castGallery.contains(event.relatedTarget)) selectCast(null); });
-// A real pre-rendered movie, sampled by scroll. Decode only a small local window.
+// Native PNG layers: scroll changes transforms, never fetches video frames.
 (() => {
   const section = document.getElementById('intro');
   const stage = section.querySelector('.frame-stage');
-  const canvas = document.getElementById('introCanvas');
-  const context = canvas.getContext('2d', { alpha: false });
-  const brand = document.getElementById('navBig');
+  const logo = document.getElementById('introLogo');
+  const bag = document.getElementById('introBag');
+  const actors = [...section.querySelectorAll('.intro-actor')];
+  const fragments = [...section.querySelectorAll('.intro-fragment')];
+  const sparks = [...section.querySelectorAll('.intro-spark')];
   const finale = document.getElementById('introFinale');
   const product = document.getElementById('finaleProduct');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const loadingLabel = document.getElementById('introLoadingLabel');
-  const loadingRoot = document.documentElement;
-  const START_BUFFER = 20;
-  let loading = false, loadingTimer;
-  function finishLoading() {
-    loading = false;
-    clearTimeout(loadingTimer);
-    loadingRoot.classList.remove('intro-is-loading');
-    stage.classList.remove('is-buffering');
-    section.dataset.loading = 'complete';
-    if(!cache.size) stage.classList.add('is-fallback');
-  }
-  function startLoading() {
-    loading = true;
-    loadingRoot.classList.add('intro-is-loading');
-    stage.classList.add('is-buffering');
-    section.dataset.loading = 'buffering';
-    loadingLabel.textContent = 'Cargando la experiencia… 0%';
-    clearTimeout(loadingTimer);
-    loadingTimer = setTimeout(() => { finishLoading(); schedule(); },10000);
-  }
-  function loadingProgress() {
-    if(!loading) return;
-    let completed = 0;
-    for(let i=0;i<START_BUFFER;i++) if(cache.has(i)||failures.has(i)) completed++;
-    loadingLabel.textContent = `Cargando la experiencia… ${Math.round(completed/START_BUFFER*100)}%`;
-    if(completed===START_BUFFER) finishLoading();
-  }
-  const cache = new Map();
-  const pending = new Set();
-  const failures = new Set();
-  const COUNT = 180, LIMIT = 20;
-  let variant = '', generation = 0, controller = new AbortController();
-  let target = 0, shown = -1, raf = 0, active = true, queue = [];
   const range = (p,a,b) => Math.max(0,Math.min(1,(p-a)/(b-a)));
-  function updateFinale(progress, visible) {
-    const reveal = motion.matches ? 1 : range(progress,.8,.87);
+  const out = t => 1-(1-t)**3;
+  const ease = t => t*t*(3-2*t);
+  const mix = (a,b,t) => a+(b-a)*t;
+  let raf = 0;
+  function sprite(node,x,y,height,scale=1,angle=0,alpha=1,turn=0) {
+    // Keep rotated sprites inside the viewport, including narrow phones.
+    const radians=angle*Math.PI/180, ratio=node.naturalWidth/node.naturalHeight||.82;
+    const halfWidth=height*scale*(Math.abs(Math.cos(radians))*ratio+Math.abs(Math.sin(radians)))/2;
+    const limit=Math.max(0,stage.clientWidth/2-12-halfWidth);
+    x=Math.max(-limit,Math.min(limit,x));
+    node.style.height = `${height}px`;
+    node.style.opacity = String(alpha);
+    node.style.transform = `translate(-50%,-50%) translate3d(${x}px,${y}px,0) rotate(${angle}deg) rotateY(${turn}deg) scale(${scale})`;
+  }
+  function update() {
+    raf = 0;
+    const rect = section.getBoundingClientRect();
+    const W=stage.clientWidth, H=stage.clientHeight, mobile=W<700;
+    const progress=motion.matches?1:range(-rect.top,0,Math.max(1,section.offsetHeight-H));
+    const visible=rect.bottom>0&&rect.top<innerHeight;
+    const reveal=motion.matches?1:range(progress,.8,.87);
+    const appearance=motion.matches?1:range(progress,.87,.94);
+    stage.style.setProperty('--intro-progress',progress);
     stage.style.setProperty('--finale-reveal',reveal);
-    const appearance = motion.matches ? 1 : range(progress,.87,.94);
     stage.style.setProperty('--finale-copy',appearance);
     stage.style.setProperty('--finale-bag',appearance);
-    section.style.zIndex = reveal>0 && visible ? '1001' : '';
-    finale.inert = reveal<1 || !visible;
+    section.style.zIndex=reveal>0&&visible?'1001':'';
+    finale.inert=reveal<1||!visible;
     finale.setAttribute('aria-hidden',String(finale.inert));
+    section.dataset.progress=String(progress);
+    section.dataset.variant=mobile?'mobile':'desktop';
+    section.dataset.status=motion.matches?'reduced':'native';
+    if(motion.matches) { neutralTilt(); return; }
+    const p=Math.min(1,progress/.8);
+    const leave=ease(range(p,.06,.19));
+    sprite(logo,0,-H*.02-leave*H*.07,Math.min(W*.29,H*.28),1-leave*.65,-leave*8,1-leave);
+    const entrance=out(range(p,.11,.25));
+    const bagH=Math.min(H*.60,W*(mobile?.70:.50));
+    const bagY=H*.02+(1-entrance)*H*.20;
+    const shake=Math.sin(range(p,.30,.405)*Math.PI*6)*range(p,.30,.405)*3;
+    sprite(bag,0,bagY,bagH,mix(.72,1,entrance),shake,p<.405?entrance:0);
+    // Four clipped copies reuse the same PNG, with no new image downloads.
+    const burst=out(range(p,.405,.66));
+    fragments.forEach((node,i)=>{
+      const left=i%2===0, upper=i<2;
+      const x=(left?-1:1)*burst*W*(mobile?.19:.27);
+      const y=H*.02+(upper?-1:1)*burst*H*.21;
+      const alpha=p>=.405?1-ease(range(p,.49,.65)):0;
+      sprite(node,x,y,bagH,mix(1,.42,burst),(left?-1:1)*burst*(upper?32:48),alpha);
+    });
+    actors.forEach((node,i)=>{
+      const t=out(range(p,.415+i*.014,.63+i*.014));
+      const spin=ease(range(p,.64+i*.015,.79+i*.015));
+      const endX=(i-1)*W*(mobile?.27:.28);
+      const endY=mobile?(i===1?H*.16:-H*.09):H*.01;
+      const height=mobile?Math.min(H*(i===1?.29:.25),W*(i===1?.62:.47)):Math.min(H*.44,W*.29);
+      const turn=i===0?spin*360:i===1?Math.sin(spin*Math.PI*2)*12:Math.sin(spin*Math.PI*5)*16*(1-spin);
+      sprite(node,endX*t,mix(H*.04,endY,t)-Math.sin(t*Math.PI)*H*.14,height,mix(.12,1,t),(i-1)*22*(1-t)+turn,range(t,0,.12),i===1?Math.sin(spin*Math.PI*2)*24:0);
+    });
+    sparks.forEach((node,i)=>{
+      const t=range(p,.405,.67), radius=out(t), a=i*2.39996;
+      node.style.opacity=String(Math.sin(t*Math.PI)*.65);
+      node.style.transform=`translate(${Math.cos(a)*W*.40*radius}px,${Math.sin(a)*H*.32*radius}px) rotate(${i*35+t*200}deg)`;
+    });
   }
   function neutralTilt() {
     product.style.setProperty('--tilt-x','0deg');
@@ -881,136 +908,27 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
     product.style.setProperty('--tilt-z','-5deg');
     product.setAttribute('aria-pressed','false');
   }
-  product.addEventListener('pointermove',event => {
-    if(motion.matches || event.pointerType==='touch') return;
+  product.addEventListener('pointermove',event=>{
+    if(motion.matches||event.pointerType==='touch') return;
     const rect=product.getBoundingClientRect();
-    const x=range(event.clientX,rect.left,rect.right)*2-1;
-    const y=range(event.clientY,rect.top,rect.bottom)*2-1;
+    const x=range(event.clientX,rect.left,rect.right)*2-1,y=range(event.clientY,rect.top,rect.bottom)*2-1;
     product.style.setProperty('--tilt-x',`${-y*12}deg`);
     product.style.setProperty('--tilt-y',`${x*16}deg`);
     product.style.setProperty('--tilt-z',`${x*4-5}deg`);
   });
   product.addEventListener('pointerleave',neutralTilt);
   product.addEventListener('blur',neutralTilt);
-  product.addEventListener('click',() => {
+  product.addEventListener('click',()=>{
     if(motion.matches) return;
     if(product.getAttribute('aria-pressed')==='true') return neutralTilt();
     product.style.setProperty('--tilt-x','-8deg');product.style.setProperty('--tilt-y','16deg');product.style.setProperty('--tilt-z','5deg');
     product.setAttribute('aria-pressed','true');
   });
-
-  function dispose(image) { image.close?.(); }
-  function reset(next) {
-    if(loading) finishLoading();
-    generation++;
-    controller.abort(); controller = new AbortController();
-    cache.forEach(dispose); cache.clear(); pending.clear(); failures.clear();
-    queue = []; variant = next; shown = -1;
-    stage.classList.remove('is-ready');
-    stage.classList.remove('is-fallback');
-    section.dataset.variant = variant;
-  }
-  function evict() {
-    const distant = [...cache.keys()].sort((a,b) => Math.abs(b-target)-Math.abs(a-target));
-    while(cache.size > LIMIT) {
-      const key = distant.shift(); dispose(cache.get(key)); cache.delete(key);
-    }
-    section.dataset.cached = String(cache.size);
-  }
-  function draw(force = false) {
-    if(!cache.size || motion.matches) return;
-    const index = cache.has(target) ? target : [...cache.keys()].reduce((a,b) => Math.abs(a-target)<Math.abs(b-target)?a:b);
-    // Keep the last scene visible during a large seek rather than flashing a remote cached frame.
-    if(Math.abs(index-target)>14 && shown>=0 && !force) return;
-    if(index===shown && !force) return;
-    const frame = cache.get(index);
-    const scale = Math.min(canvas.width/frame.width, canvas.height/frame.height);
-    context.fillStyle = '#FBF6ED';
-    context.fillRect(0,0,canvas.width,canvas.height);
-    context.drawImage(frame,(canvas.width-frame.width*scale)/2,(canvas.height-frame.height*scale)/2,frame.width*scale,frame.height*scale);
-    shown = index;
-    stage.classList.add('is-ready');
-    section.dataset.frame = String(index);
-    section.dataset.status = failures.size ? 'partial' : 'ready';
-  }
-  async function fetchFrame(index, version, signal) {
-    try {
-      const response = await fetch(`assets/intro/${variant}/frame-${String(index).padStart(3,'0')}.webp?v=native-finale-1`, {signal});
-      if(!response.ok) throw new Error(`Frame ${response.status}`);
-      const blob = await response.blob();
-      let bitmap;
-      if('createImageBitmap' in window) bitmap = await createImageBitmap(blob);
-      else {
-        const url = URL.createObjectURL(blob);
-        try { bitmap = new Image(); bitmap.src = url; await bitmap.decode(); }
-        finally { URL.revokeObjectURL(url); }
-      }
-      if(version !== generation) { dispose(bitmap); return; }
-      cache.set(index,bitmap); evict(); draw();
-    } catch(error) {
-      if(version===generation && error.name!=='AbortError') {
-        failures.add(index);
-        section.dataset.status = 'partial';
-        if(!cache.size) stage.classList.add('is-fallback');
-      }
-    } finally {
-      if(version===generation) { pending.delete(index); loadingProgress(); pump(); }
-    }
-  }
-  function pump() {
-    if(!active || motion.matches) return;
-    while(pending.size<3 && queue.length) {
-      const index = queue.shift();
-      if(cache.has(index) || pending.has(index) || failures.has(index)) continue;
-      pending.add(index); fetchFrame(index,generation,controller.signal);
-    }
-  }
-  function update() {
-    raf = 0;
-    if(motion.matches) {
-      if(variant!=='reduced') reset('reduced');
-      brand.style.opacity = '1'; section.dataset.status = 'reduced';
-      const bounds=section.getBoundingClientRect();updateFinale(1,bounds.bottom>0&&bounds.top<innerHeight);neutralTilt();return;
-    }
-    const next = innerWidth<700 ? 'mobile' : 'desktop';
-    if(variant!==next) {
-      reset(next);
-      if(Math.abs(section.getBoundingClientRect().top)<2) startLoading();
-    }
-    const rect = section.getBoundingClientRect();
-    const progress = Math.max(0,Math.min(1,-rect.top/Math.max(1,section.offsetHeight-stage.clientHeight)));
-    active = rect.bottom>0 && rect.top<innerHeight;
-    updateFinale(progress,active);
-    target = Math.round(Math.min(1,progress/.8)*(COUNT-1));
-    section.dataset.target = String(target);
-    stage.style.setProperty('--intro-progress',progress);
-    brand.style.opacity = '1';
-    const pixelRatio = Math.min(devicePixelRatio || 1,1.5);
-    const width = Math.round(stage.clientWidth*pixelRatio), height = Math.round(stage.clientHeight*pixelRatio);
-    const resized = canvas.width!==width || canvas.height!==height;
-    if(resized) { canvas.width=width; canvas.height=height; }
-    draw(resized);
-    if(!active) { queue=[]; return; }
-    // Prioritize the current scroll position, then both directions for smooth reversal.
-    queue = [target];
-    for(let distance=1;distance<=7;distance++) {
-      if(target+distance<COUNT) queue.push(target+distance);
-      if(target-distance>=0) queue.push(target-distance);
-    }
-    if(loading) queue = Array.from({length:START_BUFFER},(_,index)=>index);
-    pump();
-  }
   function schedule() { if(!raf) raf=requestAnimationFrame(update); }
   addEventListener('scroll',schedule,{passive:true});
   addEventListener('resize',schedule,{passive:true});
-  motion.addEventListener('change',schedule);
-  addEventListener('pagehide',() => { reset(''); });
-  addEventListener('wheel',event=>{if(loading) event.preventDefault();},{passive:false});
-  addEventListener('touchmove',event=>{if(loading) event.preventDefault();},{passive:false});
-  addEventListener('keydown',event=>{
-    if(loading && ['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(event.key)) event.preventDefault();
-  });
   addEventListener('pageshow',schedule);
+  motion.addEventListener('change',schedule);
   update();
 })();
 
