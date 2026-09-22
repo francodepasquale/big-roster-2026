@@ -72,7 +72,7 @@ img { max-width: 100%; display: block; }
    behind it -- impeccable detect flagged this, fixed by dropping the blur
    and just paying the opaque cream outright. */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: center;
   padding: 18px 32px; background: var(--crema);
   border-bottom: 1px solid var(--borde); }
 .nav-brand { font-weight: 900; font-size: 15px; letter-spacing: .02em; text-transform: uppercase; }
@@ -196,7 +196,6 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .island-item:hover, .island-item.active { background: rgba(238,88,9,.14); color: var(--crema); }
 .island-item-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--naranja); opacity: 0; transform: scale(0); transition: opacity .2s ease, transform .2s ease; }
 .island-item.active .island-item-dot { opacity: 1; transform: scale(1); }
-footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display: flex; justify-content: space-between; }
 
 .story-timeline { list-style: none; margin-top: 48px; border: 1px solid var(--borde); }
 .story-step { position: relative; display: grid; grid-template-columns: 72px .8fr 1.2fr; gap: 32px; padding: 48px 40px 48px 0; border-bottom: 1px solid var(--borde); align-items: center; }
@@ -352,25 +351,22 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .frame-loading-brand .big-badge { width: auto; height: auto; transform: translateY(-3svh); }
 .frame-loading-brand .big-badge img { width: auto; height: min(29vw,28svh); }
 .frame-stage.is-fallback .frame-loading-brand { display: none; }
-.frame-controls { position: absolute; bottom: 92px; left: 6vw; right: 6vw; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #3A2142; }
-.frame-controls a { margin-left: auto; color: inherit; text-decoration: none; padding: 12px 16px; border: 1px solid currentColor; border-radius: 99px; background: rgba(251,246,237,.6); }
-.frame-controls a:focus-visible { outline: 3px solid #3A2142; outline-offset: 4px; }
 .frame-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: #3A2142; transform: scaleX(var(--intro-progress)); transform-origin: left; }
 .intro-finale { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 5svh 4vw 7svh; background: #EE5809; color: #FBF6ED; clip-path: inset(calc((1 - var(--finale-reveal,0)) * 100%) 0 0); }
-.intro-finale-copy { position: absolute; left: 6vw; right: 6vw; top: 16%; z-index: 1; text-align: left; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
+.intro-finale-copy { order: 1; position: relative; z-index: 1; width: 100%; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
 .intro-finale h1 { font: 900 clamp(42px,15.7vw,260px)/.9 'Inter',sans-serif; letter-spacing: -.035em; margin: 0; white-space: nowrap; }
-.finale-tagline { position: absolute; left: 6vw; bottom: 9%; z-index: 1; max-width: 88vw; font-size: clamp(14px,1.3vw,20px); font-weight: 500; color: #fff; margin: 0; text-align: left; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
-.finale-product-reveal { position: absolute; inset: 33% 12% 5% 42%; z-index: 2; display: grid; place-items: center; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
+.finale-tagline { order: 2; position: relative; z-index: 1; max-width: 88vw; font-size: clamp(18px,2.2vw,34px); line-height: 1.3; font-weight: 500; color: #fff; margin: 0; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
+.finale-product-reveal { order: 0; position: relative; z-index: 2; display: grid; place-items: center; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
 .finale-product { display: block; border: 0; background: transparent; padding: 0; cursor: pointer; perspective: 850px; touch-action: pan-y; border-radius: 20px; }
 .finale-product { pointer-events: auto; }
-.finale-product img { display: block; height: min(60svh,640px); max-width: 48vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 28px 26px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
+.finale-product img { display: block; height: min(30svh,320px); max-width: 24vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 20px 22px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
 .finale-product:focus-visible { outline: 2px solid #3A2142; outline-offset: 10px; }
 .finale-product:hover img { filter: drop-shadow(0 38px 32px rgba(58,33,66,.38)); }
-@media(max-width:699px) { .intro-finale-copy { top: 22%; } .intro-finale h1 { font-size: 15.4vw; } .finale-product-reveal { inset: 27% 6% 13% 16%; } .finale-product img { height: 52svh; max-width: 66vw; } }
+@media(max-width:699px) { .intro-finale { gap: 24px; padding: max(24px,env(safe-area-inset-top)) 4vw max(24px,env(safe-area-inset-bottom)); } .intro-finale h1 { font-size: 15.4vw; } .finale-tagline { font-size: clamp(17px,4.5vw,26px); } .finale-product img { height: 26svh; max-width: 33vw; } }
 #navBig { opacity: 0; }
 .intro-description { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
-@media(max-width:600px) { .nav-brand .brand-client { display: none; } }
-@media(prefers-reduced-motion:reduce) { .frame-intro { height: 100svh; } .frame-stage canvas, .frame-loading-brand, .frame-controls, .frame-progress, .frame-poster { display: none; } .intro-finale { clip-path: none; } .intro-finale-copy, .finale-tagline, .finale-product-reveal { opacity: 1; transform: none; } .finale-product img { transform: none; transition: none; } #navBig { opacity: 1 !important; } }
+@media(max-width:600px) { .nav-brand { gap: 8px; font-size: clamp(10px,2.8vw,14px); } .nav-brand .big-badge { width: 36px; height: 36px; } .nav-brand .big-badge img { height: 30px; } .brand-client { white-space: nowrap; } }
+@media(prefers-reduced-motion:reduce) { .frame-intro { height: 100svh; } .frame-stage canvas, .frame-loading-brand, .frame-progress, .frame-poster { display: none; } .intro-finale { clip-path: none; } .intro-finale-copy, .finale-tagline, .finale-product-reveal { opacity: 1; transform: none; } .finale-product img { transform: none; transition: none; } #navBig { opacity: 1 !important; } }
 /* Accessible image accordion, using the three original character cutouts. */
 .elenco-grid { display: flex; gap: 12px; }
 .elenco-card { position: relative; flex: 1 1 0; min-width: 0; height: 580px; border-radius: 22px; overflow: hidden; background: var(--crema-2); cursor: pointer; transition: flex .65s cubic-bezier(.2,.8,.2,1),opacity .6s,transform .6s; }
@@ -458,7 +454,6 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
       <div class="frame-loading-brand" aria-hidden="true"><span class="big-badge"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt=""></span></div>
       <canvas id="introCanvas" aria-hidden="true"></canvas>
       <p class="intro-description">BIG presenta: la bolsa de KHE MANIS se abre y libera a Don Pela, Barbacacho y Parmesandro.</p>
-      <div class="frame-controls"><a href="#hero">Saltar intro ↗</a></div>
       <div class="frame-progress" aria-hidden="true"></div>
       <div class="intro-finale" id="introFinale" inert aria-hidden="true">
         <div class="intro-finale-copy"><h1>KHEMANIS</h1></div>
@@ -802,10 +797,6 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
   <div class="island-menu"><div class="island-menu-head"><span>Índice</span><button class="island-close" id="islandClose" type="button" aria-label="Cerrar">&times;</button></div><div class="island-menu-list"><button class="island-item" type="button" data-id="hero"><span>Portada</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="propuesta"><span>Propuesta</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="elenco"><span>Elenco</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="serie"><span>La serie</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="storyboard"><span>Storyboard</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="otras"><span>Microepisodios</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="piloto"><span>Piloto</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="factibilidad"><span>Desarrollo del producto</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="acuerdo"><span>Acuerdo</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="proximos"><span>Próximos pasos</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="referencias"><span>Referencias</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="pelao"><span>Pelao Khe</span><span class="island-item-dot"></span></button><button class="island-item" type="button" data-id="cierre"><span>Cierre</span><span class="island-item-dot"></span></button></div></div>
 </div></div>
 
-<footer class="claro">
-  <span>KHE MANIS &times; BIG</span>
-  <span>Actualizado 22 de septiembre de 2026</span>
-</footer>
 
 <script>
 const castGallery = document.querySelector('.elenco-grid');
@@ -834,7 +825,6 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   const brand = document.getElementById('navBig');
   const finale = document.getElementById('introFinale');
   const product = document.getElementById('finaleProduct');
-  const controls = section.querySelector('.frame-controls');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const cache = new Map();
   const pending = new Set();
@@ -852,8 +842,6 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
     section.style.zIndex = reveal>0 && visible ? '1001' : '';
     finale.inert = reveal<1 || !visible;
     finale.setAttribute('aria-hidden',String(finale.inert));
-    controls.style.opacity = String(1-reveal);
-    controls.inert = reveal>0;
   }
   function neutralTilt() {
     product.style.setProperty('--tilt-x','0deg');
