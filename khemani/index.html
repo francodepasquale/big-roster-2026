@@ -357,16 +357,16 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .frame-controls a:focus-visible { outline: 3px solid #3A2142; outline-offset: 4px; }
 .frame-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: #3A2142; transform: scaleX(var(--intro-progress)); transform-origin: left; }
 .intro-finale { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 5svh 4vw 7svh; background: #EE5809; color: #FBF6ED; clip-path: inset(calc((1 - var(--finale-reveal,0)) * 100%) 0 0); }
-.intro-finale-copy { position: absolute; left: 6vw; right: 6vw; top: 43%; z-index: 1; text-align: left; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
+.intro-finale-copy { position: absolute; left: 6vw; right: 6vw; top: 16%; z-index: 1; text-align: left; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
 .intro-finale h1 { font: 900 clamp(42px,15.7vw,260px)/.9 'Inter',sans-serif; letter-spacing: -.035em; margin: 0; white-space: nowrap; }
 .intro-finale-copy p { font-size: clamp(12px,1.2vw,18px); font-weight: 900; color: #fff; margin: 20px 0 0; }
-.finale-product-reveal { position: absolute; inset: 6% 12% 8% 32%; z-index: 2; display: grid; place-items: center; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
+.finale-product-reveal { position: absolute; inset: 33% 12% 5% 32%; z-index: 2; display: grid; place-items: center; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
 .finale-product { display: block; border: 0; background: transparent; padding: 0; cursor: pointer; perspective: 850px; touch-action: pan-y; border-radius: 20px; }
 .finale-product { pointer-events: auto; }
-.finale-product img { display: block; height: min(76svh,800px); max-width: 52vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 28px 26px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
+.finale-product img { display: block; height: min(60svh,640px); max-width: 48vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 28px 26px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
 .finale-product:focus-visible { outline: 2px solid #3A2142; outline-offset: 10px; }
 .finale-product:hover img { filter: drop-shadow(0 38px 32px rgba(58,33,66,.38)); }
-@media(max-width:699px) { .intro-finale-copy { top: 64%; } .intro-finale h1 { font-size: 15.4vw; } .finale-product-reveal { inset: 9% 6% 21%; } .finale-product img { height: 60svh; max-width: 72vw; } }
+@media(max-width:699px) { .intro-finale-copy { top: 22%; } .intro-finale h1 { font-size: 15.4vw; } .finale-product-reveal { inset: 27% 6% 13%; } .finale-product img { height: 52svh; max-width: 66vw; } }
 #navBig { opacity: 0; }
 .intro-description { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 @media(max-width:600px) { .nav-brand .brand-client { display: none; } }
@@ -415,6 +415,35 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .creator-source { margin-top: 24px; font-size: 11px; line-height: 1.5; color: rgba(36,26,34,.55); }
 .creator-source a { color: inherit; }
 @media(max-width:600px) { .creator-head { grid-template-columns: 1fr; } .creator-metrics { grid-template-columns: 1fr; } .creator-role { flex-direction: column; gap: 8px; } }
+/* Pinned-note proposal journey, adapted from the supplied HowItWorks reference. */
+.proposal-board { position: relative; margin-top: 64px; padding: 32px 0; background: repeating-linear-gradient(transparent 0 31px,rgba(58,33,66,.07) 31px 32px); }
+.proposal-board::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg,var(--crema),transparent 22%,transparent 78%,var(--crema)); }
+.proposal-notes { position: relative; list-style: none; width: 100%; max-width: 1000px; height: 940px; margin: 0 auto; padding: 0; }
+.proposal-path { position: absolute; top: 32px; left: 50%; transform: translateX(-50%); width: min(100%,1000px); height: 940px; pointer-events: none; color: rgba(58,33,66,.3); }
+.proposal-path path { stroke-dasharray: 8 6; animation: proposal-dashes 3s linear infinite; }
+@keyframes proposal-dashes { to { stroke-dashoffset: -140; } }
+.proposal-step { position: absolute; width: 31%; left: 13%; top: 20px; --note-accent: #bd431c; --note-bg: #fff0e3; --note-angle: 6deg; }
+.proposal-step:nth-child(2) { left: auto; right: 13%; top: 170px; --note-accent: #553366; --note-bg: #f2eaf6; --note-angle: -6deg; }
+.proposal-step:nth-child(3) { top: 480px; --note-accent: #586e25; --note-bg: #f1f4e5; }
+.proposal-step:nth-child(4) { left: auto; right: 10%; top: 620px; --note-angle: -6deg; }
+.proposal-step:hover { z-index: 2; }
+.proposal-card { background: #fffdfa; border: 1px solid rgba(58,33,66,.06); border-radius: 25px; padding: 10px; box-shadow: 0 12px 24px rgba(58,33,66,.12); transform: rotate(var(--note-angle)); transition: transform .3s ease,box-shadow .3s; }
+.proposal-card:hover { transform: rotate(0deg) scale(1.04); box-shadow: 0 18px 32px rgba(58,33,66,.18); }
+.proposal-pin { display: block; width: 30px; height: 30px; color: var(--note-accent); margin: 4px auto 20px; }
+.proposal-card-body { min-height: 218px; padding: 20px; border: 1px solid color-mix(in srgb,var(--note-accent) 12%,transparent); border-radius: 16px; background: var(--note-bg); }
+.proposal-number { display: block; color: var(--note-accent); font-size: 34px; line-height: 1; font-weight: 800; margin-bottom: 24px; }
+.proposal-card h3 { font-size: 24px; line-height: 1.1; font-weight: 800; margin: 0 0 12px; }
+.proposal-card p { font-size: 15px; line-height: 1.55; color: rgba(36,26,34,.75); margin: 0; }
+@media(max-width:760px) {
+  .proposal-board { margin-top: 36px; padding: 30px 12px; }
+  .proposal-path { display: none; }
+  .proposal-notes { display: flex; flex-direction: column; gap: 46px; height: auto; max-width: 420px; }
+  .proposal-notes::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed rgba(58,33,66,.24); }
+  .proposal-step, .proposal-step:nth-child(n) { position: relative; width: 100%; left: auto; right: auto; top: auto; --note-angle: 2deg; }
+  .proposal-step:nth-child(even) { --note-angle: -2deg; }
+  .proposal-card-body { min-height: 0; }
+}
+@media(prefers-reduced-motion:reduce) { .proposal-path path { animation: none; } .proposal-card, .proposal-card:hover { transform: none; transition: none; } }
 </style>
 <noscript><style>.frame-intro { display:none; } #navBig { opacity:1; }</style></noscript>
 
@@ -451,19 +480,11 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
   <section class="claro" id="propuesta">
     <div class="wrap">
       <h2 class="serif rv">Una colaboración que empieza en el producto</h2>
-      <div class="dos-col">
-        <div class="rv">
-          <h3>La propuesta</h3>
-          <p>Reunir tres variedades de Croppers en una edición con Pelao Khe.</p>
-        </div>
-        <div class="rv">
-          <h3>El producto</h3>
-          <p>Un mismo paquete combina maní clásico, barbacoa y crocante de parmesano y pimienta.</p>
-          <h3 style="margin-top:22px">La campaña</h3>
-          <p>Cada variedad se convierte en un personaje. Alex interpreta sus voces en una comedia de convivencia.</p>
-        </div>
+      <div class="proposal-board">
+        <svg class="proposal-path" viewBox="0 0 1000 940" preserveAspectRatio="none" aria-hidden="true"><path d="M 285 70 C 470 -10 570 140 715 220 C 920 370 490 370 285 530 C 170 640 570 660 745 670" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
+        <ol class="proposal-notes" aria-label="De la propuesta al piloto"><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">01</span><h3>La propuesta</h3><p>Reunir tres variedades de Croppers en una edición con Pelao Khe.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">02</span><h3>El producto</h3><p>Un mismo paquete combina maní clásico, barbacoa y crocante de parmesano y pimienta.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">03</span><h3>La campaña</h3><p>Cada variedad se convierte en un personaje. Alex interpreta sus voces en una comedia de convivencia.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">04</span><h3>El piloto</h3><p>El piloto permitirá evaluar si se entiende el mix y si despierta interés de compra.</p></div></article></li></ol>
       </div>
-      <p class="nota rv">El piloto permitirá evaluar si se entiende el mix y si despierta interés de compra. Estas variedades ya existen por separado en el catálogo de Croppers &mdash; lo nuevo es la combinación en un mismo envase, aún sin definir en gramaje, proporciones ni viabilidad industrial.</p>
+      <p class="nota rv">Estas variedades ya existen por separado en el catálogo de Croppers &mdash; lo nuevo es la combinación en un mismo envase, aún sin definir en gramaje, proporciones ni viabilidad industrial.</p>
     </div>
   </section>
 
