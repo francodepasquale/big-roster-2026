@@ -346,8 +346,11 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .intro-scene { position: absolute; inset: 0; perspective: 1000px; background: radial-gradient(ellipse at center, #f6e5cb 0%, #FBF6ED 70%); pointer-events: none; }
 .intro-sprite { position: absolute; left: 50%; top: 50%; width: auto; max-width: none; object-fit: contain; opacity: 0; transform: translate(-50%,-50%); will-change: transform,opacity; }
 #introLogo { opacity: 1; height: min(29vw,28svh); }
-#introBag, .intro-actor { filter: drop-shadow(0 14px 16px rgba(58,33,66,.16)); }
-.intro-actor { z-index: 2; }
+.intro-pack, .intro-actor { filter: drop-shadow(0 14px 16px rgba(58,33,66,.16)); }
+.intro-pack { z-index: 1; }
+.intro-pack[data-character="parmesandro"] { z-index: 2; }
+.intro-pack[data-character="don-pela"] { z-index: 3; }
+.intro-actor { z-index: 4; }
 .intro-fragment:nth-of-type(1) { clip-path: polygon(0 0,50% 0,58% 50%,0 56%); }
 .intro-fragment:nth-of-type(2) { clip-path: polygon(50% 0,100% 0,100% 52%,58% 50%); }
 .intro-fragment:nth-of-type(3) { clip-path: polygon(0 56%,58% 50%,50% 100%,0 100%); }
@@ -361,13 +364,26 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .intro-finale-copy { order: 1; position: relative; z-index: 1; width: 100%; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
 .intro-finale h1 { font: 900 clamp(42px,15.7vw,260px)/.9 'Inter',sans-serif; letter-spacing: -.035em; margin: 0; white-space: nowrap; }
 .finale-tagline { order: 2; position: relative; z-index: 1; max-width: 88vw; font-size: clamp(12.6px,1.54vw,23.8px); line-height: 1.3; font-weight: 500; color: #fff; margin: 0; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
-.finale-product-reveal { order: 0; position: relative; top: clamp(10px,2svh,18px); z-index: 2; display: grid; place-items: center; margin-bottom: -32px; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
-.finale-product { display: block; border: 0; background: transparent; padding: 0; cursor: pointer; perspective: 850px; touch-action: pan-y; border-radius: 20px; }
+.finale-product-reveal { order: 0; position: relative; top: clamp(10px,2svh,18px); z-index: 2; display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: -32px; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
+.finale-product { --base-angle: 0deg; position: relative; z-index: 1; flex: 0 0 auto; display: block; border: 0; background: transparent; padding: 0; cursor: pointer; perspective: 850px; touch-action: pan-y; border-radius: 20px; }
+.finale-product + .finale-product { margin-left: clamp(-70px,-5vw,-14px); }
+.finale-product:first-child { --base-angle: -8deg; }
+.finale-product:last-child { --base-angle: 8deg; z-index: 2; }
+.finale-product:nth-child(2) { z-index: 3; transform: translateY(-5%); }
 .finale-product { pointer-events: auto; }
-.finale-product img { display: block; height: min(42svh,448px,40.8vw); max-width: 33.6vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 20px 22px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
+.finale-product img { display: block; height: min(42svh,448px,37vw); width: auto; max-width: 27vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(calc(var(--base-angle) + var(--tilt-z,0deg))); filter: drop-shadow(0 20px 22px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
 .finale-product:focus-visible { outline: 2px solid #3A2142; outline-offset: 10px; }
 .finale-product:hover img { filter: drop-shadow(0 38px 32px rgba(58,33,66,.38)); }
-@media(max-width:699px) { .intro-finale { gap: 24px; padding: max(24px,env(safe-area-inset-top)) 4vw max(24px,env(safe-area-inset-bottom)); } .intro-finale h1 { font-size: 15.4vw; } .finale-tagline { font-size: clamp(11.9px,3.15vw,18.2px); } .finale-product img { height: min(36.4svh,56.1vw); max-width: 46.2vw; } }
+@media(max-width:699px) { .intro-finale { gap: 24px; padding: max(24px,env(safe-area-inset-top)) 4vw max(24px,env(safe-area-inset-bottom)); } .intro-finale h1 { font-size: 15.4vw; } .finale-tagline { font-size: clamp(11.9px,3.15vw,18.2px); } .finale-product-reveal { margin-bottom: -24px; } .finale-product img { height: min(34svh,43vw); max-width: 28vw; } }
+.product-lineup { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(12px,3vw,40px); margin-top: 50px; }
+.product-lineup figure { margin: 0; text-align: center; }
+.product-lineup img { display: block; width: 100%; height: clamp(150px,30vw,360px); object-fit: contain; filter: drop-shadow(0 12px 14px #241a221a); }
+.product-lineup figcaption { margin-top: 20px; font-size: clamp(13px,1.8vw,20px); font-weight: 700; }
+.story-packshot { display: flex; align-items: center; justify-content: center; gap: 2%; min-height: 320px; aspect-ratio: 1; padding: 6%; background: var(--crema-2); border-radius: 8px; }
+.story-step .story-packshot img { width: 31%; height: auto; border-radius: 0; filter: drop-shadow(0 10px 9px #241a2230); }
+.story-packshot img:first-child { transform: rotate(-7deg); }
+.story-packshot img:last-child { transform: rotate(7deg); }
+@media(max-width:699px) { .story-packshot { min-height: 0; } }
 #navBig { opacity: 1; }
 .intro-description { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 @media(max-width:600px) { .nav-brand { gap: 8px; font-size: clamp(10px,2.8vw,14px); } .nav-brand .big-badge { width: 36px; height: 36px; } .nav-brand .big-badge img { height: 30px; } .brand-client { white-space: nowrap; } }
@@ -457,17 +473,17 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
     <div class="frame-stage">
       <div class="intro-scene" aria-hidden="true">
         <img class="intro-sprite" id="introLogo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt="">
-        <img class="intro-sprite" id="introBag" src="assets/packaging-transparent.png" alt="" fetchpriority="high" decoding="async">
-        <div><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"><img class="intro-sprite intro-fragment" src="assets/packaging-transparent.png" alt="" decoding="async"></div>
-        <img class="intro-sprite intro-actor" src="assets/personajes/barbacacho.png" alt="" loading="eager" decoding="async"><img class="intro-sprite intro-actor" src="assets/personajes/don-pela.png" alt="" loading="eager" decoding="async"><img class="intro-sprite intro-actor" src="assets/personajes/parmesandro.png" alt="" loading="eager" decoding="async">
+        <img class="intro-sprite intro-pack" data-character="barbacacho" src="assets/packaging/barbacacho.png" width="1024" height="1536" alt="" fetchpriority="high" decoding="async"><img class="intro-sprite intro-pack" data-character="don-pela" src="assets/packaging/don-pela.png" width="1024" height="1536" alt="" fetchpriority="high" decoding="async"><img class="intro-sprite intro-pack" data-character="parmesandro" src="assets/packaging/parmesandro.png" width="1024" height="1536" alt="" fetchpriority="high" decoding="async">
+        <div><img class="intro-sprite intro-fragment" data-character="barbacacho" src="assets/packaging/barbacacho.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="barbacacho" src="assets/packaging/barbacacho.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="barbacacho" src="assets/packaging/barbacacho.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="barbacacho" src="assets/packaging/barbacacho.png" width="1024" height="1536" alt="" decoding="async"></div><div><img class="intro-sprite intro-fragment" data-character="don-pela" src="assets/packaging/don-pela.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="don-pela" src="assets/packaging/don-pela.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="don-pela" src="assets/packaging/don-pela.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="don-pela" src="assets/packaging/don-pela.png" width="1024" height="1536" alt="" decoding="async"></div><div><img class="intro-sprite intro-fragment" data-character="parmesandro" src="assets/packaging/parmesandro.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="parmesandro" src="assets/packaging/parmesandro.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="parmesandro" src="assets/packaging/parmesandro.png" width="1024" height="1536" alt="" decoding="async"><img class="intro-sprite intro-fragment" data-character="parmesandro" src="assets/packaging/parmesandro.png" width="1024" height="1536" alt="" decoding="async"></div>
+        <img class="intro-sprite intro-actor" data-character="barbacacho" src="assets/personajes/barbacacho.png" alt="" loading="eager" decoding="async"><img class="intro-sprite intro-actor" data-character="don-pela" src="assets/personajes/don-pela.png" alt="" loading="eager" decoding="async"><img class="intro-sprite intro-actor" data-character="parmesandro" src="assets/personajes/parmesandro.png" alt="" loading="eager" decoding="async">
         <div><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i><i class="intro-spark"></i></div>
       </div>
-      <p class="intro-description">BIG presenta: la bolsa de KHE MANIS se abre y libera a Don Pela, Barbacacho y Parmesandro.</p>
+      <p class="intro-description">BIG presenta tres paquetes de KHE MANIS: Don Pela, Barbacacho y Parmesandro. Cada envase se abre y de él sale su propio personaje.</p>
       <div class="frame-progress" aria-hidden="true"></div>
       <div class="intro-finale" id="introFinale" inert aria-hidden="true">
         <div class="intro-finale-copy"><h1>KHEMANIS</h1></div>
         <p class="finale-tagline">UNA IDEA BIEN CROPPADA</p>
-        <div class="finale-product-reveal"><button class="finale-product" id="finaleProduct" type="button" aria-label="Inclinar la bolsa de KHE MANIS" aria-pressed="false"><img src="assets/packaging-transparent.png" alt="Bolsa de KHE MANIS, Croppers × Pelao Khe" draggable="false"></button></div>
+        <div class="finale-product-reveal"><button class="finale-product" data-character="barbacacho" type="button" aria-label="Inclinar el pack de Barbacacho" aria-pressed="false"><img src="assets/packaging/barbacacho.png" width="1024" height="1536" alt="KHE MANIS — Barbacacho: Maní sabor barbacoa" draggable="false"></button><button class="finale-product" data-character="don-pela" type="button" aria-label="Inclinar el pack de Don Pela" aria-pressed="false"><img src="assets/packaging/don-pela.png" width="1024" height="1536" alt="KHE MANIS — Don Pela: Maní sin piel salado" draggable="false"></button><button class="finale-product" data-character="parmesandro" type="button" aria-label="Inclinar el pack de Parmesandro" aria-pressed="false"><img src="assets/packaging/parmesandro.png" width="1024" height="1536" alt="KHE MANIS — Parmesandro: Crocante parmesano y pimienta" draggable="false"></button></div>
       </div>
     </div>
   </section>
@@ -475,7 +491,7 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
   <section class="hero claro" id="hero">
     <div class="wrap">
       <div>
-        <p class="hero-sub rv">Tres variedades de maní de Croppers, convertidas en personajes que Alex (Pelao Khe) interpreta en una serie de piezas animadas para redes.</p>
+        <p class="hero-sub rv">Tres variedades de maní de Croppers. Tres personajes, cada uno con su propio paquete y un color que lo identifica. Alex (Pelao Khe) les da voz en una serie de piezas animadas para redes.</p>
         <div class="hero-disclaimer rv">Propuesta desarrollada por la representación de Pelao Khe. La colaboración, la fórmula y la producción todavía no están confirmadas por Croppers.</div>
       </div>
       <figure class="hero-talent rv"><img src="data:image/webp;base64,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" alt="Pelao Khe, Alex, intérprete de los personajes de KHE MANIS" width="599" height="749" loading="lazy"><figcaption><strong>Pelao Khe</strong><span>Alex · Las tres voces</span></figcaption></figure>
@@ -487,17 +503,18 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
       <h2 class="serif rv">Una colaboración que empieza en el producto</h2>
       <div class="proposal-board">
         <svg class="proposal-path" viewBox="0 0 1000 940" preserveAspectRatio="none" aria-hidden="true"><path d="M 285 70 C 470 -10 570 140 715 220 C 920 370 490 370 285 530 C 170 640 570 660 745 670" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
-        <ol class="proposal-notes" aria-label="De la propuesta al piloto"><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">01</span><h3>La propuesta</h3><p>Reunir tres variedades de Croppers en una edición con Pelao Khe.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">02</span><h3>El producto</h3><p>Un mismo paquete combina maní clásico, barbacoa y crocante de parmesano y pimienta.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">03</span><h3>La campaña</h3><p>Cada variedad se convierte en un personaje. Alex interpreta sus voces en una comedia de convivencia.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">04</span><h3>El piloto</h3><p>El piloto permitirá evaluar si se entiende el mix y si despierta interés de compra.</p></div></article></li></ol>
+        <ol class="proposal-notes" aria-label="De la propuesta al piloto"><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">01</span><h3>La propuesta</h3><p>Crear una línea de tres variedades de Croppers con Pelao Khe. Cada una tiene su personaje y su propio packaging.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">02</span><h3>El producto</h3><p>Tres paquetes distintos: Don Pela para el clásico salado, Barbacacho para barbacoa y Parmesandro para parmesano y pimienta.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">03</span><h3>La campaña</h3><p>Cada personaje sale de su propio paquete. Alex interpreta las tres voces en una comedia entre vecinos.</p></div></article></li><li class="proposal-step rv"><article class="proposal-card"><svg class="proposal-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg><div class="proposal-card-body"><span class="proposal-number">04</span><h3>El piloto</h3><p>El piloto permitirá evaluar si se reconoce cada variedad y su personaje, y si despierta interés de compra.</p></div></article></li></ol>
       </div>
-      <p class="nota rv">Estas variedades ya existen por separado en el catálogo de Croppers &mdash; lo nuevo es la combinación en un mismo envase, aún sin definir en gramaje, proporciones ni viabilidad industrial.</p>
+      <p class="nota rv">Las variedades parten del catálogo de Croppers. La propuesta les da una identidad propia dentro de KHE MANIS: un sabor, un personaje y un packaging para cada una.</p>
     </div>
   </section>
 
   <section class="claro" id="producto">
     <div class="wrap">
-      <h2 class="serif rv">Tres variedades, una mezcla</h2>
+      <h2 class="serif rv">Tres sabores. Tres personajes. Tres packs.</h2>
+      <div class="product-lineup"><figure class="rv"><img src="assets/packaging/barbacacho.png" alt="Pack individual de Barbacacho" width="1024" height="1536" loading="lazy"><figcaption>Barbacacho</figcaption></figure><figure class="rv"><img src="assets/packaging/don-pela.png" alt="Pack individual de Don Pela" width="1024" height="1536" loading="lazy"><figcaption>Don Pela</figcaption></figure><figure class="rv"><img src="assets/packaging/parmesandro.png" alt="Pack individual de Parmesandro" width="1024" height="1536" loading="lazy"><figcaption>Parmesandro</figcaption></figure></div>
       <div class="tabla rv">
-        <div class="tabla-head"><div>Variedad</div><div>Personaje</div><div>Papel en la mezcla</div></div>
+        <div class="tabla-head"><div>Variedad</div><div>Personaje</div><div>Personalidad del sabor</div></div>
         
       <div class="tabla-row">
         <div>Maní sin piel salado</div><div>Don Pela</div><div>Sabor clásico</div>
@@ -584,7 +601,7 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
       <div class="serie-grid">
         <div>
           <h2 class="serif rv">Los Infiltrados</h2>
-          <p class="hero-sub rv" style="color:rgba(251,246,237,.8);margin-top:18px">El paquete es su departamento. Tres personalidades obligadas a convivir. Lo que pasa fuera del envase se convierte en un problema dentro.</p>
+          <p class="hero-sub rv" style="color:rgba(251,246,237,.8);margin-top:18px">Cada paquete es su casa. Tres vecinos comparten góndola, se visitan y se encuentran en cada picada. Sus personalidades chocan cada vez que salen de sus envases.</p>
         </div>
         <div class="serie-meta rv">
           <b>La mudanza</b>
@@ -598,7 +615,7 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
   <section class="claro" id="storyboard">
     <div class="wrap">
       <h2 class="serif rv">La mudanza</h2>
-      <p class="hero-sub rv" style="margin-top:14px">Duración orientativa: 30 segundos, formato vertical 9:16. Las láminas son viñetas de referencia, no una animación terminada.</p>
+      <p class="hero-sub rv" style="margin-top:14px">Tres paquetes llegan a la misma góndola y sus personajes se conocen. Duración orientativa: 30 segundos, formato vertical 9:16. Las viñetas orientan las actuaciones; el cierre muestra los tres envases.</p>
       <ol class="story-timeline"><li class="story-step">
           <div class="story-marker"><span>01</span></div>
           <div class="story-copy"><span class="story-badge">0–14 s · Llegan los nuevos</span><h3 class="serif">Don Pela</h3><p>“¿Ustedes quiénes son?”</p></div>
@@ -613,16 +630,16 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
           <figure><svg class="story-art" viewBox="1287 300 521 543" role="img" aria-label="Viñeta: Parmesandro"><image href="assets/storyboard/source-08.png" width="1920" height="1080" /></svg></figure>
         </li><li class="story-step">
           <div class="story-marker"><span>04</span></div>
-          <div class="story-copy"><span class="story-badge">14–30 s · El primer sacudón</span><h3 class="serif">Parmesandro</h3><p>“¡Se mueve el departamento!”</p></div>
+          <div class="story-copy"><span class="story-badge">14–30 s · El primer sacudón</span><h3 class="serif">Parmesandro</h3><p>“¡Se mueve mi casa!”</p></div>
           <figure><svg class="story-art" viewBox="114 300 550 544" role="img" aria-label="Viñeta: Parmesandro"><image href="assets/storyboard/source-09.png" width="1920" height="1080" /></svg></figure>
         </li><li class="story-step">
           <div class="story-marker"><span>05</span></div>
-          <div class="story-copy"><span class="story-badge">14–30 s · El primer sacudón</span><h3 class="serif">Don Pela</h3><p>“Es un mix, maestro. Acostumbrate.”</p></div>
+          <div class="story-copy"><span class="story-badge">14–30 s · El primer sacudón</span><h3 class="serif">Don Pela</h3><p>“Bienvenido a la góndola, maestro.”</p></div>
           <figure><svg class="story-art" viewBox="680 300 560 544" role="img" aria-label="Viñeta: Don Pela"><image href="assets/storyboard/source-09.png" width="1920" height="1080" /></svg></figure>
         </li><li class="story-step">
           <div class="story-marker"><span>06</span></div>
           <div class="story-copy"><span class="story-badge">14–30 s · El primer sacudón</span><h3 class="serif">Alex</h3><p>“Khe Manis, de Croppers. Una idea bien croppada.”</p></div>
-          <figure><svg class="story-art" viewBox="1256 300 552 544" role="img" aria-label="Viñeta: Alex"><image href="assets/storyboard/source-09.png" width="1920" height="1080" /></svg></figure>
+          <figure><div class="story-packshot" role="img" aria-label="Los tres envases individuales de KHE MANIS"><img src="assets/packaging/barbacacho.png" alt="" loading="lazy"><img src="assets/packaging/don-pela.png" alt="" loading="lazy"><img src="assets/packaging/parmesandro.png" alt="" loading="lazy"></div></figure>
         </li></ol>
     </div>
   </section>
@@ -652,7 +669,7 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
       <div class="decision-grid">
         <div>
           <div class="serie-meta"><b>La primera decisión</b></div>
-          <h2 class="serif decision-quote rv">Probar la mezcla.<br>Escuchar las voces.</h2>
+          <h2 class="serif decision-quote rv">Conocer los sabores.<br>Escuchar las voces.</h2>
         </div>
         <div class="decision-side"><b>Para avanzar</b><ol class="advance-rail"><li><i></i><small>01</small><span>Validación de Croppers</span></li><li><i></i><small>02</small><span>Prueba de voces</span></li><li><i></i><small>03</small><span>Propuesta económica</span></li></ol></div>
       </div>
@@ -678,7 +695,7 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 
   <section class="oscuro cierre" id="cierre">
     <div class="wrap">
-      <h2 class="serif rv">Probar la mezcla. Escuchar las voces.</h2>
+      <h2 class="serif rv">Conocer los sabores. Escuchar las voces.</h2>
       <p class="hero-sub rv" style="color:rgba(251,246,237,.8);margin:18px auto 0;max-width:52ch">Una muestra de producto y una prueba con Alex permiten definir el alcance y preparar una cotización del piloto. Los costos de esta etapa se acuerdan antes de contratar.</p>
       <a class="btn rv" href="https://tienda.croppers.com.ar/croppers/" target="_blank" rel="noopener">Ver catálogo de Croppers <span>&rarr;</span></a>
     </div>
@@ -717,12 +734,12 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   const stage = section.querySelector('.frame-stage');
   const header = document.getElementById('deckHeader');
   const logo = document.getElementById('introLogo');
-  const bag = document.getElementById('introBag');
+  const packs = [...section.querySelectorAll('.intro-pack')];
   const actors = [...section.querySelectorAll('.intro-actor')];
   const fragments = [...section.querySelectorAll('.intro-fragment')];
   const sparks = [...section.querySelectorAll('.intro-spark')];
   const finale = document.getElementById('introFinale');
-  const product = document.getElementById('finaleProduct');
+  const products = [...section.querySelectorAll('.finale-product')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const range = (p,a,b) => Math.max(0,Math.min(1,(p-a)/(b-a)));
   const out = t => 1-(1-t)**3;
@@ -731,7 +748,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   let raf = 0;
   function sprite(node,x,y,height,scale=1,angle=0,alpha=1,turn=0) {
     // Keep rotated sprites inside the viewport, including narrow phones.
-    const radians=angle*Math.PI/180, ratio=node.naturalWidth/node.naturalHeight||.82;
+    const radians=angle*Math.PI/180, ratio=node.naturalWidth/node.naturalHeight||node.width/node.height||.82;
     const halfWidth=height*scale*(Math.abs(Math.cos(radians))*ratio+Math.abs(Math.sin(radians)))/2;
     const limit=Math.max(0,stage.clientWidth/2-12-halfWidth);
     x=Math.max(-limit,Math.min(limit,x));
@@ -761,32 +778,39 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
     section.dataset.progress=String(progress);
     section.dataset.variant=mobile?'mobile':'desktop';
     section.dataset.status=motion.matches?'reduced':'native';
-    if(motion.matches) { neutralTilt(); return; }
+    if(motion.matches) { products.forEach(neutralTilt); return; }
     const p=Math.min(1,progress/.8);
     const leave=ease(range(p,.06,.19));
     sprite(logo,0,-H*.02-leave*H*.07,Math.min(W*.29,H*.28),1-leave*.65,-leave*8,1-leave);
-    const entrance=out(range(p,.11,.25));
-    const bagH=Math.min(H*.60,W*(mobile?.70:.50));
-    const bagY=H*.02+(1-entrance)*H*.20;
-    const shake=Math.sin(range(p,.30,.405)*Math.PI*6)*range(p,.30,.405)*3;
-    sprite(bag,0,bagY,bagH,mix(.72,1,entrance),shake,p<.405?entrance:0);
-    // Four clipped copies reuse the same PNG, with no new image downloads.
-    const burst=out(range(p,.405,.66));
-    fragments.forEach((node,i)=>{
-      const left=i%2===0, upper=i<2;
-      const x=(left?-1:1)*burst*W*(mobile?.19:.27);
-      const y=H*.02+(upper?-1:1)*burst*H*.21;
-      const alpha=p>=.405?1-ease(range(p,.49,.65)):0;
-      sprite(node,x,y,bagH,mix(1,.42,burst),(left?-1:1)*burst*(upper?32:48),alpha);
+    const packH=Math.min(H*.52,W*(mobile?.49:.34));
+    const lane=W*(mobile?.30:.27);
+    const packLane=Math.min(lane*.60,packH*.45);
+    const originY=H*.04;
+    // Cada envase se abre en su propia columna y libera al personaje asociado.
+    packs.forEach((pack,i)=>{
+      const entrance=out(range(p,.11+i*.016,.27+i*.016));
+      const opening=.405+i*.018;
+      const tension=range(p,opening-.1,opening);
+      const shake=Math.sin(tension*Math.PI*6)*tension*2;
+      const x=(i-1)*packLane;
+      sprite(pack,x,originY+(1-entrance)*H*.16,packH,mix(.8,1,entrance),(i-1)*5+shake,p<opening?entrance:0);
+      const burst=out(range(p,opening,opening+.23));
+      const alpha=p>=opening?1-ease(range(p,opening+.09,opening+.23)):0;
+      fragments.slice(i*4,i*4+4).forEach((node,j)=>{
+        const side=j%2===0?-1:1, vertical=j<2?-1:1;
+        sprite(node,x+side*burst*lane*.27,originY+vertical*burst*packH*.26,packH,mix(1,.42,burst),(i-1)*5+side*burst*(j<2?32:48),alpha);
+      });
     });
     actors.forEach((node,i)=>{
-      const t=out(range(p,.415+i*.014,.63+i*.014));
+      const t=out(range(p,.415+i*.018,.63+i*.018));
       const spin=ease(range(p,.64+i*.015,.79+i*.015));
-      const endX=(i-1)*W*(mobile?.27:.28);
-      const endY=mobile?(i===1?H*.16:-H*.09):H*.01;
-      const height=mobile?Math.min(H*(i===1?.29:.25),W*(i===1?.62:.47)):Math.min(H*.44,W*.29);
-      const turn=i===0?spin*360:i===1?Math.sin(spin*Math.PI*2)*12:Math.sin(spin*Math.PI*5)*16*(1-spin);
-      sprite(node,endX*t,mix(H*.04,endY,t)-Math.sin(t*Math.PI)*H*.14,height,mix(.12,1,t),(i-1)*22*(1-t)+turn,range(t,0,.12),i===1?Math.sin(spin*Math.PI*2)*24:0);
+      const endX=(i-1)*lane;
+      const startX=(i-1)*packLane;
+      const endY=mobile?(i===1?H*.055:-H*.025):H*.01;
+      const height=mobile?Math.min(H*.30,W*.34):Math.min(H*.42,W*.23);
+      const angle=i===1?Math.sin(spin*Math.PI*2)*8:i===0?Math.sin(spin*Math.PI)*18:Math.sin(spin*Math.PI*5)*14*(1-spin);
+      const turn=i===0?spin*360:i===1?Math.sin(spin*Math.PI*2)*22:0;
+      sprite(node,mix(startX,endX,t),mix(originY,endY,t)-Math.sin(t*Math.PI)*H*.11,height,mix(.12,1,t),(i-1)*12*(1-t)+angle,range(t,0,.12),turn);
     });
     sparks.forEach((node,i)=>{
       const t=range(p,.405,.67), radius=out(t), a=i*2.39996;
@@ -794,33 +818,37 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
       node.style.transform=`translate(${Math.cos(a)*W*.40*radius}px,${Math.sin(a)*H*.32*radius}px) rotate(${i*35+t*200}deg)`;
     });
   }
-  function neutralTilt() {
+  function neutralTilt(product) {
     product.style.setProperty('--tilt-x','0deg');
     product.style.setProperty('--tilt-y','0deg');
-    product.style.setProperty('--tilt-z','-5deg');
+    product.style.setProperty('--tilt-z','0deg');
     product.setAttribute('aria-pressed','false');
   }
-  product.addEventListener('pointermove',event=>{
+  products.forEach(product=>{
+    product.addEventListener('pointermove',event=>{
     if(motion.matches||event.pointerType==='touch') return;
     const rect=product.getBoundingClientRect();
     const x=range(event.clientX,rect.left,rect.right)*2-1,y=range(event.clientY,rect.top,rect.bottom)*2-1;
     product.style.setProperty('--tilt-x',`${-y*12}deg`);
     product.style.setProperty('--tilt-y',`${x*16}deg`);
-    product.style.setProperty('--tilt-z',`${x*4-5}deg`);
+    product.style.setProperty('--tilt-z',`${x*4}deg`);
   });
-  product.addEventListener('pointerleave',neutralTilt);
-  product.addEventListener('blur',neutralTilt);
+  product.addEventListener('pointerleave',()=>neutralTilt(product));
+  product.addEventListener('blur',()=>neutralTilt(product));
   product.addEventListener('click',()=>{
     if(motion.matches) return;
-    if(product.getAttribute('aria-pressed')==='true') return neutralTilt();
+    if(product.getAttribute('aria-pressed')==='true') return neutralTilt(product);
     product.style.setProperty('--tilt-x','-8deg');product.style.setProperty('--tilt-y','16deg');product.style.setProperty('--tilt-z','5deg');
     product.setAttribute('aria-pressed','true');
+  });
   });
   function schedule() { if(!raf) raf=requestAnimationFrame(update); }
   addEventListener('scroll',schedule,{passive:true});
   addEventListener('resize',schedule,{passive:true});
   addEventListener('pageshow',schedule);
   motion.addEventListener('change',schedule);
+  // Recalcular los límites usando la proporción real al terminar la descarga.
+  [logo,...packs,...actors].forEach(image=>image.addEventListener('load',schedule));
   update();
 })();
 
