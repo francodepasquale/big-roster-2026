@@ -351,6 +351,10 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .frame-loading-brand .big-badge { width: auto; height: auto; transform: translateY(-3svh); }
 .frame-loading-brand .big-badge img { width: auto; height: min(29vw,28svh); }
 .frame-stage.is-fallback .frame-loading-brand { display: none; }
+html.intro-is-loading, html.intro-is-loading body { overflow: hidden; }
+.frame-stage.is-buffering .frame-loading-brand { display: grid; visibility: visible; z-index: 4; }
+.intro-loading-label { display: none; position: absolute; top: 65%; left: 0; right: 0; text-align: center; font-size: 13px; font-weight: 500; letter-spacing: .04em; color: var(--tinta); }
+.is-buffering .intro-loading-label { display: block; }
 .frame-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: #3A2142; transform: scaleX(var(--intro-progress)); transform-origin: left; }
 .intro-finale { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 5svh 4vw 7svh; background: #EE5809; color: #FBF6ED; clip-path: inset(calc((1 - var(--finale-reveal,0)) * 100%) 0 0); }
 .intro-finale-copy { order: 1; position: relative; z-index: 1; width: 100%; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
@@ -451,7 +455,7 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
   <section class="frame-intro" id="intro" aria-label="BIG presenta KHEMANIS">
     <div class="frame-stage">
       <picture><source media="(max-width:699px)" srcset="assets/intro/mobile/poster.webp?v=native-finale"><img class="frame-poster" src="assets/intro/desktop/poster.webp?v=native-finale" alt="Don Pela, Barbacacho y Parmesandro."></picture>
-      <div class="frame-loading-brand" aria-hidden="true"><span class="big-badge"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt=""></span></div>
+      <div class="frame-loading-brand"><span class="big-badge" aria-hidden="true"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt=""></span><span class="intro-loading-label" id="introLoadingLabel" role="status" aria-live="polite">Cargando la experiencia…</span></div>
       <canvas id="introCanvas" aria-hidden="true"></canvas>
       <p class="intro-description">BIG presenta: la bolsa de KHE MANIS se abre y libera a Don Pela, Barbacacho y Parmesandro.</p>
       <div class="frame-progress" aria-hidden="true"></div>
@@ -826,6 +830,34 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   const finale = document.getElementById('introFinale');
   const product = document.getElementById('finaleProduct');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const loadingLabel = document.getElementById('introLoadingLabel');
+  const loadingRoot = document.documentElement;
+  const START_BUFFER = 20;
+  let loading = false, loadingTimer;
+  function finishLoading() {
+    loading = false;
+    clearTimeout(loadingTimer);
+    loadingRoot.classList.remove('intro-is-loading');
+    stage.classList.remove('is-buffering');
+    section.dataset.loading = 'complete';
+    if(!cache.size) stage.classList.add('is-fallback');
+  }
+  function startLoading() {
+    loading = true;
+    loadingRoot.classList.add('intro-is-loading');
+    stage.classList.add('is-buffering');
+    section.dataset.loading = 'buffering';
+    loadingLabel.textContent = 'Cargando la experiencia… 0%';
+    clearTimeout(loadingTimer);
+    loadingTimer = setTimeout(() => { finishLoading(); schedule(); },10000);
+  }
+  function loadingProgress() {
+    if(!loading) return;
+    let completed = 0;
+    for(let i=0;i<START_BUFFER;i++) if(cache.has(i)||failures.has(i)) completed++;
+    loadingLabel.textContent = `Cargando la experiencia… ${Math.round(completed/START_BUFFER*100)}%`;
+    if(completed===START_BUFFER) finishLoading();
+  }
   const cache = new Map();
   const pending = new Set();
   const failures = new Set();
@@ -869,11 +901,13 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
 
   function dispose(image) { image.close?.(); }
   function reset(next) {
+    if(loading) finishLoading();
     generation++;
     controller.abort(); controller = new AbortController();
     cache.forEach(dispose); cache.clear(); pending.clear(); failures.clear();
     queue = []; variant = next; shown = -1;
     stage.classList.remove('is-ready');
+    stage.classList.remove('is-fallback');
     section.dataset.variant = variant;
   }
   function evict() {
@@ -920,7 +954,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
         if(!cache.size) stage.classList.add('is-fallback');
       }
     } finally {
-      if(version===generation) { pending.delete(index); pump(); }
+      if(version===generation) { pending.delete(index); loadingProgress(); pump(); }
     }
   }
   function pump() {
@@ -939,7 +973,10 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
       const bounds=section.getBoundingClientRect();updateFinale(1,bounds.bottom>0&&bounds.top<innerHeight);neutralTilt();return;
     }
     const next = innerWidth<700 ? 'mobile' : 'desktop';
-    if(variant!==next) reset(next);
+    if(variant!==next) {
+      reset(next);
+      if(Math.abs(section.getBoundingClientRect().top)<2) startLoading();
+    }
     const rect = section.getBoundingClientRect();
     const progress = Math.max(0,Math.min(1,-rect.top/Math.max(1,section.offsetHeight-stage.clientHeight)));
     active = rect.bottom>0 && rect.top<innerHeight;
@@ -960,6 +997,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
       if(target+distance<COUNT) queue.push(target+distance);
       if(target-distance>=0) queue.push(target-distance);
     }
+    if(loading) queue = Array.from({length:START_BUFFER},(_,index)=>index);
     pump();
   }
   function schedule() { if(!raf) raf=requestAnimationFrame(update); }
@@ -967,6 +1005,11 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   addEventListener('resize',schedule,{passive:true});
   motion.addEventListener('change',schedule);
   addEventListener('pagehide',() => { reset(''); });
+  addEventListener('wheel',event=>{if(loading) event.preventDefault();},{passive:false});
+  addEventListener('touchmove',event=>{if(loading) event.preventDefault();},{passive:false});
+  addEventListener('keydown',event=>{
+    if(loading && ['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(event.key)) event.preventDefault();
+  });
   addEventListener('pageshow',schedule);
   update();
 })();
