@@ -339,7 +339,7 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
   .advance-rail i, .advance-rail::after, .info-timeline::after { transform: scale(1); transition: none; }
 }
 .big-badge { display: grid; place-items: center; width: 64px; height: 44px; color: var(--tinta); font: 900 30px/1 'Inter',sans-serif; letter-spacing: -.065em; flex-shrink: 0; }
-.big-badge img { width: 55%; height: 65%; object-fit: contain; }
+.big-badge img { width: auto; height: 36px; object-fit: contain; }
 .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--tinta); }
 .nav { padding-top: 10px; padding-bottom: 10px; }
 .frame-intro { height: 520svh; padding: 0; position: relative; background: #FBF6ED; }
@@ -350,7 +350,8 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .frame-stage.is-ready canvas { opacity: 1; }
 .frame-stage.is-ready .frame-poster, .frame-stage.is-ready .frame-loading-brand { visibility: hidden; }
 .frame-loading-brand { position: absolute; inset: 0; display: grid; place-items: center; background: #FBF6ED; }
-.frame-loading-brand .big-badge { width: auto; height: auto; font-size: clamp(140px,22vw,252px); }
+.frame-loading-brand .big-badge { width: auto; height: auto; transform: translateY(-3svh); }
+.frame-loading-brand .big-badge img { width: auto; height: min(29vw,28svh); }
 .frame-stage.is-fallback .frame-loading-brand { display: none; }
 .frame-controls { position: absolute; bottom: 92px; left: 6vw; right: 6vw; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #3A2142; }
 .frame-controls a { color: inherit; text-decoration: none; padding: 12px 16px; border: 1px solid currentColor; border-radius: 99px; background: rgba(251,246,237,.6); }
@@ -408,7 +409,7 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 <noscript><style>.frame-intro { height:100svh; } .frame-loading-brand, .frame-controls span { display:none; } #navBig { opacity:1; }</style></noscript>
 
 <nav class="nav">
-  <a class="nav-brand" href="#intro" aria-label="BIG — Volver a la intro"><span class="big-badge" id="navBig">BIG</span><span class="brand-client"><b>Croppers</b> &times; Pelao Khe</span></a>
+  <a class="nav-brand" href="#intro" aria-label="BIG — Volver a la intro"><span class="big-badge" id="navBig"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt="BIG"></span><span class="brand-client"><b>Croppers</b> &times; Pelao Khe</span></a>
   <button class="nav-index" id="navIndex" type="button">Índice</button>
   <div class="nav-badge">Propuesta &mdash; no confirmada</div>
 </nav>
@@ -417,7 +418,7 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
   <section class="frame-intro" id="intro" aria-label="BIG presenta KHEMANIS">
     <div class="frame-stage">
       <picture><source media="(max-width:699px)" srcset="assets/intro/mobile/poster.webp"><img class="frame-poster" src="assets/intro/desktop/poster.webp" alt="KHEMANIS. Una idea bien croppada."></picture>
-      <div class="frame-loading-brand" aria-hidden="true"><span class="big-badge">BIG</span></div>
+      <div class="frame-loading-brand" aria-hidden="true"><span class="big-badge"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt=""></span></div>
       <canvas id="introCanvas" aria-hidden="true"></canvas>
       <p class="intro-description">BIG presenta: la bolsa de KHE MANIS se abre y libera a Don Pela, Barbacacho y Parmesandro.</p>
       <div class="frame-controls"><span>Deslizá para abrir la bolsa ↓</span><a href="#hero">Saltar intro ↗</a></div>
@@ -841,7 +842,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   }
   async function fetchFrame(index, version, signal) {
     try {
-      const response = await fetch(`assets/intro/${variant}/frame-${String(index).padStart(3,'0')}.webp`, {signal});
+      const response = await fetch(`assets/intro/${variant}/frame-${String(index).padStart(3,'0')}.webp?v=big-logo-1`, {signal});
       if(!response.ok) throw new Error(`Frame ${response.status}`);
       const blob = await response.blob();
       let bitmap;
