@@ -342,11 +342,11 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .big-badge img { width: auto; height: 36px; object-fit: contain; }
 .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--tinta); }
 .nav { padding-top: 10px; padding-bottom: 10px; }
-.frame-intro { height: 520svh; padding: 0; position: relative; background: #FBF6ED; }
+.frame-intro { height: 620svh; padding: 0; position: relative; background: #FBF6ED; }
 .frame-stage { height: 100svh; position: sticky; top: 0; overflow: hidden; --intro-progress: 0; }
 .frame-stage canvas, .frame-poster { position: absolute; inset: 0; width: 100%; height: 100%; }
 .frame-stage canvas { opacity: 0; }
-.frame-poster { object-fit: contain; background: #EE5809; }
+.frame-poster { object-fit: contain; background: #FBF6ED; }
 .frame-stage.is-ready canvas { opacity: 1; }
 .frame-stage.is-ready .frame-poster, .frame-stage.is-ready .frame-loading-brand { visibility: hidden; }
 .frame-loading-brand { position: absolute; inset: 0; display: grid; place-items: center; background: #FBF6ED; }
@@ -357,10 +357,21 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .frame-controls a { color: inherit; text-decoration: none; padding: 12px 16px; border: 1px solid currentColor; border-radius: 99px; background: rgba(251,246,237,.6); }
 .frame-controls a:focus-visible { outline: 3px solid #3A2142; outline-offset: 4px; }
 .frame-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: #3A2142; transform: scaleX(var(--intro-progress)); transform-origin: left; }
+.intro-finale { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 5svh 4vw 7svh; background: #EE5809; color: #FBF6ED; clip-path: inset(calc((1 - var(--finale-reveal,0)) * 100%) 0 0); }
+.intro-finale-copy { text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
+.intro-finale h2 { font: 900 clamp(42px,15.7vw,260px)/.9 'Inter',sans-serif; letter-spacing: -.035em; margin: 0; white-space: nowrap; }
+.intro-finale-copy p { font-size: clamp(11px,1.2vw,18px); font-weight: 900; color: #3A2142; margin: 16px 0 0; }
+.finale-product-reveal { opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
+.finale-product { display: block; border: 0; background: transparent; padding: 0; cursor: pointer; perspective: 850px; touch-action: pan-y; border-radius: 20px; }
+.finale-product img { display: block; height: min(38svh,380px); max-width: 65vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 20px 18px rgba(58,33,66,.24)); transition: transform .18s ease-out,filter .3s; }
+.finale-product:focus-visible { outline: 2px solid #3A2142; outline-offset: 10px; }
+.finale-product:hover img { filter: drop-shadow(0 30px 24px rgba(58,33,66,.3)); }
+.finale-continue { position: absolute; bottom: 24px; color: #3A2142; font-size: 12px; font-weight: 800; text-decoration: none; padding: 10px 18px; border: 1px solid currentColor; border-radius: 99px; }
+@media(max-width:699px) { .intro-finale { gap: 32px; } .intro-finale h2 { font-size: 15.4vw; } .finale-product img { height: min(42svh,360px); } }
 #navBig { opacity: 0; }
 .intro-description { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 @media(max-width:600px) { .nav-brand .brand-client { display: none; } }
-@media(prefers-reduced-motion:reduce) { .frame-intro { height: 100svh; } .frame-stage canvas, .frame-loading-brand, .frame-controls span, .frame-progress { display: none; } .frame-stage .frame-poster { visibility: visible; } #navBig { opacity: 1 !important; } }
+@media(prefers-reduced-motion:reduce) { .frame-intro { height: 100svh; } .frame-stage canvas, .frame-loading-brand, .frame-controls, .frame-progress, .frame-poster { display: none; } .intro-finale { clip-path: none; } .intro-finale-copy, .finale-product-reveal { opacity: 1; transform: none; } .finale-product img { transform: none; transition: none; } #navBig { opacity: 1 !important; } }
 /* Accessible image accordion, using the three original character cutouts. */
 .elenco-grid { display: flex; gap: 12px; }
 .elenco-card { position: relative; flex: 1 1 0; min-width: 0; height: 580px; border-radius: 22px; overflow: hidden; background: var(--crema-2); cursor: pointer; transition: flex .65s cubic-bezier(.2,.8,.2,1),opacity .6s,transform .6s; }
@@ -406,7 +417,7 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 .creator-source a { color: inherit; }
 @media(max-width:600px) { .creator-head { grid-template-columns: 1fr; } .creator-metrics { grid-template-columns: 1fr; } .creator-role { flex-direction: column; gap: 8px; } }
 </style>
-<noscript><style>.frame-intro { height:100svh; } .frame-loading-brand, .frame-controls span { display:none; } #navBig { opacity:1; }</style></noscript>
+<noscript><style>.frame-intro { display:none; } #navBig { opacity:1; }</style></noscript>
 
 <nav class="nav">
   <a class="nav-brand" href="#intro" aria-label="BIG — Volver a la intro"><span class="big-badge" id="navBig"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt="BIG"></span><span class="brand-client"><b>Croppers</b> &times; Pelao Khe</span></a>
@@ -417,12 +428,17 @@ footer { padding: 26px 32px; font-size: 12px; color: rgba(36,26,34,.5); display:
 <main>
   <section class="frame-intro" id="intro" aria-label="BIG presenta KHEMANIS">
     <div class="frame-stage">
-      <picture><source media="(max-width:699px)" srcset="assets/intro/mobile/poster.webp"><img class="frame-poster" src="assets/intro/desktop/poster.webp" alt="KHEMANIS. Una idea bien croppada."></picture>
+      <picture><source media="(max-width:699px)" srcset="assets/intro/mobile/poster.webp?v=native-finale"><img class="frame-poster" src="assets/intro/desktop/poster.webp?v=native-finale" alt="Don Pela, Barbacacho y Parmesandro."></picture>
       <div class="frame-loading-brand" aria-hidden="true"><span class="big-badge"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt=""></span></div>
       <canvas id="introCanvas" aria-hidden="true"></canvas>
       <p class="intro-description">BIG presenta: la bolsa de KHE MANIS se abre y libera a Don Pela, Barbacacho y Parmesandro.</p>
       <div class="frame-controls"><span>Deslizá para abrir la bolsa ↓</span><a href="#hero">Saltar intro ↗</a></div>
       <div class="frame-progress" aria-hidden="true"></div>
+      <div class="intro-finale" id="introFinale" inert aria-hidden="true">
+        <div class="intro-finale-copy"><h2>KHEMANIS</h2><p>UNA IDEA BIEN CROPPADA</p></div>
+        <div class="finale-product-reveal"><button class="finale-product" id="finaleProduct" type="button" aria-label="Inclinar la bolsa de KHE MANIS" aria-pressed="false"><img src="assets/packaging-transparent.png" alt="Bolsa de KHE MANIS, Croppers × Pelao Khe" draggable="false"></button></div>
+        <a class="finale-continue" href="#hero">Ver propuesta ↓</a>
+      </div>
     </div>
   </section>
 
@@ -800,6 +816,9 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   const canvas = document.getElementById('introCanvas');
   const context = canvas.getContext('2d', { alpha: false });
   const brand = document.getElementById('navBig');
+  const finale = document.getElementById('introFinale');
+  const product = document.getElementById('finaleProduct');
+  const controls = section.querySelector('.frame-controls');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const cache = new Map();
   const pending = new Set();
@@ -807,6 +826,41 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   const COUNT = 180, LIMIT = 20;
   let variant = '', generation = 0, controller = new AbortController();
   let target = 0, shown = -1, raf = 0, active = true, queue = [];
+  const range = (p,a,b) => Math.max(0,Math.min(1,(p-a)/(b-a)));
+  function updateFinale(progress, visible) {
+    const reveal = motion.matches ? 1 : range(progress,.8,.87);
+    stage.style.setProperty('--finale-reveal',reveal);
+    stage.style.setProperty('--finale-copy',motion.matches?1:range(progress,.85,.92));
+    stage.style.setProperty('--finale-bag',motion.matches?1:range(progress,.9,.97));
+    section.style.zIndex = reveal>0 && visible ? '1001' : '';
+    finale.inert = reveal<1 || !visible;
+    finale.setAttribute('aria-hidden',String(finale.inert));
+    controls.style.opacity = String(1-reveal);
+    controls.inert = reveal>0;
+  }
+  function neutralTilt() {
+    product.style.setProperty('--tilt-x','0deg');
+    product.style.setProperty('--tilt-y','0deg');
+    product.style.setProperty('--tilt-z','-5deg');
+    product.setAttribute('aria-pressed','false');
+  }
+  product.addEventListener('pointermove',event => {
+    if(motion.matches || event.pointerType==='touch') return;
+    const rect=product.getBoundingClientRect();
+    const x=range(event.clientX,rect.left,rect.right)*2-1;
+    const y=range(event.clientY,rect.top,rect.bottom)*2-1;
+    product.style.setProperty('--tilt-x',`${-y*12}deg`);
+    product.style.setProperty('--tilt-y',`${x*16}deg`);
+    product.style.setProperty('--tilt-z',`${x*4-5}deg`);
+  });
+  product.addEventListener('pointerleave',neutralTilt);
+  product.addEventListener('blur',neutralTilt);
+  product.addEventListener('click',() => {
+    if(motion.matches) return;
+    if(product.getAttribute('aria-pressed')==='true') return neutralTilt();
+    product.style.setProperty('--tilt-x','-8deg');product.style.setProperty('--tilt-y','16deg');product.style.setProperty('--tilt-z','5deg');
+    product.setAttribute('aria-pressed','true');
+  });
 
   function dispose(image) { image.close?.(); }
   function reset(next) {
@@ -832,7 +886,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
     if(index===shown && !force) return;
     const frame = cache.get(index);
     const scale = Math.min(canvas.width/frame.width, canvas.height/frame.height);
-    context.fillStyle = index >= 166 ? '#EE5809' : '#FBF6ED';
+    context.fillStyle = '#FBF6ED';
     context.fillRect(0,0,canvas.width,canvas.height);
     context.drawImage(frame,(canvas.width-frame.width*scale)/2,(canvas.height-frame.height*scale)/2,frame.width*scale,frame.height*scale);
     shown = index;
@@ -842,7 +896,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   }
   async function fetchFrame(index, version, signal) {
     try {
-      const response = await fetch(`assets/intro/${variant}/frame-${String(index).padStart(3,'0')}.webp?v=big-logo-1`, {signal});
+      const response = await fetch(`assets/intro/${variant}/frame-${String(index).padStart(3,'0')}.webp?v=native-finale-1`, {signal});
       if(!response.ok) throw new Error(`Frame ${response.status}`);
       const blob = await response.blob();
       let bitmap;
@@ -876,14 +930,16 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
     raf = 0;
     if(motion.matches) {
       if(variant!=='reduced') reset('reduced');
-      brand.style.opacity = '1'; section.dataset.status = 'reduced'; return;
+      brand.style.opacity = '1'; section.dataset.status = 'reduced';
+      const bounds=section.getBoundingClientRect();updateFinale(1,bounds.bottom>0&&bounds.top<innerHeight);neutralTilt();return;
     }
     const next = innerWidth<700 ? 'mobile' : 'desktop';
     if(variant!==next) reset(next);
     const rect = section.getBoundingClientRect();
     const progress = Math.max(0,Math.min(1,-rect.top/Math.max(1,section.offsetHeight-stage.clientHeight)));
     active = rect.bottom>0 && rect.top<innerHeight;
-    target = Math.round(progress*(COUNT-1));
+    updateFinale(progress,active);
+    target = Math.round(Math.min(1,progress/.8)*(COUNT-1));
     section.dataset.target = String(target);
     stage.style.setProperty('--intro-progress',progress);
     brand.style.opacity = Math.max(0,Math.min(1,(progress-.09)/.09));
