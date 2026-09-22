@@ -220,7 +220,7 @@ body {
    as a solid dark silhouette so they read on the deck's light --fondo
    without needing a background chip (same trick as big-web's --logo-filtro) */
 .cover-logo-big.darken { filter: brightness(0); }
-.cover-logo-big.photo { height: clamp(126px, 15vw, 225px); border-radius: 14px; }
+.cover-logo-big.photo { height: clamp(189px, 22.5vw, 338px); border-radius: 14px; }
 .cat-cover.inview .cover-logo-big { animation: riseIn .8s cubic-bezier(.16,1,.3,1) .18s forwards; }
 .cover-category-pill {
   display: inline-flex; align-items: center; margin-top: 22px;
@@ -2834,8 +2834,8 @@ function layoutIntroLogo() {
     ? portadaEl.offsetHeight + 'px'
     : (portadaEl.offsetHeight + INTRO_DISTANCE) + 'px';
 
-  let fontSize = Math.max(90, window.innerWidth * 0.105);
-  fontSize = Math.min(fontSize, 182, window.innerHeight * 0.224);
+  let fontSize = Math.max(117, window.innerWidth * 0.1365);
+  fontSize = Math.min(fontSize, 237, window.innerHeight * 0.2912);
   introLogo.style.fontSize = fontSize + 'px';
   introLogo.style.left = '0px';
   introLogo.style.top = '0px';
