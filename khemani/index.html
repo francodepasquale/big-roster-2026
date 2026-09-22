@@ -339,7 +339,8 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .big-badge { display: grid; place-items: center; width: 64px; height: 44px; color: var(--tinta); font: 900 30px/1 'Inter',sans-serif; letter-spacing: -.065em; flex-shrink: 0; }
 .big-badge img { width: auto; height: 36px; object-fit: contain; }
 .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--tinta); }
-.nav { padding-top: 10px; padding-bottom: 10px; }
+.nav { padding-top: 10px; padding-bottom: 10px; visibility: hidden; pointer-events: none; }
+.nav[data-visible="true"] { visibility: visible; pointer-events: auto; }
 .frame-intro { height: 620svh; padding: 0; position: relative; background: #FBF6ED; }
 .frame-stage { height: 100svh; position: sticky; top: 0; overflow: hidden; --intro-progress: 0; }
 .intro-scene { position: absolute; inset: 0; perspective: 1000px; background: radial-gradient(ellipse at center, #f6e5cb 0%, #FBF6ED 70%); pointer-events: none; }
@@ -445,9 +446,9 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 }
 @media(prefers-reduced-motion:reduce) { .proposal-path path { animation: none; } .proposal-card, .proposal-card:hover { transform: none; transition: none; } }
 </style>
-<noscript><style>.frame-intro { display:none; } #navBig { opacity:1; }</style></noscript>
+<noscript><style>.frame-intro { display:none; } .nav { visibility:visible; pointer-events:auto; } #navBig { opacity:1; }</style></noscript>
 
-<nav class="nav">
+<nav class="nav" id="deckHeader">
   <a class="nav-brand" href="#intro" aria-label="BIG — Volver a la intro"><span class="big-badge" id="navBig"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8yIiBkYXRhLW5hbWU9IkNhcGEgMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEwLjcxIDQ2Ni4zMyI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbDogIzI0MWEyMjsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGcgaWQ9IkNhcGFfMS0yIiBkYXRhLW5hbWU9IkNhcGEgMSI+CiAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik00MDkuNTIsMjQ1LjY0bC0uNDYtMi41OGMtOS4yNi02MC44OC04MC42My05OS40LTEzNy4xNC03MS43NC04OC40NSwzNS41LTE1MS4yMiwxMjMuNTctMTUxLjE0LDIyMy40NSwwLDMuNDktLjc4LDYuOTgtMi42LDkuOTYtOS4wMywxNC44LTM0LjkxLDExLjkyLTM5LjY3LTUuMy0uODEtMi45Mi0uODItNi0uMjYtOC45NywyMS45NC0xMTcuODYsMTEyLjUzLTIxOC4wOSwyMjMuNjItMjYwLjc3LjcxLS4zMSwxLjQxLS42NCwyLjEtMSw1Mi4wNS0zMC44NSwzNS4xNi0xMTkuMDgtMjUuNTUtMTI3LjUyLTQuMTItLjc2LTguMzUtMS4xNi0xMi42OC0xLjE2SDB2NDY2LjMzaDQxMC40OWMtLjczLTkuMTgsMS40OC0yMDcuNS0uOTctMjIwLjY5WiIvPgogIDwvZz4KPC9zdmc+" alt="BIG"></span><span class="brand-client"><b>Croppers</b> &times; Pelao Khe</span></a>
 </nav>
 
@@ -828,6 +829,7 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
 (() => {
   const section = document.getElementById('intro');
   const stage = section.querySelector('.frame-stage');
+  const header = document.getElementById('deckHeader');
   const logo = document.getElementById('introLogo');
   const bag = document.getElementById('introBag');
   const actors = [...section.querySelectorAll('.intro-actor')];
@@ -854,6 +856,10 @@ castGallery.addEventListener('focusout', event => { if(!castGallery.contains(eve
   function update() {
     raf = 0;
     const rect = section.getBoundingClientRect();
+    const pastCover = rect.bottom <= 0;
+    header.dataset.visible = String(pastCover);
+    header.inert = !pastCover;
+    header.setAttribute('aria-hidden',String(!pastCover));
     const W=stage.clientWidth, H=stage.clientHeight, mobile=W<700;
     const progress=motion.matches?1:range(-rect.top,0,Math.max(1,section.offsetHeight-H));
     const visible=rect.bottom>0&&rect.top<innerHeight;
