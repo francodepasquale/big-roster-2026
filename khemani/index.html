@@ -356,13 +356,13 @@ h2 { font-size: clamp(32px,3.8vw,52px); line-height: 1.05; }
 .intro-finale-copy { order: 1; position: relative; z-index: 1; width: 100%; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
 .intro-finale h1 { font: 900 clamp(42px,15.7vw,260px)/.9 'Inter',sans-serif; letter-spacing: -.035em; margin: 0; white-space: nowrap; }
 .finale-tagline { order: 2; position: relative; z-index: 1; max-width: 88vw; font-size: clamp(18px,2.2vw,34px); line-height: 1.3; font-weight: 500; color: #fff; margin: 0; text-align: center; opacity: var(--finale-copy,0); transform: translateY(calc((1 - var(--finale-copy,0)) * 30px)); }
-.finale-product-reveal { order: 0; position: relative; z-index: 2; display: grid; place-items: center; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
+.finale-product-reveal { order: 0; position: relative; z-index: 2; display: grid; place-items: center; margin-bottom: -32px; pointer-events: none; opacity: var(--finale-bag,0); transform: translateY(calc((1 - var(--finale-bag,0)) * 50px)) scale(calc(.86 + var(--finale-bag,0) * .14)); }
 .finale-product { display: block; border: 0; background: transparent; padding: 0; cursor: pointer; perspective: 850px; touch-action: pan-y; border-radius: 20px; }
 .finale-product { pointer-events: auto; }
-.finale-product img { display: block; height: min(30svh,320px); max-width: 24vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 20px 22px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
+.finale-product img { display: block; height: min(42svh,448px,40.8vw); max-width: 33.6vw; object-fit: contain; transform: rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) rotateZ(var(--tilt-z,-5deg)); filter: drop-shadow(0 20px 22px rgba(58,33,66,.3)); transition: transform .18s ease-out,filter .3s; }
 .finale-product:focus-visible { outline: 2px solid #3A2142; outline-offset: 10px; }
 .finale-product:hover img { filter: drop-shadow(0 38px 32px rgba(58,33,66,.38)); }
-@media(max-width:699px) { .intro-finale { gap: 24px; padding: max(24px,env(safe-area-inset-top)) 4vw max(24px,env(safe-area-inset-bottom)); } .intro-finale h1 { font-size: 15.4vw; } .finale-tagline { font-size: clamp(17px,4.5vw,26px); } .finale-product img { height: 26svh; max-width: 33vw; } }
+@media(max-width:699px) { .intro-finale { gap: 24px; padding: max(24px,env(safe-area-inset-top)) 4vw max(24px,env(safe-area-inset-bottom)); } .intro-finale h1 { font-size: 15.4vw; } .finale-tagline { font-size: clamp(17px,4.5vw,26px); } .finale-product img { height: min(36.4svh,56.1vw); max-width: 46.2vw; } }
 #navBig { opacity: 0; }
 .intro-description { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 @media(max-width:600px) { .nav-brand { gap: 8px; font-size: clamp(10px,2.8vw,14px); } .nav-brand .big-badge { width: 36px; height: 36px; } .nav-brand .big-badge img { height: 30px; } .brand-client { white-space: nowrap; } }
