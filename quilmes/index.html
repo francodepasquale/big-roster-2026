@@ -173,12 +173,13 @@ body {
   opacity: var(--intro-progress);
 }
 .portada h1 .lima { color: var(--fondo); display: block; }
-.portada p {
-  margin-top: 26px; max-width: 560px; font-size: 20px; font-weight: 500;
-  line-height: 1.5; color: rgba(255,255,255,.85);
+.portada-copy {
+  margin-top: 26px; max-width: 680px;
   transform: translateY(calc((1 - var(--intro-progress)) * 40px));
   opacity: var(--intro-progress);
 }
+.portada-copy p { margin: 0; font-size: clamp(17px, 1.45vw, 20px); font-weight: 500; line-height: 1.42; color: rgba(255,255,255,.85); }
+.portada-copy p + p { margin-top: 12px; }
 @keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
 
 .scroll-cue {
@@ -490,7 +491,11 @@ body {
     <section class="portada" id="portada">
       <div class="section-inner">
         <h1>Matching<span class="lima">de Marcas</span></h1>
-        <p>Para cada marca de Grupo Quilmes, el equipo de creadores de BIG que mejor conecta con su audiencia — match principal y alternativas sugeridas.</p>
+        <div class="portada-copy">
+          <p>Queremos encontrar el punto de encuentro entre las marcas de Grupo Quilmes y los creadores de BIG.</p>
+          <p>A partir de sus audiencias, perfiles y territorios de contenido, seleccionamos para cada marca un match principal y distintas alternativas para explorar.</p>
+          <p>Como siguiente paso proponemos segmentar los perfiles que más sentido tengan para cada marca y empezar a construir juntos las oportunidades.</p>
+        </div>
       </div>
       <button class="scroll-cue" onclick="document.getElementById('catViewport').scrollIntoView({behavior:'smooth'})">
         Explorar más <span class="chev">↓</span>
