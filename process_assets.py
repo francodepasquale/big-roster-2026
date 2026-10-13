@@ -25,7 +25,7 @@ PEOPLE = [
     ("eve_vidal", "Eve Vidal", "Eve-w/WhatsApp Image 2026-06-30 at 1.30.47 PM.jpeg", ["Cocina", "Lifestyle"], "384 K", "360.6 K", "@evecocinaybienestar", "@evecocinaybienestar"),
     ("inez", "Inez", "Inez f/inezz.jpg", ["Humor", "Lifestyle"], "123 K", "465 K", "@inezzzzzita", "@inezzzzzita"),
     ("mumy", "Mumy", "Mumy Ratibel f/mumy.jpg", ["Humor", "Lifestyle"], "91 K", "447 K", "@mumyratibel", "@mumyratibel"),
-    ("nanu_yael", "Nanu Yael", "Nanu Yael f/nanu 2.jpg", ["Humor", "Lifestyle"], "202 K", "1.8 M", "@nanu.yael", "@nanu.yael"),
+    ("nanu_yael", "Nanu Yael", "Nanu Yael f/nanu 2.jpg", ["Humor", "Lifestyle"], "202 K", "1.8 M", "@nanu.yael", "@nana.yael"),
     ("sabri_ludmila", "Sabri Ludmila", "Sabri Ludmila f/sabri.jpg", ["Humor", "Lifestyle"], "379 K", "764 K", "@sabrinaludmila_", "@sabrina_ludmila"),
     ("yo_soy_brisa", "Yo Soy Brisa", "Yo soy Brisa f/brisa 1.jpg", ["Lifestyle"], "762 K", "1.5 M", "@yosoybrisaa", "@yosoybrisaa"),
 ]
