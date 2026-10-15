@@ -14,6 +14,20 @@ export async function mountScenes(state){
   const metrics={frames:0,drawCalls:0,triangles:0,activeScenes:0,fpsLimit:null};
   let raf=0,last=performance.now(),time=0,disposed=false;
 
+  function positionOpeningBeans(r){
+    const compact=innerWidth<=760;
+    r.beans.items.forEach((bean,index)=>{
+      if(index<24){
+        const angle=index*2.399963,radius=Math.sqrt((index+.5)/24);
+        bean.base.set((compact?-3.1:-4.8)+Math.cos(angle)*radius*(compact?1.05:1.65),
+          (compact?-3.7:-2.35)+Math.sin(angle)*radius*(compact?1:.78),(index%5-2)*.25);
+      }else{
+        const progress=(index-24)/7;
+        bean.base.set(mix(compact?-1:-2,compact?3.6:4.8,progress),
+          (compact?-3.2:-1.65)-Math.sin(progress*Math.PI)*.75+(index%2)*.25,(index%3-1)*.3);
+      }
+    });
+  }
   function resize(r){
     const rect=r.slot.getBoundingClientRect();r.width=rect.width;r.height=rect.height;r.documentTop=rect.top+scrollY;
     if(!r.ready||!r.width||!r.height)return;
@@ -21,6 +35,7 @@ export async function mountScenes(state){
     const aspect=r.width/r.height;
     const viewHeight=r.type==='character'?Math.max(3.4,3.4/aspect):r.type==='collection'?Math.max(10,10.4/aspect):r.type==='hero'?Math.max(8,7/aspect):Math.max(7.4,6.4/aspect);
     r.camera.aspect=aspect;r.camera.position.z=viewHeight/(2*Math.tan(THREE.MathUtils.degToRad(16)));r.camera.updateProjectionMatrix();
+    if(r.type==='collection')positionOpeningBeans(r);
     render(r,0,true);wake();
   }
   function initialize(r){
@@ -38,8 +53,7 @@ export async function mountScenes(state){
       scene.add(new THREE.AmbientLight(0xffffff,.5));
       r.scene=scene;r.camera=new THREE.PerspectiveCamera(32,1,.1,100);r.camera.position.z=14;
       if(r.type==='collection'){
-        r.box=models.presentationBox(scene);r.beans=models.beans(scene,40,5.4);
-        r.beans.items.forEach(bean=>{bean.base.y*=.78;});
+        r.box=models.presentationBox(scene);r.beans=models.beans(scene,32,5.4);
         r.box.caps.forEach(c=>{c.userData.lift=0;});
         r.picks=[...r.slot.querySelectorAll('.capsule-pick')];
       }else if(r.type==='hero'){
