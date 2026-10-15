@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffe638">
+  <meta name="description" content="El lado alegre del lío. Una propuesta interactiva de BIG para Scrub Daddy, con Pía, Ber, Renata y Cris.">
+  <title>El lado alegre del lío — BIG × Scrub Daddy</title>
+  <link rel="icon" href="assets/daddy-cutout.webp" type="image/webp">
+  <link rel="preload" href="assets/fonts/poppins-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <script>document.documentElement.classList.add('js','boot-loading')</script>
+  <style>
+    .boot-loader{display:none}
+    html.boot-loading{overflow:hidden;background:#ffe638}
+    .boot-loading body{margin:0}
+    .boot-loading:not(.boot-revealing) main,.boot-loading:not(.boot-revealing) .island-wrap,.boot-loading .skip-link{visibility:hidden}
+    .boot-loading .boot-loader{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#ffe638;color:#262328}
+    .boot-count{font:800 clamp(90px,18vw,240px)/1 Arial,sans-serif;letter-spacing:-.075em;font-variant-numeric:tabular-nums}
+    .boot-retry{display:none}
+    .boot-error .boot-retry,.boot-slow .boot-retry{display:block}
+  </style>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="boot-loader" id="boot-loader">
+  <div id="boot-progress" class="boot-count" role="progressbar" aria-label="Cargando la experiencia" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="boot-number" aria-hidden="true">0</span><span aria-hidden="true">%</span></div>
+  <button class="boot-retry" type="button" onclick="location.reload()">Volver a cargar</button>
+</div>
+<a class="skip-link" href="#concepto">Saltar a la propuesta</a>
+<main id="deck">
+  <section class="hero section-anchor" id="inicio" aria-labelledby="hero-heading">
+    <div class="hero-playground" id="hero-playground">
+      <div class="hero-copy"><h1 class="hero-title" id="hero-heading">El lado alegre<br>del lío.</h1></div>
+      <canvas class="dirt-canvas" aria-hidden="true"></canvas>
+      <div class="cover-brand" aria-label="BIG por Scrub Daddy"><span class="big-mark"><img src="assets/big.svg" alt="BIG" width="29" height="33"></span><span aria-hidden="true">×</span><img class="scrub-logo" src="assets/scrub-daddy-logo.webp" alt="Scrub Daddy" width="76" height="49"></div>
+      <p class="cover-instruction">Agarrá una esponja.<br>Descubrí la idea.</p>
+      <canvas class="sponge-canvas" aria-hidden="true"></canvas>
+      <canvas class="foam-canvas" aria-hidden="true"></canvas>
+      <button class="sponge-grab hero-daddy" id="grab-daddy" aria-label="Agarrar Scrub Daddy y limpiar la portada. Mantené presionado y arrastrá. Con teclado, Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/daddy-cutout.webp" alt="" draggable="false"></button>
+      <button class="sponge-grab hero-mommy" id="grab-mommy" aria-label="Agarrar Scrub Mommy y limpiar la portada. Mantené presionado y arrastrá. Con teclado, Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/mommy-cutout.webp" alt="" draggable="false"></button>
+      <button class="sponge-grab hero-fiber" id="grab-fiber" aria-label="Agarrar la esponja de fibra y limpiar la portada. Mantené presionado y arrastrá. Con teclado, Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/fiber-cutout.webp" alt="" draggable="false"></button>
+      <div class="hero-progress" aria-label="Avance de la revelación"><span class="progress-track"><span id="hero-progress-bar"></span></span><span id="hero-progress-number">0%</span></div>
+      <button class="text-button cover-skip" id="skip-hero">Revelar</button>
+      <button class="text-button cover-restart" id="restart-hero" type="button" data-restart>Volver a ensuciar</button>
+    </div>
+  </section>
+
+  <section class="concept section-pad section-anchor" id="concepto" aria-labelledby="concept-heading">
+    <div class="concept-heading"><h2 id="concept-heading" data-reveal-title>Si hay lío,<br>hay historia.</h2><p data-reveal>Cuatro creadores resuelven sus líos cotidianos y dejan todo impecable.</p></div>
+    <div class="idea-sequence">
+      <figure class="idea-card idea-mess" data-reveal style="--delay:0ms"><div class="idea-art" aria-hidden="true"><div class="mess-plate"><div class="mess-sauce"></div><i></i><i></i><i></i></div><span class="crumb crumb-one"></span><span class="crumb crumb-two"></span></div><figcaption>Un lío.</figcaption></figure>
+      <figure class="idea-card idea-sponge" data-reveal style="--delay:100ms"><div class="idea-art" aria-hidden="true"><img src="assets/mommy-cutout.webp" alt="" width="350" height="350" loading="lazy" data-parallax="26"><span class="soap soap-one"></span><span class="soap soap-two"></span><span class="soap soap-three"></span><span class="soap soap-four"></span></div><figcaption>Una esponja.</figcaption></figure>
+      <figure class="idea-card idea-happy" data-reveal style="--delay:200ms"><div class="idea-art" aria-hidden="true"><img src="assets/daddy-cutout.webp" alt="" width="350" height="350" loading="lazy" data-parallax="-24"><span class="happy-glint">✦</span></div><figcaption>Todo impecable.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="talents section-pad section-anchor" id="talentos" aria-labelledby="talents-heading">
+    <div class="section-heading-row"><h2 id="talents-heading" data-reveal-title>Cuatro formas<br>de hacer un lío.</h2><p data-reveal>Elegí un talento.<br> Entrá en su historia.</p></div>
+    <div class="talent-grid"><article class="talent-card" data-reveal style="--delay:0ms;--card-color:#ddd0ff;--card-accent:#6743dc;--card-rotate:-2deg">
+ <button class="talent-image-button" data-scene-link="0" aria-label="Probar la escena de Pía Scarnato">
+ <img src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" width="600" height="900" loading="eager" decoding="async">
+ <span class="talent-name">Pía<br>Scarnato</span>
+ </button>
+ <div class="talent-caption"><span>El after del GRWM.</span><a href="https://www.instagram.com/piascarnato/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Pía Scarnato">IG</a></div></article>
+<article class="talent-card" data-reveal style="--delay:90ms;--card-color:#bdebb9;--card-accent:#257a45;--card-rotate:1.5deg">
+ <button class="talent-image-button" data-scene-link="1" aria-label="Probar la escena de Ber Scarnato">
+ <img src="assets/photos/ber_scarnato.webp" alt="Ber Scarnato" width="600" height="900" loading="eager" decoding="async">
+ <span class="talent-name">Ber<br>Scarnato</span>
+ </button>
+ <div class="talent-caption"><span>Una receta. Toda la cocina.</span><a href="https://www.instagram.com/berscarnato/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Ber Scarnato">IG</a></div></article>
+<article class="talent-card" data-reveal style="--delay:180ms;--card-color:#ffc7db;--card-accent:#bc366b;--card-rotate:-1.5deg">
+ <button class="talent-image-button" data-scene-link="2" aria-label="Probar la escena de Renata Blasevich">
+ <img src="assets/photos/renata_blasevich.webp" alt="Renata Blasevich" width="600" height="900" loading="eager" decoding="async">
+ <span class="talent-name">Renata<br>Blasevich</span>
+ </button>
+ <div class="talent-caption"><span>«Estamos abajo».</span><a href="https://www.instagram.com/renatablasevich/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Renata Blasevich">IG</a></div></article>
+<article class="talent-card" data-reveal style="--delay:270ms;--card-color:#bde5ff;--card-accent:#2263c0;--card-rotate:2deg">
+ <button class="talent-image-button" data-scene-link="3" aria-label="Probar la escena de Cris Pierri">
+ <img src="assets/photos/cris_pierri.webp" alt="Cris Pierri" width="600" height="900" loading="eager" decoding="async">
+ <span class="talent-name">Cris<br>Pierri</span>
+ </button>
+ <div class="talent-caption"><span>Lo dejé en remojo.</span><a href="https://www.instagram.com/crispierri/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Cris Pierri">IG</a></div></article></div>
+  </section>
+
+  <section class="experience section-pad section-anchor" id="experiencia" aria-labelledby="experience-heading">
+    <div class="section-heading-row"><h2 id="experience-heading" data-reveal-title>Dejá todo<br>impecable.</h2><p data-reveal>Elegí una escena y limpiá.</p></div>
+    <div class="scene-tabs" role="tablist" aria-label="Escenas de los talentos"><button role="tab" id="scene-tab-0" aria-controls="scene-panel" aria-selected="true" tabindex="0" data-scene="0">Pía<span class="tab-done" aria-hidden="true">✓</span></button>
+<button role="tab" id="scene-tab-1" aria-controls="scene-panel" aria-selected="false" tabindex="-1" data-scene="1">Ber<span class="tab-done" aria-hidden="true">✓</span></button>
+<button role="tab" id="scene-tab-2" aria-controls="scene-panel" aria-selected="false" tabindex="-1" data-scene="2">Renata<span class="tab-done" aria-hidden="true">✓</span></button>
+<button role="tab" id="scene-tab-3" aria-controls="scene-panel" aria-selected="false" tabindex="-1" data-scene="3">Cris<span class="tab-done" aria-hidden="true">✓</span></button></div>
+    <div class="scene-panel" id="scene-panel" role="tabpanel" aria-labelledby="scene-tab-0" style="--scene-color:#ddd0ff;--scene-accent:#6743dc" data-reveal>
+      <div class="scene-story">
+        <div class="scene-person"><img id="scene-photo" src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" width="52" height="52"><h3 id="scene-name">Pía Scarnato</h3></div>
+        <h4 id="scene-title">El after del GRWM.</h4>
+        <p class="scene-description" id="scene-story">El look está listo. La bacha necesita su propio cambio de look.</p>
+        <div class="scene-product"><img id="scene-product-image" src="assets/mommy-cutout.webp" width="52" height="52" alt=""><div><strong id="scene-product">Scrub Mommy</strong><span id="scene-surface">Bacha de cerámica</span></div></div>
+      </div>
+      <div class="scene-game-area">
+        <div class="scene-game" id="scene-game">
+          <div class="prop-wrap" aria-hidden="true"><div class="wash-object sink" id="wash-object"><div class="prop-inner"></div><div class="prop-drain"></div><div class="prop-handle handle-left"></div><div class="prop-handle handle-right"></div><div class="prop-faucet"></div><div class="prop-glint"></div></div></div>
+          <div class="clean-reveal" id="clean-reveal" aria-hidden="true">Lista para salir.<br>Y para volver.</div>
+          <canvas class="dirt-canvas" aria-hidden="true"></canvas><canvas class="sponge-canvas" aria-hidden="true"></canvas><canvas class="foam-canvas" aria-hidden="true"></canvas>
+          <button class="sponge-grab scene-sponge" id="grab-scene" aria-label="Agarrar la esponja y limpiar. Mantené presionado y arrastrá; Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/mommy-cutout.webp" alt="" draggable="false"></button>
+          <span class="scene-drag-hint" aria-hidden="true">Agarrá y limpiá</span><div class="sr-only" id="scene-done" role="status"></div>
+        </div>
+        <div class="scene-game-controls"><div class="scene-meter"><span id="scene-progress-label">0% limpio</span><span class="progress-track"><span id="scene-progress-bar"></span></span></div><button class="text-button" id="reveal-scene">Revelar</button><button class="icon-button" id="reset-scene" aria-label="Volver a ensuciar esta escena" title="Volver a ensuciar">↺</button></div>
+      </div>
+    </div>
+    <div class="scene-after"><p id="scene-benefit">Un lado para frotar. Otro para absorber y hacer espuma.</p><button class="text-button" id="next-scene">Próximo lío <span aria-hidden="true">→</span></button></div>
+    <span class="sr-only" id="scene-count">0 de 4 líos resueltos</span>
+  </section>
+
+  <section class="product-lab section-pad section-anchor" id="productos" aria-labelledby="products-heading">
+    <div class="product-grid">
+      <div class="product-copy"><h2 id="products-heading" data-reveal-title>La sonrisa<br>tiene volumen.</h2>
+        <div class="product-options" role="group" aria-label="Elegir modelo de esponja"><button data-product="daddy" class="product-option active" aria-pressed="true"><span class="color-chip yellow-chip"></span>Original</button><button data-product="mommy" class="product-option" aria-pressed="false"><span class="color-chip pink-chip"></span>Mommy</button><button data-product="fiber" class="product-option" aria-pressed="false"><span class="color-chip fiber-chip"></span>Fibra</button></div>
+        <div class="product-info" data-reveal><h3 id="product-name">Scrub Daddy Original</h3><p id="product-description">Firme con agua fría. Suave con agua tibia.</p><a id="product-source" href="https://scrubdaddy.com.ar/productos/scrub-daddy-original1/" target="_blank" rel="noopener noreferrer">Conocé el producto</a></div>
+      </div>
+      <div class="model-showcase" id="model-showcase" data-reveal><canvas class="sponge-canvas" aria-hidden="true"></canvas><img class="model-fallback sponge-fallback" src="assets/daddy-cutout.webp" alt="Scrub Daddy Original" id="model-fallback"><div class="model-drag-surface" id="model-drag" role="slider" aria-label="Girar el modelo 3D. Arrastrá o usá las flechas izquierda y derecha." aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" tabindex="0"></div><div class="model-controls"><button id="rotate-model" class="icon-button" aria-label="Girar esponja 90 grados">↻</button><span>Arrastrá para girar<span class="sr-only" id="model-angle">0°</span></span><button id="reset-model" class="text-button">Al frente</button></div></div>
+    </div>
+  </section>
+
+  <section class="campaign section-pad section-anchor" id="campana" aria-labelledby="campaign-heading">
+    <h2 id="campaign-heading" data-reveal-title>Del lío al feed.</h2>
+    <div class="campaign-grid"><div class="campaign-copy" data-reveal><h3>Reels<br>+ Stories</h3><p>Una historia por talento.<br>El producto en acción.</p></div><div class="reel-stack" aria-label="Pía, Ber, Renata y Cris protagonizan la serie"><figure class="reel-card" style="--left:0%;--top:28px;--rotate:-12deg;--delay:0ms"><img src="assets/photos/pia_scarnato.webp" alt="Pía Scarnato" width="600" height="900" loading="lazy"><span class="reel-play" aria-hidden="true">▶</span><figcaption>El after.</figcaption></figure>
+<figure class="reel-card" style="--left:20%;--top:2px;--rotate:-5deg;--delay:110ms"><img src="assets/photos/ber_scarnato.webp" alt="Ber Scarnato" width="600" height="900" loading="lazy"><span class="reel-play" aria-hidden="true">▶</span><figcaption>La receta.</figcaption></figure>
+<figure class="reel-card" style="--left:41%;--top:20px;--rotate:5deg;--delay:220ms"><img src="assets/photos/renata_blasevich.webp" alt="Renata Blasevich" width="600" height="900" loading="lazy"><span class="reel-play" aria-hidden="true">▶</span><figcaption>La visita.</figcaption></figure>
+<figure class="reel-card" style="--left:61%;--top:5px;--rotate:13deg;--delay:330ms"><img src="assets/photos/cris_pierri.webp" alt="Cris Pierri" width="600" height="900" loading="lazy"><span class="reel-play" aria-hidden="true">▶</span><figcaption>El remojo.</figcaption></figure></div></div>
+    <p class="proposal-note">Propuesta creativa. Casting, entregables, usos e inversión a definir con la marca.</p>
+  </section>
+
+  <section class="closing section-pad section-anchor" id="cierre" aria-labelledby="closing-heading"><div class="closing-copy"><h2 id="closing-heading" data-reveal-title>¿Cuál es tu<br>próximo lío?</h2><a href="#experiencia" class="round-cta" data-reveal>Volvé a hacer espuma</a></div><img class="closing-sponge" src="assets/daddy-cutout.webp" alt="" width="500" height="500" loading="lazy" data-parallax="65"></section>
+</main>
+<div class="island-backdrop" id="island-backdrop"></div>
+<div class="island-wrap"><div class="island" id="island">
+  <button class="island-pill" id="island-toggle" aria-expanded="false" aria-controls="island-menu" aria-label="Abrir índice de la propuesta"><span class="island-dot" aria-hidden="true"></span><span id="island-label">Portada</span><svg class="island-progress" width="23" height="23" viewBox="0 0 24 24" aria-hidden="true"><circle class="track" cx="12" cy="12" r="9.5"/><circle class="fill" id="island-progress" cx="12" cy="12" r="9.5"/></svg></button>
+  <div class="island-menu" id="island-menu" role="dialog" aria-label="Índice de la propuesta" aria-modal="true" inert><div class="island-menu-head"><span>Índice</span><button id="island-close" aria-label="Cerrar índice">×</button></div><nav aria-label="Secciones"><a href="#inicio" class="island-item" aria-current="location">Portada<span aria-hidden="true"></span></a><a href="#concepto" class="island-item">La idea<span aria-hidden="true"></span></a><a href="#talentos" class="island-item">Los talentos<span aria-hidden="true"></span></a><a href="#experiencia" class="island-item">Hacé espuma<span aria-hidden="true"></span></a><a href="#productos" class="island-item">Las esponjas<span aria-hidden="true"></span></a><a href="#campana" class="island-item">La campaña<span aria-hidden="true"></span></a><a href="#cierre" class="island-item">El próximo lío<span aria-hidden="true"></span></a></nav><button class="island-restart" id="restart-deck" type="button" data-restart>Volver a ensuciar</button></div>
+</div></div>
+<div id="live-announcement" class="sr-only" role="status" aria-live="polite"></div>
+<noscript><div class="noscript-notice">Activá JavaScript para limpiar la portada y probar las escenas.</div></noscript>
+<script id="scenes-data" type="application/json">[{"id": "pia", "pid": "pia_scarnato", "short": "Pía", "number": "01", "sponge": "mommy", "product": "Scrub Mommy", "surface": "Bacha de cerámica", "kind": "sink", "color": "#ddd0ff", "accent": "#6743dc", "title": "El after del GRWM.", "quote": "El look: 10/10. La bacha: mejor no hablemos.", "story": "El look está listo. La bacha necesita su propio cambio de look.", "benefit": "Un lado para frotar. Otro para absorber y hacer espuma.", "reveal": "Lista para salir.\nY para volver.", "result": "El look y la bacha: 10/10.", "productUrl": "https://scrubdaddy.com.ar/productos/scrub-mommy/", "name": "Pía Scarnato", "photo": "assets/photos/pia_scarnato.webp", "ig": "https://www.instagram.com/piascarnato/"}, {"id": "ber", "pid": "ber_scarnato", "short": "Ber", "number": "02", "sponge": "daddy", "product": "Scrub Daddy Original", "surface": "Olla de acero inoxidable", "kind": "pan", "color": "#bdebb9", "accent": "#257a45", "title": "Una receta. Toda la cocina.", "quote": "Decía «una receta fácil». No decía cuántas cosas iba a ensuciar.", "story": "Una receta fácil. Una montaña de cosas por lavar. Falta el último paso.", "benefit": "Con agua fría, FlexTexture® se vuelve firme para frotar.", "reveal": "Chef del caos.\nCrack del después.", "result": "Receta terminada. Olla también.", "productUrl": "https://scrubdaddy.com.ar/productos/scrub-daddy-original1/", "name": "Ber Scarnato", "photo": "assets/photos/ber_scarnato.webp", "ig": "https://www.instagram.com/berscarnato/"}, {"id": "renata", "pid": "renata_blasevich", "short": "Renata", "number": "03", "sponge": "mommy", "product": "Scrub Mommy", "surface": "Mesada de granito", "kind": "counter", "color": "#ffc7db", "accent": "#bc366b", "title": "«Estamos abajo».", "quote": "Yo: vengan cuando quieran. También yo: ¿YA?", "story": "Llega el mensaje: «Estamos abajo». Empieza el operativo mesada.", "benefit": "ResoFoam® absorbe. FlexTexture® ayuda a limpiar la superficie.", "reveal": "Que pase\nla visita.", "result": "Mesada lista. Que suban.", "productUrl": "https://scrubdaddy.com.ar/productos/scrub-mommy/", "name": "Renata Blasevich", "photo": "assets/photos/renata_blasevich.webp", "ig": "https://www.instagram.com/renatablasevich/"}, {"id": "cris", "pid": "cris_pierri", "short": "Cris", "number": "04", "sponge": "daddy", "product": "Scrub Daddy Original", "surface": "Plato de cerámica", "kind": "plate", "color": "#bde5ff", "accent": "#2263c0", "title": "Lo dejé en remojo.", "quote": "Ese plato está en remojo desde otra gestión.", "story": "El plato sigue en remojo. La esponja le pone fin a la excusa.", "benefit": "Con agua tibia, FlexTexture® se ablanda para lavar la vajilla.", "reveal": "Chau excusas.\nHola sonrisa.", "result": "Se terminó el mandato del remojo.", "productUrl": "https://scrubdaddy.com.ar/productos/scrub-daddy-original1/", "name": "Cris Pierri", "photo": "assets/photos/cris_pierri.webp", "ig": "https://www.instagram.com/crispierri/"}]</script>
+<script type="module" src="startup.js" onerror="document.documentElement.classList.add('boot-error');document.getElementById('boot-progress').setAttribute('aria-label','No se pudo completar la carga')"></script>
+</body>
+</html>

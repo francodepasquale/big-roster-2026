@@ -1,0 +1,54 @@
+{
+  "pia_scarnato": {
+    "name": "Pía Scarnato",
+    "photo": "assets/photos/pia_scarnato.webp",
+    "tags": [
+      "Humor",
+      "Lifestyle"
+    ],
+    "ig": "1.1 M",
+    "tt": "2.1 M",
+    "ig_url": "https://www.instagram.com/piascarnato/",
+    "tt_url": "https://www.tiktok.com/@piascarnato.ok?lang=es-419",
+    "yt": "993 K",
+    "yt_url": "https://www.youtube.com/@piascarnato"
+  },
+  "ber_scarnato": {
+    "name": "Ber Scarnato",
+    "photo": "assets/photos/ber_scarnato.webp",
+    "tags": [
+      "Humor",
+      "Sketch"
+    ],
+    "ig": "432 K",
+    "tt": "742 K",
+    "ig_url": "https://www.instagram.com/berscarnato/",
+    "tt_url": "https://www.tiktok.com/@berscarnato"
+  },
+  "renata_blasevich": {
+    "name": "Renata Blasevich",
+    "photo": "assets/photos/renata_blasevich.webp",
+    "tags": [
+      "Humor",
+      "Sketch"
+    ],
+    "ig": "329 K",
+    "tt": "2.3 M",
+    "ig_url": "https://www.instagram.com/renatablasevich/",
+    "tt_url": "https://www.tiktok.com/@renatablasevich?lang=es-419"
+  },
+  "cris_pierri": {
+    "name": "Cris Pierri",
+    "photo": "assets/photos/cris_pierri.webp",
+    "tags": [
+      "Humor",
+      "Sketch"
+    ],
+    "ig": "947 K",
+    "tt": "3.3 M",
+    "ig_url": "https://www.instagram.com/crispierri/",
+    "tt_url": "https://www.tiktok.com/@crispierri?lang=es-419",
+    "yt": "1.07 M",
+    "yt_url": "https://www.youtube.com/@crispierri"
+  }
+}
