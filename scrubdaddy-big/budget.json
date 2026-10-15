@@ -1,0 +1,15 @@
+{
+  "note": "Valores a cotizar según entregables y derechos de uso.",
+  "formats": [
+    {"key": "reel", "label": "Reel"},
+    {"key": "stories", "label": "Stories"},
+    {"key": "tiktok", "label": "TikTok"},
+    {"key": "pauta", "label": "Pauta"}
+  ],
+  "talents": {
+    "pia_scarnato": {"reel": null, "stories": null, "tiktok": null, "pauta": null},
+    "ber_scarnato": {"reel": null, "stories": null, "tiktok": null, "pauta": null},
+    "renata_blasevich": {"reel": null, "stories": null, "tiktok": null, "pauta": null},
+    "cris_pierri": {"reel": null, "stories": null, "tiktok": null, "pauta": null}
+  }
+}

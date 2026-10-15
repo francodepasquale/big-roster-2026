@@ -132,7 +132,13 @@ export class SpongeWorld {
   add(key,layout,button=null) {
     const object = makeSponge(key); this.scene.add(object);
     const shadow = getShadow(); this.scene.add(shadow);
-    const item = {object,shadow,key,layout,button,held:false,drag:null,rest:null,current:{x:0,y:0},velocity:{x:0,y:0},phase:this.items.length*2.8};
+    const item = {object,shadow,key,layout,button,held:false,hovered:false,focused:false,drag:null,rest:null,current:{x:0,y:0},velocity:{x:0,y:0},phase:this.items.length*2.8};
+    if(this.mode==='hero'&&button){
+      button.addEventListener('pointerenter',event=>{item.hovered=event.pointerType!=='touch';});
+      button.addEventListener('pointerleave',()=>{item.hovered=false;});
+      button.addEventListener('focus',()=>{item.focused=button.matches(':focus-visible');});
+      button.addEventListener('blur',()=>{item.focused=false;});
+    }
     this.items.push(item); this.layoutItem(item,true);this.render(performance.now(),true);return item;
   }
   layoutItem(item,snap=false) {
@@ -171,27 +177,31 @@ export class SpongeWorld {
     this.spin+=(this.spinTarget-this.spin)*blend(145);
     for (const item of this.items) {
       const h=item.home;
+      const hero=this.mode==='hero',highlighted=hero&&(item.hovered||item.focused);
       const floating=!reducedMotion&&!item.held&&!item.rest;
-      const float=floating?Math.sin(time*.00065+item.phase)*6:0;
-      const tx=item.held?item.drag.x:item.rest?item.rest.x*this.width:h.x;
+      const float=floating?Math.sin(time*(hero?.00115:.00065)+item.phase)*(hero?Math.min(22,h.size*.14):6):0;
+      const drift=floating&&hero?Math.sin(time*.0007+item.phase*.8)*Math.min(12,h.size*.07):0;
+      const tx=item.held?item.drag.x:item.rest?item.rest.x*this.width:h.x+drift;
       const ty=item.held?item.drag.y:item.rest?item.rest.y*this.height:h.y+float;
       item.velocity.x=tx-item.current.x;item.velocity.y=ty-item.current.y;
       item.current.x+=(tx-item.current.x)*follow;item.current.y+=(ty-item.current.y)*follow;
       const o=item.object;
       o.position.set(item.current.x-this.width/2,this.height/2-item.current.y,40+(h.z||0));
-      const scale=h.size*(item.held?.94:1);
+      const scale=h.size*(item.held?(hero?1.045:.94):highlighted?(reducedMotion?1.025:1.07):1);
       o.scale.x+=(scale-o.scale.x)*settle;o.scale.y+=(scale*(item.held?.98:1)-o.scale.y)*settle;o.scale.z+=(scale*(item.held?.95:1)-o.scale.z)*settle;
-      const idle=floating?Math.sin(time*.00045+item.phase)*.035:0;
+      const idle=floating?Math.sin(time*(hero?.00085:.00045)+item.phase)*(hero?.11:.035):0;
       const tilt=(speed,limit)=>reducedMotion?0:Math.max(-limit,Math.min(limit,speed));
-      const ry=(h.ry||0)+idle+this.spin+(item.held?tilt(item.velocity.x*.007,.2):0);
-      const rx=(h.rx||0)+idle+(item.held?tilt(-item.velocity.y*.005,.15):0);
+      const ry=(h.ry||0)+idle+this.spin+(highlighted&&!item.held?.08:0)+(item.held?tilt(item.velocity.x*.007,.2):0);
+      const rx=(h.rx||0)+idle+(highlighted&&!item.held?-.07:0)+(item.held?tilt(-item.velocity.y*.005,.15):0);
       const rz=(h.rz||0)+idle*.6+(item.held?tilt(-item.velocity.x*.006,.18):0);
       o.rotation.x+=(rx-o.rotation.x)*turn;o.rotation.y+=(ry-o.rotation.y)*turn;o.rotation.z+=(rz-o.rotation.z)*turn;
       // The hit area follows the rendered sponge so it can be picked up where it rests.
       if(item.button){item.button.style.left=`${item.current.x}px`;item.button.style.top=`${item.current.y}px`;}
-      item.shadow.position.set(o.position.x+18,o.position.y-h.size*.72,-120);
-      item.shadow.scale.set(o.scale.x*2.4,o.scale.y*.73,1);
-      item.shadow.material.opacity+=((item.held?.5:.7)-item.shadow.material.opacity)*settle;
+      const lifted=hero&&(item.held||highlighted);
+      item.shadow.position.set(o.position.x+(hero?h.size*.18:18),o.position.y-h.size*(hero?(lifted?.6:.5):.72),-120);
+      item.shadow.scale.set(o.scale.x*(hero?(lifted?2.85:2.65):2.4),o.scale.y*(hero?1.9:.73),1);
+      const shadowOpacity=hero?(item.held?.65:highlighted?.8:.95):(item.held?.5:.7);
+      item.shadow.material.opacity+=(shadowOpacity-item.shadow.material.opacity)*settle;
     }
     this.renderer.render(this.scene,this.camera);
   }

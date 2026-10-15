@@ -6,8 +6,10 @@ Run from any directory: python3 build_deck.py
 from pathlib import Path
 from html import escape
 import json
+import hashlib
 HERE=Path(__file__).resolve().parent
 people=json.loads((HERE/'people.json').read_text())
+budget=json.loads((HERE/'budget.json').read_text())
 SCENES=[
  dict(id='pia',pid='pia_scarnato',short='Pía',number='01',sponge='mommy',product='Scrub Mommy',surface='Bacha de cerámica',kind='sink',color='#ddd0ff',accent='#6743dc',title='El after del GRWM.',quote='El look: 10/10. La bacha: mejor no hablemos.',story='Pía termina de prepararse y la cámara descubre el verdadero detrás de escena: la bacha. Un cambio de protagonista, espuma y un final tan impecable como el look.',benefit='Dos caras, una solución: FlexTexture® para frotar y ResoFoam® para absorber y hacer espuma.',reveal='Lista para salir.\nY para volver.',result='El look y la bacha: 10/10.',productUrl='https://scrubdaddy.com.ar/productos/scrub-mommy/'),
  dict(id='ber',pid='ber_scarnato',short='Ber',number='02',sponge='daddy',product='Scrub Daddy Original',surface='Olla de acero inoxidable',kind='pan',color='#bdebb9',accent='#257a45',title='Una receta. Toda la cocina.',quote='Decía «una receta fácil». No decía cuántas cosas iba a ensuciar.',story='Ber cocina algo simple y convierte la cocina en una producción. Cuando llega la hora de lavar, Scrub Daddy entra a resolver el último paso de la receta.',benefit='FlexTexture® se vuelve firme con agua fría para trabajar sobre residuos persistentes.',reveal='Chef del caos.\nCrack del después.',result='Receta terminada. Olla también.',productUrl='https://scrubdaddy.com.ar/productos/scrub-daddy-original1/'),
@@ -45,8 +47,24 @@ def tabs():
 def reels():
  return '\n'.join(f'''<figure class="reel-card" style="--left:{[0,20,41,61][i]}%;--top:{[28,2,20,5][i]}px;--rotate:{[-12,-5,5,13][i]}deg;--delay:{i*110}ms"><img src="{s['photo']}" alt="{escape(s['name'])}" width="600" height="900" loading="lazy"><span class="reel-play" aria-hidden="true">▶</span><figcaption>{['El after.','La receta.','La visita.','El remojo.'][i]}</figcaption></figure>''' for i,s in enumerate(SCENES))
 
+def versioned(name):
+ return f'{name}?v={hashlib.sha256((HERE/name).read_bytes()).hexdigest()[:12]}'
+
+def budget_cards():
+ out=[]
+ for i,s in enumerate(SCENES):
+  p=people[s['pid']];rates=budget['talents'][s['pid']]
+  socials=''.join(f'<a href="{escape(p[key+"_url"])}" target="_blank" rel="noopener noreferrer" aria-label="{label} de {escape(p["name"])}">{label}</a>' for key,label in [('ig','Instagram'),('tt','TikTok')])
+  followers=''.join(f'<div class="budget-follow"><strong>{escape(p[key].replace(".",","))}</strong><span>Seguidores {label}</span></div>' for key,label in [('ig','Instagram'),('tt','TikTok')])
+  rows=''.join(f'<div class="budget-row"><dt>{escape(f["label"])}</dt><dd>{escape(str(rates[f["key"]])) if rates[f["key"]] is not None else "A cotizar"}</dd></div>' for f in budget['formats'])
+  out.append(f'''<article class="budget-card" data-reveal style="--budget-color:{s['color']};--delay:{(i%2)*100}ms" aria-labelledby="budget-name-{s['id']}">
+ <div class="budget-talent"><img class="budget-avatar" src="{escape(p['photo'])}" alt="{escape(p['name'])}" width="72" height="72" loading="lazy"><div><h3 id="budget-name-{s['id']}">{escape(p['name'])}</h3><p>{escape(' · '.join(p['tags']))}</p><div class="budget-socials">{socials}</div></div></div>
+ <div class="budget-followers">{followers}</div><dl class="budget-rows">{rows}</dl></article>''')
+ return '\n'.join(out)
+
 template=(HERE/'template.html').read_text()
-replacements={'TALENT_CARDS':cards(),'SCENE_TABS':tabs(),'REEL_CARDS':reels(),'SCENES_JSON':json.dumps(SCENES,ensure_ascii=False).replace('</','<\\/'), 'YEAR':'2026'}
+module_imports={'imports':{f'./{name}':f'./{versioned(name)}' for name in ['app.js','sponges.js','geometry.js','cleaning.js','navigation.js']}}
+replacements={'TALENT_CARDS':cards(),'SCENE_TABS':tabs(),'REEL_CARDS':reels(),'BUDGET_CARDS':budget_cards(),'BUDGET_NOTE':escape(budget['note']),'SCENES_JSON':json.dumps(SCENES,ensure_ascii=False).replace('</','<\\/'), 'YEAR':'2026','STYLES_URL':versioned('styles.css'),'STARTUP_URL':versioned('startup.js'),'MODULE_IMPORTS':json.dumps(module_imports)}
 for k,v in replacements.items():template=template.replace('{{'+k+'}}',v)
 assert '{{' not in template
 (HERE/'index.html').write_text(template)

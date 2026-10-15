@@ -20,7 +20,7 @@
     .boot-retry{display:none}
     .boot-error .boot-retry,.boot-slow .boot-retry{display:block}
   </style>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{{STYLES_URL}}">
 </head>
 <body>
 <div class="boot-loader" id="boot-loader">
@@ -102,15 +102,21 @@
   </section>
 
   <section class="closing section-pad section-anchor" id="cierre" aria-labelledby="closing-heading"><div class="closing-copy"><h2 id="closing-heading" data-reveal-title>¿Cuál es tu<br>próximo lío?</h2><a href="#experiencia" class="round-cta" data-reveal>Volvé a hacer espuma</a></div><img class="closing-sponge" src="assets/daddy-cutout.webp" alt="" width="500" height="500" loading="lazy" data-parallax="65"></section>
+
+  <section class="budget section-pad section-anchor" id="presupuesto" aria-labelledby="budget-heading">
+    <div class="section-heading-row"><h2 id="budget-heading" data-reveal-title>Presupuesto</h2><p data-reveal>{{BUDGET_NOTE}}</p></div>
+    <div class="budget-grid">{{BUDGET_CARDS}}</div>
+  </section>
 </main>
 <div class="island-backdrop" id="island-backdrop"></div>
 <div class="island-wrap"><div class="island" id="island">
   <button class="island-pill" id="island-toggle" aria-expanded="false" aria-controls="island-menu" aria-label="Abrir índice de la propuesta"><span class="island-dot" aria-hidden="true"></span><span id="island-label">Portada</span><svg class="island-progress" width="23" height="23" viewBox="0 0 24 24" aria-hidden="true"><circle class="track" cx="12" cy="12" r="9.5"/><circle class="fill" id="island-progress" cx="12" cy="12" r="9.5"/></svg></button>
-  <div class="island-menu" id="island-menu" role="dialog" aria-label="Índice de la propuesta" aria-modal="true" inert><div class="island-menu-head"><span>Índice</span><button id="island-close" aria-label="Cerrar índice">×</button></div><nav aria-label="Secciones"><a href="#inicio" class="island-item" aria-current="location">Portada<span aria-hidden="true"></span></a><a href="#concepto" class="island-item">La idea<span aria-hidden="true"></span></a><a href="#talentos" class="island-item">Los talentos<span aria-hidden="true"></span></a><a href="#experiencia" class="island-item">Hacé espuma<span aria-hidden="true"></span></a><a href="#productos" class="island-item">Las esponjas<span aria-hidden="true"></span></a><a href="#campana" class="island-item">La campaña<span aria-hidden="true"></span></a><a href="#cierre" class="island-item">El próximo lío<span aria-hidden="true"></span></a></nav><button class="island-restart" id="restart-deck" type="button" data-restart>Volver a ensuciar</button></div>
+  <div class="island-menu" id="island-menu" role="dialog" aria-label="Índice de la propuesta" aria-modal="true" inert><div class="island-menu-head"><span>Índice</span><button id="island-close" aria-label="Cerrar índice">×</button></div><nav aria-label="Secciones"><a href="#inicio" class="island-item" aria-current="location">Portada<span aria-hidden="true"></span></a><a href="#concepto" class="island-item">La idea<span aria-hidden="true"></span></a><a href="#talentos" class="island-item">Los talentos<span aria-hidden="true"></span></a><a href="#experiencia" class="island-item">Hacé espuma<span aria-hidden="true"></span></a><a href="#productos" class="island-item">Las esponjas<span aria-hidden="true"></span></a><a href="#campana" class="island-item">La campaña<span aria-hidden="true"></span></a><a href="#cierre" class="island-item">El próximo lío<span aria-hidden="true"></span></a><a href="#presupuesto" class="island-item">Presupuesto<span aria-hidden="true"></span></a></nav><button class="island-restart" id="restart-deck" type="button" data-restart>Volver a ensuciar</button></div>
 </div></div>
 <div id="live-announcement" class="sr-only" role="status" aria-live="polite"></div>
 <noscript><div class="noscript-notice">Activá JavaScript para limpiar la portada y probar las escenas.</div></noscript>
 <script id="scenes-data" type="application/json">{{SCENES_JSON}}</script>
-<script type="module" src="startup.js" onerror="document.documentElement.classList.add('boot-error');document.getElementById('boot-progress').setAttribute('aria-label','No se pudo completar la carga')"></script>
+<script type="importmap">{{MODULE_IMPORTS}}</script>
+<script type="module" src="{{STARTUP_URL}}" onerror="document.documentElement.classList.add('boot-error');document.getElementById('boot-progress').setAttribute('aria-label','No se pudo completar la carga')"></script>
 </body>
 </html>

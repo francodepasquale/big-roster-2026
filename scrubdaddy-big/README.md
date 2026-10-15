@@ -10,6 +10,7 @@ GitHub Pages publica esta carpeta desde la raíz de `main`. Todos los recursos d
 
 - `template.html` y `build_deck.py`: contenido y generación de `index.html`.
 - `people.json`: datos públicos de los cuatro talentos utilizados por el generador.
+- `budget.json`: formatos e importes por talento; `null` se muestra como «A cotizar».
 - `styles.css`: estilos y diseño responsive.
 - `startup.js`: carga de 0 a 100% antes de mostrar la portada.
 - `app.js`, `navigation.js` y `cleaning.js`: escenas, índice, reinicio, suciedad, arrastre y espuma.
@@ -20,6 +21,8 @@ Regenerar desde esta carpeta:
 ```sh
 python3 build_deck.py
 ```
+
+El generador agrega una versión basada en el contenido a los estilos y módulos para que cada publicación cargue los recursos actualizados.
 
 Para probar la ruta de publicación, ejecutar desde la raíz del repositorio:
 
@@ -32,6 +35,8 @@ Abrir http://127.0.0.1:8935/scrubdaddy-big/. Los módulos ES requieren HTTP; no 
 ## Alcance
 
 La portada se limpia con tres esponjas 3D y luego habilita el recorrido del deck. Hay cuatro escenas por talento, un visor de producto, índice flotante y botones «Volver a ensuciar». Incluye controles por teclado, reducción de movimiento y fotos de respaldo cuando WebGL no está disponible.
+
+El cierre incluye Presupuesto con enlaces y seguidores de Instagram y TikTok para los cuatro talentos. Reel, Stories, TikTok y pauta se publican como «A cotizar».
 
 Las geometrías se generan en el navegador desde `assets/models/silhouettes.json`. Los GLB, imágenes originales y scripts de generación de texturas permanecen en la carpeta de trabajo; no son necesarios para ejecutar ni editar el contenido de esta versión.
 
