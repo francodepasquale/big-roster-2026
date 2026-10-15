@@ -66,6 +66,11 @@ html:not(.js) .cover-brand{opacity:1;visibility:visible;transform:translate(-50%
 html:not(.js) .cover-restart{display:none}
 @media print{.cover-restart{display:none!important}}
 
+/* The next instruction appears after the cover has finished rinsing. */
+.cover-instruction.cover-scroll-hint{top:auto;bottom:max(96px,calc(env(safe-area-inset-bottom) + 72px));transform:translateX(-50%);opacity:0;visibility:hidden;translate:0 10px;transition:opacity .55s var(--ease),translate .65s var(--ease),visibility 0s .65s}
+.hero-complete .cover-scroll-hint{opacity:1;visibility:visible;translate:0 0;transition-delay:1.05s}
+@media(max-width:760px){.cover-instruction.cover-scroll-hint{bottom:max(144px,calc(env(safe-area-inset-bottom) + 126px))}}
+
 /* Budget: the Hilario José card structure, with this proposal's own talent data. */
 .budget{background:var(--paper);padding-bottom:160px}
 .budget .section-heading-row>p{max-width:285px}
