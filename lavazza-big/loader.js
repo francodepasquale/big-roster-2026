@@ -2,7 +2,7 @@
 // No artificial loading percentage: the animated number only follows settled work.
 (()=>{
   const root=document.documentElement,overlay=document.querySelector('#page-loader');
-  const number=document.querySelector('#load-number'),progress=document.querySelector('#load-progress'),bar=document.querySelector('#load-bar');
+  const number=document.querySelector('#load-number'),progress=document.querySelector('#load-progress');
   const urls=[...new Set([...document.images].map(image=>image.currentSrc||image.src))];
   const tasks=new Map([...urls,'fonts','scene','story'].map(key=>[key,false]));
   const failures=[],history=[{percent:0,time:performance.now()}];
@@ -23,11 +23,14 @@
   }
   function close(){
     if(closing)return;closing=true;
-    // Let 100% register, then reveal the already rendered presentation.
+    // Let 100% register, then slide the loading screen away from the rendered cover.
     setTimeout(()=>{
       root.classList.add('is-revealing');overlay.classList.add('is-leaving');
       if(reduced)release();else{
-        overlay.addEventListener('transitionend',release,{once:true});setTimeout(release,650);
+        overlay.addEventListener('transitionend',event=>{
+          if(event.target===overlay&&event.propertyName==='transform')release();
+        });
+        setTimeout(release,1100);
       }
     },reduced?0:180);
   }
@@ -40,7 +43,6 @@
     if(number.textContent!==String(percent)){
       number.textContent=String(percent);progress.setAttribute('aria-valuenow',String(percent));history.push({percent,time:now});
     }
-    bar.style.transform=`scaleX(${value/100})`;
     if(percent===100)close();else if(value<target)frame=requestAnimationFrame(paint);
   }
   function settle(key,error){

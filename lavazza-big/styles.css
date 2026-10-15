@@ -135,17 +135,14 @@
 @media print{.statement-object{opacity:1!important}.statement-line,.statement-run{transform:none!important}}
 
 /* The percentage follows decoded assets, fonts, typesetting and the first 3D frame. */
-.is-loading .page-loader{font-family:Inter,Arial,sans-serif;transition:opacity .55s var(--ease)}
-.page-loader.is-leaving{opacity:0;pointer-events:none}
+.is-loading .page-loader{font-family:Inter,Arial,sans-serif;transform:translate3d(0,0,0);will-change:transform;transition:transform .9s cubic-bezier(.76,0,.24,1)}
+.is-loading .page-loader.is-leaving{transform:translate3d(0,-100%,0);pointer-events:none}
 .is-loading.is-revealing main,.is-loading.is-revealing .island-wrap{visibility:visible}
-.loader-brand{position:absolute;top:28px;left:50%;transform:translateX(-50%);justify-content:center;width:max-content}
 .loader-center{text-align:center;transform:translateY(-10px)}
 .loader-count{display:flex;align-items:baseline;justify-content:center;font-size:clamp(110px,17vw,260px);font-weight:550;line-height:1;letter-spacing:-.085em;font-variant-numeric:tabular-nums}
 .loader-percent{font-size:.3em;letter-spacing:-.07em;margin-left:.22em}
 .loader-center p{font-size:15px;letter-spacing:-.035em;margin-top:30px}
-.loader-track{position:absolute;bottom:45px;left:var(--gutter);right:var(--gutter);height:1px;background:#ffffff26;overflow:hidden}
-.loader-track span{display:block;height:100%;width:100%;background:var(--cream);transform:scaleX(0);transform-origin:left}
-@media(max-width:760px){.loader-brand{top:25px}.loader-count{font-size:30vw}.loader-track{bottom:30px}}
+@media(max-width:760px){.loader-count{font-size:30vw}}
 @media(prefers-reduced-motion:reduce){.is-loading .page-loader{transition:none}}
 @media print{.page-loader{display:none!important}html.is-loading{overflow:visible}.is-loading main{visibility:visible}}
 
