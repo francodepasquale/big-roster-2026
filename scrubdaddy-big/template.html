@@ -15,8 +15,8 @@
     html.boot-loading{overflow:hidden;background:#ffe638}
     .boot-loading body{margin:0}
     .boot-loading:not(.boot-revealing) main,.boot-loading:not(.boot-revealing) .island-wrap,.boot-loading .skip-link{visibility:hidden}
-    .boot-loading .boot-loader{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#ffe638;color:#262328}
-    .boot-count{font:800 clamp(90px,18vw,240px)/1 Arial,sans-serif;letter-spacing:-.075em;font-variant-numeric:tabular-nums}
+    .boot-loading .boot-loader{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#ffe638;color:#987e00}
+    .boot-count{color:#987e00;font:800 clamp(90px,18vw,240px)/1 Arial,sans-serif;letter-spacing:-.075em;font-variant-numeric:tabular-nums}
     .boot-retry{display:none}
     .boot-error .boot-retry,.boot-slow .boot-retry{display:block}
   </style>
@@ -34,14 +34,14 @@
       <div class="hero-copy"><h1 class="hero-title" id="hero-heading">El lado alegre<br>del lío.</h1></div>
       <canvas class="dirt-canvas" aria-hidden="true"></canvas>
       <div class="cover-brand" aria-label="BIG por Scrub Daddy"><span class="big-mark"><img src="assets/big.svg" alt="BIG" width="29" height="33"></span><span aria-hidden="true">×</span><img class="scrub-logo" src="assets/scrub-daddy-logo.webp" alt="Scrub Daddy" width="76" height="49"></div>
-      <p class="cover-instruction">Agarrá una esponja.<br>Descubrí la idea.</p>
+      <p class="cover-instruction"><img class="cover-instruction-icon" src="assets/daddy-cutout.webp" alt="" width="38" height="38"><span class="cover-instruction-copy"><span>Agarrá una esponja.</span><span>Descubrí la idea.</span></span></p>
       <canvas class="sponge-canvas" aria-hidden="true"></canvas>
       <canvas class="foam-canvas" aria-hidden="true"></canvas>
       <button class="sponge-grab hero-daddy" id="grab-daddy" aria-label="Agarrar Scrub Daddy y limpiar la portada. Mantené presionado y arrastrá. Con teclado, Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/daddy-cutout.webp" alt="" draggable="false"></button>
       <button class="sponge-grab hero-mommy" id="grab-mommy" aria-label="Agarrar Scrub Mommy y limpiar la portada. Mantené presionado y arrastrá. Con teclado, Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/mommy-cutout.webp" alt="" draggable="false"></button>
       <button class="sponge-grab hero-fiber" id="grab-fiber" aria-label="Agarrar la esponja de fibra y limpiar la portada. Mantené presionado y arrastrá. Con teclado, Enter para revelar." aria-pressed="false"><img class="sponge-fallback" src="assets/fiber-cutout.webp" alt="" draggable="false"></button>
       <div class="hero-progress" aria-label="Avance de la revelación"><span class="progress-track"><span id="hero-progress-bar"></span></span><span id="hero-progress-number">0%</span></div>
-      <button class="text-button cover-skip" id="skip-hero">Revelar</button>
+      <button class="text-button cover-skip" id="skip-hero" type="button">Revelar</button>
       <button class="text-button cover-restart" id="restart-hero" type="button" data-restart>Volver a ensuciar</button>
     </div>
   </section>
