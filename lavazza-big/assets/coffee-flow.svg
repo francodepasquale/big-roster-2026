@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" fill="none">
+  <defs>
+    <linearGradient id="coffee" x1="1410" y1="30" x2="930" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f3efe5" stop-opacity=".07"/>
+      <stop offset=".46" stop-color="#a47b54" stop-opacity=".09"/>
+      <stop offset="1" stop-color="#714d32" stop-opacity=".055"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="950" x2="1340" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f3efe5" stop-opacity=".065"/>
+      <stop offset=".52" stop-color="#071e57" stop-opacity=".045"/>
+      <stop offset="1" stop-color="#f3efe5" stop-opacity=".07"/>
+    </linearGradient>
+  </defs>
+  <path d="M1410-160C1170 85 1600 160 1530 390S1160 540 1250 760s360 190 290 390" stroke="url(#coffee)" stroke-width="118"/>
+  <path d="M1434-160C1190 90 1624 170 1550 396S1178 540 1269 758s350 196 290 392" stroke="url(#water)" stroke-width="4"/>
+  <path d="M1470-160C1220 84 1660 180 1580 405S1210 540 1305 760s334 196 270 390" stroke="url(#water)" stroke-width="16"/>
+  <path d="M1328-160C1090 80 1525 158 1450 380S1086 538 1174 762s360 185 290 388" stroke="url(#water)" stroke-width="2"/>
+  <path d="M-180 680C80 585 190 768 100 860s-10 188 284 242" stroke="url(#coffee)" stroke-width="85"/>
+  <path d="M-180 699C72 608 167 768 80 865s-4 185 296 252" stroke="url(#water)" stroke-width="5"/>
+  <path d="M-180 642C100 541 234 766 137 863s-2 180 284 215" stroke="url(#water)" stroke-width="2"/>
+</svg>

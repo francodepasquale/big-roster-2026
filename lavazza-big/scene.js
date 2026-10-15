@@ -16,15 +16,25 @@ export async function mountScenes(state){
 
   function positionOpeningBeans(r){
     const compact=innerWidth<=760;
+    const sources=[[-3.3,-1.2],[-1.24,-1.1],[1.24,-1.1],[3.3,-1.2],[-1.24,1.1],[1.24,1.1]];
+    const destinations=compact?[[-4,2.1,1],[-2.4,3.6,1.3],[1.8,3.8,1.1],[3.8,2.6,.8],[-3.2,-.8,1],[3.4,-.5,1.1]]:
+      [[-.8,2.5,1],[.7,3.1,1.5],[2.4,2.7,1.2],[4.4,1.4,.8],[1.1,-1.7,1.2],[3.5,-2.2,1.1]];
     r.beans.items.forEach((bean,index)=>{
+      bean.expanded??=new THREE.Vector3();
       if(index<24){
         const angle=index*2.399963,radius=Math.sqrt((index+.5)/24);
-        bean.base.set((compact?-3.1:-4.8)+Math.cos(angle)*radius*(compact?1.05:1.65),
-          (compact?-3.7:-2.35)+Math.sin(angle)*radius*(compact?1:.78),(index%5-2)*.25);
-      }else{
+        const dx=Math.cos(angle)*radius*(compact?1.05:1.65),dy=Math.sin(angle)*radius*(compact?1:.78);
+        bean.base.set((compact?-3.1:-4.8)+dx,(compact?-3.7:-2.35)+dy,(index%5-2)*.25);
+        bean.expanded.set((compact?-2.8:-5.9)+dx*(compact?2.35:2.25),(compact?-.95:-3.25)+dy*1.1,.2+(index%4)*.18);
+      }else if(index<32){
         const progress=(index-24)/7;
         bean.base.set(mix(compact?-1:-2,compact?3.6:4.8,progress),
           (compact?-3.2:-1.65)-Math.sin(progress*Math.PI)*.75+(index%2)*.25,(index%3-1)*.3);
+        bean.expanded.set((compact?3.6:4.5)+Math.sin(progress*Math.PI)*.25,(compact?2.5:2.6)-progress*(compact?4.3:5.7),.25);
+      }else{
+        const order=index-32;
+        bean.spawn??=new THREE.Vector3();bean.spawn.set(...sources[order],-.1);
+        bean.base.copy(bean.spawn);bean.expanded.set(...destinations[order]);bean.order=order;
       }
     });
   }
@@ -53,7 +63,7 @@ export async function mountScenes(state){
       scene.add(new THREE.AmbientLight(0xffffff,.5));
       r.scene=scene;r.camera=new THREE.PerspectiveCamera(32,1,.1,100);r.camera.position.z=14;
       if(r.type==='collection'){
-        r.box=models.presentationBox(scene);r.beans=models.beans(scene,32,5.4);
+        r.box=models.presentationBox(scene);r.beans=models.beans(scene,38,5.4);
         r.box.caps.forEach(c=>{c.userData.lift=0;});
         r.picks=[...r.slot.querySelectorAll('.capsule-pick')];
       }else if(r.type==='hero'){
@@ -133,15 +143,6 @@ export async function mountScenes(state){
     const drift=state.paused?0:1,smoothing=state.paused?1:1-Math.exp(-dt*12);
     r.px=mix(r.px,state.paused?0:r.pointer.x,smoothing);r.py=mix(r.py,state.paused?0:r.pointer.y,smoothing);
     const progress=r.type==='collection'?0:clamp((innerHeight/2-(r.documentTop-scrollY+r.height/2))/innerHeight,-1,1);
-    if(r.beans){
-      const {items,dummy,bodies,seams}=r.beans;
-      items.forEach((b,i)=>{
-        dummy.position.set(b.base.x+Math.sin(time*.36+b.phase)*.14*drift+r.px*.08,
-          b.base.y+Math.cos(time*.42+b.phase)*.18*drift+progress*.3*drift,b.base.z);
-        dummy.rotation.set(b.rotation.x+Math.sin(time*.25)*.45+r.py*.08,b.rotation.y+Math.sin(time*.18)*.55+r.px*.12,b.rotation.z+time*.12);
-        dummy.scale.setScalar(b.scale);dummy.updateMatrix();bodies.setMatrixAt(i,dummy.matrix);seams.setMatrixAt(i,dummy.matrix);
-      });bodies.instanceMatrix.needsUpdate=true;seams.instanceMatrix.needsUpdate=true;
-    }
     if(r.type==='collection'){
       const box=r.box;
       box.open=state.openProgress;
@@ -172,6 +173,30 @@ export async function mountScenes(state){
       c.position.y=Math.sin(time*.5)*.13*drift;
     }else if(r.type==='character'){
       const c=r.caps[0].mesh;c.rotation.y=-.12+r.px*.3+spin(c,smoothing);c.rotation.x=-.8+r.py*.08;c.rotation.z=.16+Math.sin(time*.5)*.06*drift;
+    }
+    if(r.beans){
+      const {items,dummy,bodies,seams}=r.beans;
+      const spread=r.box?THREE.MathUtils.smoothstep(state.openProgress,.08,1):0;
+      if(r.box)r.box.root.updateMatrixWorld(true);
+      items.forEach((b,i)=>{
+        let reveal=1,travel=0;
+        if(b.spawn){
+          travel=THREE.MathUtils.smoothstep(state.openProgress,.18+b.order*.055,.9+b.order*.015);
+          reveal=THREE.MathUtils.smoothstep(travel,0,.18);
+          dummy.position.copy(b.spawn).applyMatrix4(r.box.root.matrixWorld).lerp(b.expanded,travel);
+          const arc=Math.sin(travel*Math.PI);
+          dummy.position.y+=arc*.9;dummy.position.z+=arc*1.15;
+        }else{
+          dummy.position.copy(b.base);
+          if(b.expanded)dummy.position.lerp(b.expanded,spread);
+        }
+        dummy.position.x+=Math.sin(time*.36+b.phase)*(.14+spread*.12)*drift+r.px*.08;
+        dummy.position.y+=Math.cos(time*.42+b.phase)*(.18+spread*.12)*drift+progress*.3*drift;
+        dummy.rotation.set(b.rotation.x+Math.sin(time*.25)*.45+r.py*.08+travel,
+          b.rotation.y+Math.sin(time*.18)*.55+r.px*.12,b.rotation.z+time*.12+travel*2.4+spread*.35);
+        dummy.scale.setScalar(b.scale*Math.max(.0001,reveal));dummy.updateMatrix();
+        bodies.setMatrixAt(i,dummy.matrix);seams.setMatrixAt(i,dummy.matrix);
+      });bodies.instanceMatrix.needsUpdate=true;seams.instanceMatrix.needsUpdate=true;
     }
     r.renderer.render(r.scene,r.camera);r.slot.classList.add('scene-ready');r.frames++;
     metrics.drawCalls+=r.renderer.info.render.calls;metrics.triangles+=r.renderer.info.render.triangles;

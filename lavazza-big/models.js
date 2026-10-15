@@ -95,18 +95,50 @@ export async function createModels() {
   insideCtx.font='18px Inter';insideCtx.fillText('LAVAZZA BLUE  /  CAFÉ CON CARÁCTER',600,455);
   const insideTexture=new THREE.CanvasTexture(insideCanvas);insideTexture.colorSpace=THREE.SRGBColorSpace;
   const insideMaterial=new THREE.MeshStandardMaterial({map:insideTexture,roughness:.8});
+
+  // A molded insert with real openings and tapered wells, sized to the seated cups.
+  const capsuleCenters=[-2.48,0,2.48],trayTop=-.12;
+  const trayOutline=new THREE.Shape();
+  trayOutline.moveTo(-3.77,-1.77);trayOutline.lineTo(3.77,-1.77);
+  trayOutline.lineTo(3.77,1.77);trayOutline.lineTo(-3.77,1.77);trayOutline.closePath();
+  capsuleCenters.forEach(x=>{
+    const opening=new THREE.Path();opening.absarc(x,0,1.07,0,TAU,true);trayOutline.holes.push(opening);
+  });
+  const trayGeometry=new THREE.ShapeGeometry(trayOutline,48);
+  // The profile runs into the well, so its normals face the cavity interior.
+  const recessGeometry=new THREE.LatheGeometry([
+    new THREE.Vector2(1.07,0),new THREE.Vector2(1.055,.014),new THREE.Vector2(1.035,.012),
+    new THREE.Vector2(1.02,-.008),new THREE.Vector2(1.0,-.05),new THREE.Vector2(.96,-.14),
+    new THREE.Vector2(.78,-.76),new THREE.Vector2(.74,-.86),new THREE.Vector2(.69,-.88),new THREE.Vector2(0,-.88)
+  ],96);
+  recessGeometry.rotateX(Math.PI/2);
+  const recessPosition=recessGeometry.attributes.position,colors=[];
+  const rimColor=new THREE.Color(0x25385e),wallColor=new THREE.Color(0x101a30),floorColor=new THREE.Color(0x02050d);
+  const recessColor=new THREE.Color();
+  for(let i=0;i<recessPosition.count;i++){
+    const depth=THREE.MathUtils.clamp(-recessPosition.getZ(i)/.88,0,1);
+    if(depth<.18)recessColor.copy(rimColor).lerp(wallColor,depth/.18);
+    else recessColor.copy(wallColor).lerp(floorColor,(depth-.18)/.82);
+    colors.push(recessColor.r,recessColor.g,recessColor.b);
+  }
+  recessGeometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  const recessMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.88,metalness:.02});
+
   function presentationBox(scene) {
     const root=new THREE.Group();scene.add(root);
-    const bottom=new THREE.Mesh(new THREE.BoxGeometry(7.8,3.8,.26),materials.navy);bottom.position.z=-.8;root.add(bottom);
-    const insert=new THREE.Mesh(new THREE.BoxGeometry(7.54,3.54,.12),materials.insert);insert.position.z=-.61;root.add(insert);
-    [[0,1.84,7.8,.13],[0,-1.84,7.8,.13],[-3.84,0,.13,3.68],[3.84,0,.13,3.68]].forEach(([x,y,w,h])=>{const wall=new THREE.Mesh(new THREE.BoxGeometry(w,h,.8),materials.navy);wall.position.set(x,y,-.31);root.add(wall);});
-    const caps=names.map((_,i)=>{const c=capsule(i);c.scale.setScalar(.85);c.position.set((i-1)*2.48,0,-.02);root.add(c);return c;});
+    const bottom=new THREE.Mesh(new THREE.BoxGeometry(7.8,3.8,.22),materials.navy);bottom.position.z=-1.13;root.add(bottom);
+    const insert=new THREE.Mesh(trayGeometry,materials.insert);insert.position.z=trayTop;root.add(insert);
+    const recesses=new THREE.InstancedMesh(recessGeometry,recessMaterial,3),recessMatrix=new THREE.Matrix4();
+    capsuleCenters.forEach((x,index)=>{recessMatrix.makeTranslation(x,0,trayTop);recesses.setMatrixAt(index,recessMatrix);});
+    recesses.instanceMatrix.needsUpdate=true;root.add(recesses);
+    [[0,1.84,7.8,.13],[0,-1.84,7.8,.13],[-3.84,0,.13,3.68],[3.84,0,.13,3.68]].forEach(([x,y,w,h])=>{const wall=new THREE.Mesh(new THREE.BoxGeometry(w,h,1.3),materials.navy);wall.position.set(x,y,-.56);root.add(wall);});
+    const caps=names.map((_,i)=>{const c=capsule(i);c.scale.setScalar(.85);c.position.set(capsuleCenters[i],0,-.02);root.add(c);return c;});
     const hinge=new THREE.Group();hinge.position.set(0,1.9,.17);root.add(hinge);
     const cover=new THREE.Mesh(new THREE.BoxGeometry(7.8,3.8,.13),materials.navy);cover.position.y=-1.9;hinge.add(cover);
     const label=new THREE.Mesh(boxLabelPlane,labelMaterial);label.position.set(0,-1.9,.071);hinge.add(label);
     const inner=new THREE.Mesh(new THREE.PlaneGeometry(7.5,3.5),insideMaterial);inner.rotation.set(0,Math.PI,Math.PI);inner.position.set(0,-1.9,-.071);hinge.add(inner);
     root.rotation.set(-.48,-.08,-.06);root.position.y=-.05;
-    return {root,hinge,caps,open:0};
+    return {root,hinge,caps,insert,recesses,open:0};
   }
 
   return {capsule,beans,presentationBox,names,lidMaterials};
