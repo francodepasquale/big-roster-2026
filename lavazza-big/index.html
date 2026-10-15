@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071e57">
+  <meta name="description" content="Café con carácter. Lavazza BLUE y tres personajes originales de Pelao Khe. Una propuesta de BIG.">
+  <title>Lavazza BLUE × BIG — Café con carácter</title>
+  <style>
+    .page-loader{display:none}html.is-loading{overflow:hidden}.is-loading .page-loader{display:flex;position:fixed;inset:0;z-index:2000;background:#071e57;color:#f3efe5;align-items:center;justify-content:center;font-family:Arial,sans-serif}.is-loading main,.is-loading .island-wrap,.is-loading .skip-link{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.lavazzaLoadFallback=setTimeout(()=>{
+      document.documentElement.classList.remove('is-loading');
+      document.querySelectorAll('[data-loading-inert]').forEach(element=>{element.inert=false;});
+      document.querySelector('main')?.removeAttribute('aria-busy');
+      document.dispatchEvent(new Event('lavazza:ready'));
+    },20000);
+  </script>
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div id="page-loader" class="page-loader" aria-label="Cargando la presentación">
+    <div class="loader-brand brand-lockup" aria-label="Lavazza por BIG"><span class="lavazza-logo" aria-hidden="true">&#xe900;</span><span aria-hidden="true">×</span><img src="assets/big.svg" alt="BIG" width="25" height="29"></div>
+    <div class="loader-center"><div id="load-progress" class="loader-count" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">0</span><span class="loader-percent">%</span></div><p>Café con carácter.</p></div>
+    <div class="loader-track" aria-hidden="true"><span id="load-bar"></span></div>
+  </div>
+  <a class="skip-link" href="#idea">Saltar a la idea</a>
+  <main>
+    <section id="inicio" class="opening" data-chapter="La cápsula">
+      <div id="perfiles" class="opening-chapter" data-chapter="El carácter" aria-hidden="true"></div>
+      <div class="opening-sticky">
+        <div class="opening-wash" aria-hidden="true"></div>
+        <div class="brand-lockup" aria-label="Lavazza por BIG"><span class="lavazza-logo" role="img" aria-label="Lavazza">&#xe900;</span><span aria-hidden="true">×</span><img src="assets/big.svg" alt="BIG" width="25" height="29"></div>
+        <h1 class="opening-headline">Mucho carácter.<br>En una cápsula.</h1>
+        <span class="opening-backtype" aria-hidden="true">CARATTERI</span>
+        <div class="opening-question" aria-hidden="true"><h2>¿Qué carácter<br>tiene tu café?</h2><p class="choice-instruction">Elegí una cápsula.</p></div>
+        <div id="opening-scene" class="opening-scene scene-slot" data-scene="collection" role="group" aria-label="Estuche de Lavazza BLUE. Avanzá para abrirlo. Elegí una cápsula o arrastrala para girarla suavemente.">
+          <div class="box-fallback scene-fallback" aria-hidden="true"><div class="box-content"><img src="assets/textures/enzo-capsule.webp" alt=""><img src="assets/textures/dante-capsule.webp" alt=""><img src="assets/textures/rocco-capsule.webp" alt=""></div><div class="box-lid"><span class="lavazza-logo">&#xe900;</span><span>Café con<br>carácter.</span></div></div>
+          <div class="capsule-picks" inert aria-hidden="true"><button class="capsule-pick" data-choice="enzo" aria-label="Elegir cápsula Intenso" aria-pressed="false" aria-controls="profile-panel"><span>Intenso</span></button><button class="capsule-pick" data-choice="dante" aria-label="Elegir cápsula Dolce" aria-pressed="false" aria-controls="profile-panel"><span>Dolce</span></button><button class="capsule-pick" data-choice="rocco" aria-label="Elegir cápsula Rotondo" aria-pressed="false" aria-controls="profile-panel"><span>Rotondo</span></button></div>
+        </div>
+        <div id="profile-panel" class="opening-profile" role="region" aria-labelledby="profile-title" hidden>
+          <div class="profile-copy" aria-live="polite" aria-atomic="true"><h3 id="profile-title">Una presencia<br>que se siente.</h3><p id="profile-taste">Intenso y cremoso.</p><a id="profile-character-link" class="profile-character-link" href="#idea">De este sabor nace Enzo →</a><button id="clear-choice" class="choose-again">Elegí otro carácter</button></div>
+        </div>
+      </div>
+    </section>
+    <section id="idea" class="idea-block" data-chapter="La idea">
+      <h2>La idea.</h2>
+      <p class="idea-statement" data-indent><span class="statement-source"><span class="statement-slot" data-story-object="bean" aria-hidden="true"><img class="statement-object" src="assets/textures/bean-1.webp" alt="" width="214" height="304" loading="lazy"></span> El café ya tiene carácter. Vamos a darle una cara. <span class="statement-slot" data-story-object="face" aria-hidden="true"><img class="statement-object" src="assets/people/dante-portrait.png" alt="" width="420" height="420" loading="lazy"></span> Intenso, dulce y equilibrado <span class="statement-slot" data-story-object="capsule" aria-hidden="true"><img class="statement-object" src="assets/textures/enzo-capsule.webp" alt="" width="900" height="900" loading="lazy"></span> se convierten en tres personalidades italianas de Pelao Khe, creadas a partir del sabor de cada cápsula Lavazza BLUE.</span></p>
+      <div class="idea-execution"><h3>Cómo cobra vida.</h3><p>El sabor define el gesto, la actitud y el humor de cada personaje. Su retrato llega a la cápsula y al estuche de la colección; su personalidad ayuda a reconocer y recordar cada variedad. Un recorrido que empieza en el café y termina en la elección.</p></div>
+    </section>
+    <section id="personajes" class="characters" data-chapter="Los personajes">
+      <div id="concepto" class="characters-intro">
+<div class="concept-copy"><h2>Antes de tener<br>una cara,<br>tiene un sabor.</h2></div>
+      <div class="concept-art scene-slot" data-scene="concept" role="img" aria-label="Cápsula y granos de café en tres dimensiones"><img class="scene-fallback" src="assets/textures/dante-capsule.webp" alt="Cápsula Dante Dolce de Lavazza BLUE" width="900" height="900" loading="lazy"></div>
+      </div>
+      <div class="character-grid">
+        <article id="enzo" class="character-card" data-character="enzo">
+          <div class="character-visual"><div class="phone-position"><div class="phone-tilt"><div class="phone-shell" role="img" aria-label="Mockup estilo iPhone 18 con Enzo Intenso, interpretado por Pelao Khe"><div class="phone-screen"><img src="assets/people/enzo-1.webp" alt="Enzo con bigote postizo y pañuelo rojo, haciendo el gesto italiano" loading="lazy" width="1005" height="1800"><img class="alternate" src="assets/people/enzo-2.webp" alt="" aria-hidden="true" loading="lazy" width="1005" height="1800"><span class="phone-island" aria-hidden="true"></span><span class="home-indicator" aria-hidden="true"></span></div></div></div></div>
+            <div class="scene-slot character-capsule" data-scene="character" data-character="enzo" role="img" aria-label="Cápsula tridimensional de Enzo Intenso"><img class="scene-fallback" src="assets/textures/enzo-capsule.webp" alt="" loading="lazy" width="900" height="900"></div>
+          </div><h3>Enzo Intenso</h3><p>Intenso y cremoso.<br>Lo vive todo en mayúsculas.</p>
+        </article>
+        <article id="dante" class="character-card" data-character="dante">
+          <div class="character-visual"><div class="phone-position"><div class="phone-tilt"><div class="phone-shell" role="img" aria-label="Mockup estilo iPhone 18 con Dante Dolce, interpretado por Pelao Khe"><div class="phone-screen"><img src="assets/people/dante-1.webp" alt="Dante con peluca castaña y repasador al hombro, ofreciendo un espresso" loading="lazy" width="1005" height="1800"><img class="alternate" src="assets/people/dante-2.webp" alt="" aria-hidden="true" loading="lazy" width="1005" height="1800"><span class="phone-island" aria-hidden="true"></span><span class="home-indicator" aria-hidden="true"></span></div></div></div></div>
+            <div class="scene-slot character-capsule" data-scene="character" data-character="dante" role="img" aria-label="Cápsula tridimensional de Dante Dolce"><img class="scene-fallback" src="assets/textures/dante-capsule.webp" alt="" loading="lazy" width="900" height="900"></div>
+          </div><h3>Dante Dolce</h3><p>Dulce y aromático.<br>Le pone el corazón a todo.</p>
+        </article>
+        <article id="rocco" class="character-card" data-character="rocco">
+          <div class="character-visual"><div class="phone-position"><div class="phone-tilt"><div class="phone-shell" role="img" aria-label="Mockup estilo iPhone 18 con Rocco Rotondo, interpretado por Pelao Khe"><div class="phone-screen"><img src="assets/people/rocco-1.webp" alt="Rocco con gorra gris y cardigan verde, tomando café en Italia" loading="lazy" width="1005" height="1800"><img class="alternate" src="assets/people/rocco-2.webp" alt="" aria-hidden="true" loading="lazy" width="1005" height="1800"><span class="phone-island" aria-hidden="true"></span><span class="home-indicator" aria-hidden="true"></span></div></div></div></div>
+            <div class="scene-slot character-capsule" data-scene="character" data-character="rocco" role="img" aria-label="Cápsula tridimensional de Rocco Rotondo"><img class="scene-fallback" src="assets/textures/rocco-capsule.webp" alt="" loading="lazy" width="900" height="900"></div>
+          </div><h3>Rocco Rotondo</h3><p>Equilibrado y aterciopelado.<br>El nonno que encuentra el punto justo.</p>
+        </article>
+      </div>
+    </section>
+    <section id="cierre" class="closing" data-chapter="Café con carácter">
+      <h2>Café con<br>carácter.</h2>
+      <div class="closing-art scene-slot" data-scene="hero" role="img" aria-label="Las tres cápsulas y granos de café originales, flotando en 3D"><img class="scene-fallback" src="assets/textures/enzo-capsule.webp" alt="Colección Café con carácter" width="900" height="900" loading="lazy"></div>
+      <p>El sabor de Italia,<br>donde estés.</p>
+      <div class="closing-brand brand-lockup" aria-label="Lavazza por BIG"><span class="lavazza-logo" role="img" aria-label="Lavazza">&#xe900;</span><span aria-hidden="true">×</span><img src="assets/big.svg" alt="BIG" width="25" height="29"></div>
+    </section>
+  </main>
+  <div id="island-backdrop" class="island-backdrop" hidden></div>
+  <nav class="island-wrap" aria-label="Índice de la presentación"><div id="island" class="island">
+    <button id="island-trigger" class="island-pill" aria-label="Abrir índice de la presentación" aria-expanded="false" aria-controls="island-menu"><span class="island-dot" aria-hidden="true"></span><span id="island-label">La cápsula</span><svg class="island-progress" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle class="track" cx="12" cy="12" r="10"></circle><circle id="island-progress" class="fill" cx="12" cy="12" r="10"></circle></svg></button>
+    <div id="island-menu" class="island-menu" inert aria-hidden="true"><div class="island-menu-head"><span>Índice</span><button id="island-close" aria-label="Cerrar índice">×</button></div><div class="island-menu-list"><a href="#inicio">La cápsula</a><a href="#perfiles">El carácter</a><a href="#idea">La idea</a><a href="#personajes">Los personajes</a><a href="#cierre">Café con carácter</a></div><button id="motion-toggle" class="motion-toggle" aria-pressed="false">Pausar movimiento</button></div>
+  </div></nav>
+  <noscript><style>.box-fallback{--open:1}.opening{height:100svh}</style></noscript>
+</body>
+</html>
