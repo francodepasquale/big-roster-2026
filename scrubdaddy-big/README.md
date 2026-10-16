@@ -36,7 +36,7 @@ Abrir http://127.0.0.1:8935/scrubdaddy-big/. Los módulos ES requieren HTTP; no 
 
 La portada se limpia con tres esponjas 3D y luego habilita el recorrido del deck. Hay cuatro escenas por talento, un visor de producto, índice flotante y botones «Volver a ensuciar». Incluye controles por teclado, reducción de movimiento y fotos de respaldo cuando WebGL no está disponible.
 
-El cierre incluye Presupuesto con enlaces y seguidores de Instagram y TikTok para los cuatro talentos. Reel, Stories, TikTok y pauta se publican como «A cotizar».
+El cierre incluye Presupuesto con enlaces y seguidores de Instagram y TikTok para los cuatro talentos. Tarifas actualizadas el 16 de octubre de 2026: Reel, Story y TikTok incluyen «+ IVA»; la pauta por 30 días equivale al 20% del valor total del contenido.
 
 Las geometrías se generan en el navegador desde `assets/models/silhouettes.json`. Los GLB, imágenes originales y scripts de generación de texturas permanecen en la carpeta de trabajo; no son necesarios para ejecutar ni editar el contenido de esta versión.
 

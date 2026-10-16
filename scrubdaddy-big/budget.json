@@ -1,15 +1,15 @@
 {
-  "note": "Valores a cotizar según entregables y derechos de uso.",
+  "note": "Tarifas por pieza de contenido. Pauta por 30 días.",
   "formats": [
     {"key": "reel", "label": "Reel"},
-    {"key": "stories", "label": "Stories"},
+    {"key": "stories", "label": "Story"},
     {"key": "tiktok", "label": "TikTok"},
-    {"key": "pauta", "label": "Pauta"}
+    {"key": "pauta", "label": "Pauta · 30 días"}
   ],
   "talents": {
-    "pia_scarnato": {"reel": null, "stories": null, "tiktok": null, "pauta": null},
-    "ber_scarnato": {"reel": null, "stories": null, "tiktok": null, "pauta": null},
-    "renata_blasevich": {"reel": null, "stories": null, "tiktok": null, "pauta": null},
-    "cris_pierri": {"reel": null, "stories": null, "tiktok": null, "pauta": null}
+    "pia_scarnato": {"reel": "$3.000.000 + IVA", "stories": "$1.250.000 + IVA", "tiktok": "$3.000.000 + IVA", "pauta": "20% sobre el valor total del contenido"},
+    "ber_scarnato": {"reel": "$3.000.000 + IVA", "stories": "$1.250.000 + IVA", "tiktok": "$2.800.000 + IVA", "pauta": "20% sobre el valor total del contenido"},
+    "renata_blasevich": {"reel": "$3.000.000 + IVA", "stories": "$1.200.000 + IVA", "tiktok": "$2.800.000 + IVA", "pauta": "20% sobre el valor total del contenido"},
+    "cris_pierri": {"reel": "$3.500.000 + IVA", "stories": "$1.400.000 + IVA", "tiktok": "$3.000.000 + IVA", "pauta": "20% sobre el valor total del contenido"}
   }
 }
