@@ -160,31 +160,6 @@
 .contents-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,8vw,150px);margin-top:65px;max-width:1160px}
 .contents h3{font-family:Georgia,"Times New Roman",serif;font-size:36px;font-weight:400;line-height:1;letter-spacing:-.045em;margin-bottom:22px}
 .contents p{font-size:clamp(18px,1.55vw,24px);line-height:1.48;letter-spacing:-.035em;max-width:500px}
-.island.expanded{height:385px}
+.island.expanded{height:385px;max-height:calc(100svh - 44px)}.island.expanded .island-menu{overflow-y:auto}
 @media(max-width:760px){.contents{padding:25px var(--gutter) 85px}.contents h2{font-size:12.5vw}.contents-grid{grid-template-columns:1fr;gap:40px;margin-top:40px}.contents h3{font-size:30px;margin-bottom:14px}.contents p{font-size:18px}.island.expanded{height:385px}}
 @media print{.contents{break-inside:avoid}.opening-sticky,.opening-wash,.idea-block,.characters,.contents,.closing{background-attachment:scroll}}
-
-/* Budget follows the Hilario José talent, social, audience and rates structure. */
-.budget{background-color:var(--cream);color:var(--blue);padding:110px var(--gutter) 140px;background-image:url('assets/coffee-flow.svg');background-size:100vw 100vh;background-position:center;background-repeat:no-repeat;background-attachment:fixed}
-.budget-head{text-align:center;margin-bottom:55px}
-.budget h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(55px,6.1vw,102px);font-weight:400;line-height:1;letter-spacing:-.06em;word-spacing:-.04em}
-.budget-card{max-width:680px;margin:auto;padding:32px;border:1px solid #071e571f;border-radius:22px;background:#ffffff70}
-.budget-talent{display:flex;align-items:center;gap:22px}
-.budget-avatar{width:76px;height:76px;object-fit:cover;border-radius:50%;flex-shrink:0}
-.budget h3{font-family:Georgia,"Times New Roman",serif;font-size:32px;font-weight:400;letter-spacing:-.045em}
-.budget-desc{font-size:14px;line-height:1.5;opacity:.72;margin-top:8px}
-.budget-socials{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.budget-socials a{display:inline-flex;align-items:center;gap:8px;border:1px solid #071e5725;border-radius:30px;padding:9px 14px;font-size:12px;transition:background .2s,color .2s}
-.budget-socials a:hover{background:var(--blue);color:var(--cream)}
-.budget-socials svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.budget-followers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
-.budget-followers>div{display:flex;flex-direction:column;align-items:center;gap:7px;border:1px solid #071e571a;border-radius:14px;padding:22px 12px;background:#ffffff85}
-.budget-followers strong{font-size:32px;font-weight:550;letter-spacing:-.06em;line-height:1}
-.budget-followers span{font-size:12px;opacity:.65;text-align:center}
-.budget-source{font-size:11px;line-height:1.4;opacity:.55;margin-top:12px}
-.budget-rows{margin:25px 0 0}
-.budget-rows>div{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #071e571f;padding:18px 0;font-size:15px}
-.budget-rows>div:last-child{padding-bottom:0}.budget-rows dt{font-weight:550}.budget-rows dd{margin:0;opacity:.6;text-align:right}
-.island.expanded{height:426px;max-height:calc(100svh - 44px)}.island.expanded .island-menu{overflow-y:auto}
-@media(max-width:760px){.budget{padding:75px var(--gutter) 110px}.budget h2{font-size:12.5vw}.budget-head{margin-bottom:35px}.budget-card{padding:24px 20px}.budget-talent{flex-direction:column;text-align:center;gap:16px}.budget-socials{justify-content:center}.budget-desc{font-size:13px}.budget-followers strong{font-size:28px}.budget-followers span{font-size:10px}.budget-source{text-align:center}.budget-rows{font-size:14px}}
-@media print{.budget{background-attachment:scroll}.budget-card{break-inside:avoid}}
