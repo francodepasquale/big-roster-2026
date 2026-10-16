@@ -50,13 +50,23 @@ def reels():
 def versioned(name):
  return f'{name}?v={hashlib.sha256((HERE/name).read_bytes()).hexdigest()[:12]}'
 
+def social_icon(key):
+ name={'ig':'instagram','tt':'tiktok'}[key]
+ return f'<img class="budget-social-icon" src="assets/icons/{name}.svg" alt="" aria-hidden="true" width="20" height="20">'
+
 def budget_cards():
  out=[]
  for i,s in enumerate(SCENES):
   p=people[s['pid']];rates=budget['talents'][s['pid']]
-  socials=''.join(f'<a href="{escape(p[key+"_url"])}" target="_blank" rel="noopener noreferrer" aria-label="{label} de {escape(p["name"])}">{label}</a>' for key,label in [('ig','Instagram'),('tt','TikTok')])
-  followers=''.join(f'<div class="budget-follow"><strong>{escape(p[key].replace(".",","))}</strong><span>Seguidores {label}</span></div>' for key,label in [('ig','Instagram'),('tt','TikTok')])
-  rows=''.join(f'<div class="budget-row"><dt>{escape(f["label"])}</dt><dd>{escape(str(rates[f["key"]])) if rates[f["key"]] is not None else "A cotizar"}</dd></div>' for f in budget['formats'])
+  socials=''.join(f'<a href="{escape(p[key+"_url"])}" target="_blank" rel="noopener noreferrer" aria-label="{label} de {escape(p["name"])}" title="{label}">{social_icon(key)}</a>' for key,label in [('ig','Instagram'),('tt','TikTok')])
+  followers=''.join(f'<div class="budget-follow"><strong>{escape(p[key].replace(".",","))}</strong><span class="budget-follow-label">{social_icon(key)}<span>Seguidores<span class="sr-only"> en {label}</span></span></span></div>' for key,label in [('ig','Instagram'),('tt','TikTok')])
+  rows=[]
+  for f in budget['formats']:
+   label=escape(f['label'])
+   if f['key']=='tiktok':label=social_icon('tt')+f'<span class="sr-only">{label}</span>'
+   value=escape(str(rates[f['key']])) if rates[f['key']] is not None else 'A cotizar'
+   rows.append(f'<div class="budget-row"><dt title="{escape(f["label"])}">{label}</dt><dd>{value}</dd></div>')
+  rows=''.join(rows)
   out.append(f'''<article class="budget-card" data-reveal style="--budget-color:{s['color']};--delay:{(i%2)*100}ms" aria-labelledby="budget-name-{s['id']}">
  <div class="budget-talent"><img class="budget-avatar" src="{escape(p['photo'])}" alt="{escape(p['name'])}" width="72" height="72" loading="lazy"><div><h3 id="budget-name-{s['id']}">{escape(p['name'])}</h3><p>{escape(' · '.join(p['tags']))}</p><div class="budget-socials">{socials}</div></div></div>
  <div class="budget-followers">{followers}</div><dl class="budget-rows">{rows}</dl></article>''')
