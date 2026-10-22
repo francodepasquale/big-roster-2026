@@ -397,9 +397,7 @@ em{font-style:normal}
 .pitazo-copy{justify-self:end;max-width:30ch;color:var(--cream)}
 .pitazo-copy .lead{max-width:none}
 .pitazo-spot{position:absolute;left:50%;top:50%;width:min(12vw,20svh);aspect-ratio:1;translate:-50% -50%}
-.pitazo-foot{position:absolute;left:calc(var(--pad) + 10px);right:calc(var(--pad) + 10px);bottom:clamp(36px,6vh,56px);display:flex;justify-content:space-between;align-items:center}
-.replay{display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:999px;background:var(--navy);color:var(--cream);font:800 13px/1 var(--display);font-stretch:94%;letter-spacing:.12em;text-transform:uppercase;transition:scale .2s var(--ease),background .2s}
-.replay:hover{scale:1.04;background:var(--red)}
+.pitazo-foot{position:absolute;left:calc(var(--pad) + 10px);right:calc(var(--pad) + 10px);bottom:clamp(36px,6vh,56px);display:flex;justify-content:flex-end;align-items:center}
 
 
 /* ---------- Índice tipo isla ---------- */

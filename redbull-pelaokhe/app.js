@@ -816,10 +816,6 @@ $('#motion-toggle').addEventListener('click', () => {state.paused = !state.pause
 reducedMotion.addEventListener('change', event => {state.paused = event.matches; updateMotion();});
 updateMotion();
 
-$('#replay').addEventListener('click', () => {
-  state.replay = true;
-  scrollTo({top: 0, behavior: state.paused ? 'instant' : 'smooth'});
-});
 function restart() {
   state.replay = false;
   stations.forEach(station => {if (station !== cover) closeStation(station);});
