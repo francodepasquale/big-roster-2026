@@ -140,8 +140,6 @@ em{font-style:normal}
 .ghost{position:absolute;border-radius:50%;background:radial-gradient(circle at 34% 30%,#f2685a 0%,#c42a26 46%,#7d1214 100%);width:calc(clamp(130px,14.5vw,240px)*(1 - var(--i)*.16));aspect-ratio:1;translate:-50% -50%;left:calc(78% - var(--i)*15%);top:calc(16% + var(--i)*17%);opacity:calc(.62 - var(--i)*.12)}
 .js .idea .ghost{opacity:0}
 .idea.is-open .ghost{opacity:calc(.62 - var(--i)*.12);transition:opacity .5s var(--ease) calc(1.25s - var(--i)*.16s)}
-.slowmo{position:absolute;left:4%;bottom:6%;font:800 12px/1 var(--display);font-stretch:96%;letter-spacing:.22em;text-transform:uppercase;color:var(--navy);opacity:.7}
-.slowmo::before{content:'';display:inline-block;width:.8em;height:.8em;margin-right:.6em;border-radius:50%;background:var(--red);vertical-align:-.05em}
 
 /* ---------- 02 · El recreo ---------- */
 .recreo .photo>img{object-position:50% 68%}
@@ -493,8 +491,7 @@ em{font-style:normal}
   .idea-art{position:absolute;inset:0 0 auto auto;width:62%;height:36svh;min-height:0}
   .idea-spot{right:8%;top:28%;width:30vw}
   .ghost{width:calc(30vw*(1 - var(--i)*.16));left:calc(76% - var(--i)*14%);top:calc(48% + var(--i)*10%)}
-  .slowmo{display:none}
-  .collar{width:40vw;height:12vw}
+    .collar{width:40vw;height:12vw}
 
   .recreo-frame{display:block}
   .recreo-bottom{display:block}
