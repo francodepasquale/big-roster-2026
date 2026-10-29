@@ -52,7 +52,7 @@ class Tour {
           <div class="stage card">
             <div class="stage__bar">
               <span class="url-demo__dots"><i></i><i></i><i></i></span>
-              <span class="stage__url">roster.bigagency.com.ar${esc(this.view.dataset.src)}</span>
+              <span class="stage__url">roster.bigagency.com.ar${esc(new URL(this.view.dataset.src, location.href).pathname.replace(/^\/kit-espana\//, "/espana/guia2026/"))}</span>
               <span class="step-panel__count"></span>
               <div class="dots" role="tablist" aria-label="Pasos"></div>
               <a class="stage__open" href="${esc(this.view.dataset.src)}" target="_blank" rel="noopener">Abrir ↗</a>
@@ -203,6 +203,10 @@ class Tour {
       await sleep(reduced ? 100 : 650);
     } catch (e) { console.warn('Paso del tour', e); }
     if (token !== this.token) return;
+    // Si el deck se quedó con el foco (p. ej. al girar una tarjeta), lo devolvemos al tour para que funcionen las flechas
+    try { doc.activeElement?.blur?.(); } catch {}
+    if (document.activeElement === this.iframe) this.iframe.blur();
+    window.focus();
     this.spot.classList.remove('is-moving');
     this.track();
   }

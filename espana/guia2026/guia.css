@@ -167,6 +167,8 @@ html[data-os="mac"] [data-win],html[data-os="win"] [data-mac]{display:none!impor
 .faq details p{padding:0 1.2rem 1.1rem;color:var(--muted)}
 
 /* Decathlon */
+.tours-grid .tile--tour{flex-direction:column}
+.tours-grid .tile--tour img{width:100%;aspect-ratio:16/9}
 .soon{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center}
 .soon__art{display:flex;align-items:center;gap:1.2rem}
 .soon__pdf,.soon__web{width:110px;aspect-ratio:3/4;border-radius:12px;position:relative;overflow:hidden;font-weight:800;font-size:.8rem;letter-spacing:.08em}
