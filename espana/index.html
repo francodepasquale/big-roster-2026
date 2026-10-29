@@ -1,88 +1,2697 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BIG — Roster España (Próximamente)</title>
+<title>BIG Roster 2026 · España</title>
+<link rel="preload" href="../Inter-Black.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../Inter-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../Inter-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNC41NSwzKSBzY2FsZSgwLjA1NTgpIj48cGF0aCBkPSJNNDA5LjUyLDI0NS42NGwtLjQ2LTIuNThjLTkuMjYtNjAuODgtODAuNjMtOTkuNC0xMzcuMTQtNzEuNzQtODguNDUsMzUuNS0xNTEuMjIsMTIzLjU3LTE1MS4xNCwyMjMuNDUsMCwzLjQ5LS43OCw2Ljk4LTIuNiw5Ljk2LTkuMDMsMTQuOC0zNC45MSwxMS45Mi0zOS42Ny01LjMtLjgxLTIuOTItLjgyLTYtLjI2LTguOTcsMjEuOTQtMTE3Ljg2LDExMi41My0yMTguMDksMjIzLjYyLTI2MC43Ny43MS0uMzEsMS40MS0uNjQsMi4xLTEsNTIuMDUtMzAuODUsMzUuMTYtMTE5LjA4LTI1LjU1LTEyNy41Mi00LjEyLS43Ni04LjM1LTEuMTYtMTIuNjgtMS4xNkgwdjQ2Ni4zM2g0MTAuNDljLS43My05LjE4LDEuNDgtMjA3LjUtLjk3LTIyMC42OVoiIGZpbGw9IiNGRjc2MUUiLz48L2c+PC9zdmc+">
 <style>
-@font-face { font-family: 'Inter'; font-weight: 500; font-style: normal; src: url(../Inter-Medium.woff2) format('woff2'); font-display: swap; }
-@font-face { font-family: 'Inter'; font-weight: 700; font-style: normal; src: url(../Inter-Bold.woff2) format('woff2'); font-display: swap; }
-@font-face { font-family: 'Inter'; font-weight: 900; font-style: normal; src: url(../Inter-Black.woff2) format('woff2'); font-display: swap; }
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-style: normal;
+  src: url('../Inter-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 500;
+  font-style: normal;
+  src: url('../Inter-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 700;
+  font-style: normal;
+  src: url('../Inter-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 900;
+  font-style: normal;
+  src: url('../Inter-Black.woff2') format('woff2');
+  font-display: swap;
+}
 
 :root {
   --azul: #33419A;
   --naranja: #F36F2C;
   --fondo: #F7D8BD;
+  --lima: #E8F29C;
   --negro: #0D0D14;
   --blanco: #FFFFFF;
+  --intro-progress: 0;
+  /* shared motion curve: eases in briefly, then a long soft landing — the
+     accelerate/decelerate feel every movement on the page shares */
+  --ease-io: cubic-bezier(.62,.04,.22,1);
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; overscroll-behavior-y: none; }
 body {
   font-family: 'Inter', -apple-system, sans-serif;
   background: var(--fondo);
-  color: var(--negro);
+  overscroll-behavior-y: none;
+  color: var(--azul);
+  overflow-x: hidden;
   letter-spacing: -0.01em;
-  min-height: 100vh;
 }
 
+.page-flow { position: relative; }
+.below-hero { position: relative; }
+/* the curve artwork happens to be densest right at its own top edge, which
+   sat flush against the portada seam and read as a visibly darker peach
+   band — fading the overlay in over the first 160px hides that instead of
+   trying to recolor/reposition the art itself */
+.bg-fondo {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+}
+.icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.bg-fondo svg { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; display: block; }
+/* slow, continuous drift tied to native scroll position (CSS scroll-driven
+   animation — no JS, no scroll listener, compositor-only). The 5% overscan
+   above already exists to hide crop edges, so a 4% drift never reveals a
+   gap. Browsers without view-timeline support just skip it and stay static. */
+@media (prefers-reduced-motion: no-preference) {
+  .bg-fondo svg {
+    animation: fondoParallax linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+}
+@keyframes fondoParallax { from { transform: translateY(-4%); } to { transform: translateY(4%); } }
+
+/* ---------- NAV ---------- */
+/* always transparent, no background bar at any scroll position */
 .nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
-  display: flex; align-items: center; padding: 18px 32px;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 32px;
 }
 .nav-brand {
-  display: flex; align-items: center; justify-content: center; cursor: pointer; border: none;
-  background: var(--negro); border-radius: 12px; padding: 9px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; border: none;
+  background: var(--naranja); border-radius: 12px; padding: 9px;
   transition: background .25s ease;
 }
 .nav-brand:hover { background: var(--azul); }
-.nav-brand svg { width: 24px; height: 24px; display: block; }
 
-.hero {
-  min-height: 100vh; display: flex; align-items: center;
-  background: var(--naranja);
+/* ---------- INTRO LOGO ---------- */
+/* big, centered copy of the nav logo shown on load; JS drives a scroll-linked
+   FLIP (transform only, no layout thrash) that shrinks/moves it exactly onto
+   the real .nav-brand — position/size are measured live via
+   getBoundingClientRect, not hardcoded, so it holds up at any breakpoint.
+   Skipped entirely for prefers-reduced-motion (see JS). */
+.intro-logo {
+  position: fixed; z-index: 150; top: 0; left: 0; perspective: 800px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--naranja); pointer-events: auto;
+}
+/* mount entrance (ported from reactbits.dev's AnimatedContent:
+   npx shadcn@latest add @react-bits/AnimatedContent-JS-CSS, direction
+   "vertical" + reverse -- drops in from above instead of GSAP's default of
+   rising from below) -- a CSS keyframe stands in for AnimatedContent's own
+   gsap timeline since this is a plain static page with no React/gsap
+   runtime. Its own layer, separate from #introLogo's scroll-driven
+   transform/opacity (see the JS above) and .intro-logo-tilt's hover tilt
+   below, so none of the three fight over the same element's `transform`. */
+.intro-logo-enter {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(-46px);
+  animation: introLogoEnter .8s var(--ease-io) .1s forwards;
+}
+@keyframes introLogoEnter { to { opacity: 1; transform: translateY(0); } }
+/* same 3D tilt-on-hover as the talent cards (.bcard-tilt) */
+.intro-logo-tilt {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  transform-style: preserve-3d;
+}
+.intro-logo-tilt svg { width: 56%; height: 56%; display: block; }
+
+/* unified top-right dock: Mujeres/Hombres section switch + "explorar por
+   categorías" trigger, hand-ported from magicui's Dock (proximity-based
+   icon magnify) to vanilla JS — mouse-distance -> scale + lift instead of
+   framer-motion springs. Replaces the old separate bottom-center tabs and
+   top-right category button with one control. */
+.nav-dock {
+  position: relative; display: flex; align-items: center; gap: 2px;
+  background: var(--blanco); border-radius: 999px; padding: 10px;
+  box-shadow: 0 14px 34px rgba(13,13,23,.16);
+}
+.dock-item {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--naranja); cursor: pointer; border: none; border-radius: 999px;
+  font-family: inherit; font-size: 12.5px; font-weight: 700;
+  letter-spacing: .02em; text-transform: uppercase; text-decoration: none;
+  padding: 10px 18px; white-space: nowrap;
+  transition: color .25s ease, background .25s ease;
+}
+.dock-item:hover, .dock-item.active { background: var(--naranja); color: var(--blanco); }
+/* one orange pill (injected by JS) glides between Mujeres / Hombres /
+   categorías as the scrollspy changes section; the buttons themselves stay
+   transparent on top of it. The active label turns white a beat after the
+   pill starts moving, so it never sits white-on-white mid-slide. */
+.dock-pill {
+  position: absolute; top: 0; left: 0; z-index: 0; width: 0; height: 0;
+  border-radius: 999px; background: var(--naranja); pointer-events: none;
+  opacity: 0; transform-origin: center;
+  transition: transform .5s var(--ease-io), width .5s var(--ease-io),
+              height .5s var(--ease-io), opacity .25s ease;
+}
+.dock-pill.is-on { opacity: 1; }
+.dock-pill.no-slide { transition: opacity .25s ease; }
+.nav-dock.has-pill .dock-tab.active,
+.nav-dock.has-pill .cat-menu-btn.in-category {
+  background: transparent; color: var(--blanco);
+  transition: color .25s ease .1s, background .25s ease;
+}
+.nav-dock.has-pill .dock-item:not(.active):not(.in-category):not([aria-expanded="true"]):hover {
+  background: rgba(243,111,44,.12); color: var(--naranja);
+}
+.dock-sep {
+  width: 1.5px; align-self: stretch; margin: 4px 5px; flex-shrink: 0;
+  background: rgba(13,13,23,.12); border-radius: 1px;
+}
+.cat-menu { position: relative; }
+.cat-menu-btn { padding: 10px 14px; }
+.cat-menu.open .cat-menu-btn, .cat-menu-btn.in-category { background: var(--naranja); color: var(--blanco); }
+.dock-tooltip {
+  position: absolute; bottom: calc(100% + 10px); left: 50%; z-index: 2;
+  transform: translateX(-50%) translateY(4px) scale(.92); transform-origin: bottom center;
+  background: #14141f; color: var(--blanco); font-size: 11px; font-weight: 700;
+  letter-spacing: .02em; text-transform: none;
+  padding: 6px 10px; border-radius: 8px; white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.dock-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: #14141f;
+}
+.dock-item:hover .dock-tooltip, .dock-item:focus-visible .dock-tooltip {
+  opacity: 1; transform: translateX(-50%) translateY(0) scale(1);
+}
+.cat-menu-panel {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 50;
+  min-width: 250px; background: var(--blanco); border-radius: 20px; padding: 10px;
+  display: flex; flex-direction: column; gap: 2px;
+  box-shadow: 0 20px 45px rgba(13,13,23,.22);
+  opacity: 0; transform: translateY(-8px) scale(.98); pointer-events: none;
+  transition: opacity .22s ease, transform .22s ease;
+}
+.cat-menu.open .cat-menu-panel { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+/* the big intro logo (z-index 150) sits over the nav while the hero is in
+   view; an open menu has to rise above it or its links can't be tapped */
+.nav:has(.cat-menu.open) { z-index: 160; }
+.cat-menu-link {
+  display: block; padding: 11px 14px; border-radius: 12px; text-decoration: none;
+  color: var(--naranja); font-weight: 700; font-size: 14.5px; letter-spacing: -0.01em;
+  opacity: 0; transform: translateY(-6px);
+  transition: background .2s ease, color .2s ease, opacity .2s ease, transform .2s ease;
+}
+.cat-menu.open .cat-menu-link {
+  opacity: 1; transform: none;
+  transition: background .2s ease, color .2s ease,
+              opacity .35s ease calc(.04s + var(--k, 0) * 28ms),
+              transform .5s var(--ease-io) calc(.04s + var(--k, 0) * 28ms);
+}
+.cat-menu-link:hover, .cat-menu-link.active { background: var(--fondo); color: var(--naranja); }
+
+/* nav-right groups the Mujeres/Hombres/categorías dock with the new
+   Argentina/España language dock, so .nav's justify-content:space-between
+   still only sees two children (brand, controls-group) and keeps everything
+   flush to the right edge. */
+.nav-right { display: flex; align-items: center; gap: 12px; }
+/* iOS-segmented-control look: a muted track (overriding .nav-dock's white)
+   with a white "thumb" capsule + soft shadow sitting behind whichever flag
+   is active, like a slide toggle. */
+.lang-dock { background: var(--fondo); }
+.lang-dock .dock-item {
+  padding: 8px 13px; font-size: 19px; line-height: 1; filter: grayscale(.15);
+  transition: background .25s var(--ease-io), box-shadow .25s ease, filter .25s ease;
+}
+.lang-dock .dock-item:hover:not(.active) { background: rgba(255,255,255,.55); }
+.lang-dock .dock-item:hover, .lang-dock .dock-item.active { filter: none; }
+.lang-dock .dock-item.active { background: var(--blanco); box-shadow: 0 3px 8px rgba(13,13,20,.18); }
+
+.dock-item:focus-visible, .nav-brand:focus-visible, .rail-arrow:focus-visible, .rail:focus-visible, .scroll-cue:focus-visible,
+.cat-menu-link:focus-visible {
+  outline: 2px solid var(--lima); outline-offset: 3px;
+}
+.bcard-chip:focus-visible { outline: 2px solid var(--lima); outline-offset: 2px; }
+
+.section-inner { position: relative; z-index: 1; width: 100%; max-width: min(1600px, 90vw); margin: 0 auto; padding: 0 32px; }
+
+/* ---------- PORTADA ---------- */
+/* pinned (position: sticky) for the duration of the scroll-linked intro
+   (see JS: portadaPinWrap's height is set to portada's own height + the
+   intro's scroll distance) so the headline has time to fully rise/grow
+   into place before the page actually scrolls past it — without this, the
+   hero's own content would scroll out from under the reveal before it
+   finished, since a plain (non-pinned) section moves at 1:1 with scroll. */
+.portada-pin-wrap { position: relative; }
+.portada {
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  display: flex; align-items: center; padding: 140px 0 100px;
   border-radius: 0 0 64px 64px;
-  padding: 140px 32px 100px;
+  background: var(--naranja);
+  border-bottom: 2px solid var(--fondo);
 }
-.hero-inner { width: 100%; max-width: 720px; margin: 0 auto; }
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  color: var(--blanco); background: rgba(13,13,20,.18);
-  font-weight: 700; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase;
-  padding: 9px 16px; border-radius: 999px; margin-bottom: 22px;
-}
-h1 {
+.portada .section-inner { max-width: 900px; }
+/* the headline rises up from below and grows to full size as the page
+   scrolls through the intro (tied to --intro-progress, set by JS in lockstep
+   with the logo FLIP below) — not IntersectionObserver-gated like the other
+   sections' headlines, since portada is already in view on load */
+.portada h1 {
   color: var(--blanco);
-  font-weight: 900; line-height: .92; letter-spacing: -0.05em; text-transform: uppercase;
-  font-size: clamp(44px, 7vw, 92px);
+  font-weight: 900; line-height: .85; letter-spacing: -0.07em; text-transform: uppercase;
+  font-size: clamp(56px, 8vw, 128px);
+  transform-origin: left bottom;
+  transform: translateY(calc((1 - var(--intro-progress)) * 70px)) scale(calc(.78 + var(--intro-progress) * .22));
+  opacity: var(--intro-progress);
 }
-p {
-  margin-top: 22px; max-width: 520px; font-size: 19px; font-weight: 500;
-  line-height: 1.5; color: rgba(255,255,255,.85);
+.portada h1 .lima { color: var(--fondo); display: block; }
+/* rides in right alongside the headline, off the same --intro-progress, just
+   a beat behind (its own translateY is smaller so it settles slightly sooner) */
+.portada p {
+  margin-top: 26px; max-width: 520px; font-size: 20px; font-weight: 500;
+  line-height: 1.5; color: rgba(255,255,255,.78);
+  transform: translateY(calc((1 - var(--intro-progress)) * 40px));
+  opacity: var(--intro-progress);
 }
-.cta {
-  display: inline-flex; align-items: center; gap: 10px; margin-top: 40px;
-  background: var(--blanco); color: var(--negro); text-decoration: none;
-  font-weight: 700; font-size: 14px; letter-spacing: -0.01em;
-  padding: 15px 24px; border-radius: 999px;
+@keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
+/* cover headlines (category covers + Categorías divider): JS wraps each
+   word in its own mask (.w > span) and adds .split; every word then rises
+   out of its mask one after another. The padding/negative-margin pair gives
+   accents (CATEGORÍAS) and descenders room inside the mask without moving
+   the text from where it sat before. Without JS the plain riseIn applies. */
+h1.split { opacity: 1 !important; transform: none !important; animation: none !important; }
+h1.split .w {
+  display: inline-block; vertical-align: top; overflow: hidden;
+  padding: .18em .08em .1em; margin: -.18em -.08em -.1em;
+}
+h1.split .w > span { display: inline-block; transform: translateY(115%); }
+.inview h1.split .w > span {
+  animation: wordRise 1s var(--ease-io) forwards;
+  animation-delay: calc(.06s + var(--w, 0) * 80ms);
+}
+@keyframes wordRise { to { transform: translateY(0); } }
+
+.scroll-cue {
+  position: absolute; bottom: 36px; left: 32px; z-index: 2;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  color: rgba(255,255,255,.55); cursor: pointer; border: none; background: none; font-family: inherit;
+}
+.scroll-cue .chev { display: block; animation: bounce 1.8s ease-in-out infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+.cat-viewport { position: relative; }
+.category { display: block; }
+
+/* ---------- CATEGORIAS (divider) ---------- */
+/* a second full-screen "cover" slide — same orange block and left-aligned
+   layout as .portada — sitting between Hombres/Mujeres and the 8 secondary
+   (PDF) categories, so it reads as its own chapter opener rather than just
+   another item in the list. Full-bleed to the side edges like .portada,
+   just rounded top and bottom too since (unlike .portada) it sits mid-page,
+   not flush against the top of the viewport. */
+.categorias-divider {
+  position: relative; overflow: hidden;
+  min-height: 82vh; border-radius: 64px;
+  display: flex; align-items: center; padding: 100px 0;
+  background: var(--naranja);
+  margin: 0 0 60px;
+}
+.categorias-divider .section-inner { max-width: 900px; }
+.categorias-divider h1 {
+  color: var(--blanco);
+  font-weight: 900; line-height: .85; letter-spacing: -0.07em; text-transform: uppercase;
+  font-size: clamp(56px, 8vw, 128px);
+  white-space: nowrap; hyphens: none;
+  opacity: 0; transform: translateY(24px);
+}
+.categorias-divider p {
+  margin-top: 26px; max-width: 520px; font-size: 20px; font-weight: 500;
+  line-height: 1.5; color: rgba(255,255,255,.78);
+  opacity: 0; transform: translateY(18px);
+}
+.categorias-divider.inview h1 { animation: riseIn .8s var(--ease-io) .1s forwards; }
+.categorias-divider.inview p { animation: riseIn .7s var(--ease-io) .34s forwards; }
+@media (max-width: 860px) {
+  .categorias-divider { min-height: 60vh; border-radius: 32px; margin: 0 0 36px; padding: 60px 0; }
+  .categorias-divider h1 { font-size: clamp(38px, 13vw, 64px); }
+}
+
+.cat-cover { position: relative; min-height: 92vh; overflow: hidden; display: flex; align-items: center; padding: 120px 0 80px; }
+.cat-cover .section-inner { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: center; }
+.cat-cover h1 {
+  color: var(--naranja);
+  font-weight: 900; line-height: .85; letter-spacing: -0.05em; text-transform: uppercase;
+  font-size: clamp(64px, 9vw, 148px);
+  opacity: 0; transform: translateY(24px);
+}
+.cat-cover p {
+  margin-top: 26px; max-width: 460px; font-size: 19px; font-weight: 500;
+  line-height: 1.45; color: var(--naranja);
+  opacity: 0; transform: translateY(18px);
+}
+.cat-cover.inview h1 { animation: riseIn .8s var(--ease-io) .1s forwards; }
+.cat-cover.inview p { animation: riseIn .7s var(--ease-io) .38s forwards; }
+/* category covers with no collage (all the secondary PDF categories) get
+   the full width back and a slightly smaller, wrap-friendly headline since
+   names like "Tecnología & Finanzas" are much longer than "MUJERES" */
+.section-inner.no-collage { grid-template-columns: 1fr; }
+.section-inner.no-collage h1 { font-size: clamp(48px, 7vw, 120px); max-width: 1100px; text-wrap: balance; }
+.cat-collage { position: relative; height: 680px; }
+.collage-tile {
+  position: absolute; display: block; border-radius: 32px; width: auto; height: auto;
+  object-fit: cover; object-position: center;
+  will-change: transform;
+  /* entrance: each photo opens out of a smaller rounded window, column by
+     column. Uses the standalone `scale` + `clip-path` properties because
+     `transform` belongs to the scroll parallax (JS) */
+  opacity: 0; scale: .9; clip-path: inset(9% 9% 9% 9% round 32px);
+  transition: opacity .7s ease, scale 1.3s var(--ease-io), clip-path 1.3s var(--ease-io);
+  transition-delay: calc(.15s + var(--t, 0) * 110ms);
+}
+.cat-cover.inview .collage-tile { opacity: 1; scale: 1; clip-path: inset(0 round 32px); }
+.ct-1 { --t: 0; } .ct-3 { --t: 1; } .ct-2 { --t: 2; } .ct-4 { --t: 3; }
+.ct-1 { width: 40%; height: 47%; left: 0; top: 2%; }
+.ct-2 { width: 40%; height: 47%; left: 0; bottom: 2%; }
+.ct-3 { width: 44%; height: 88%; right: 0; top: 8%; }
+#cat-hombres .ct-3 { object-position: 30% center; }
+
+/* 4-photo collage: a staggered 2x2 (right column dropped lower than the
+   left) instead of a rigid grid, so it doesn't read as too static */
+.cat-collage.collage-4 .ct-1 { width: 40%; height: 43%; left: 0; top: 2%; }
+.cat-collage.collage-4 .ct-2 { width: 40%; height: 43%; left: 0; top: 47%; }
+.cat-collage.collage-4 .ct-3 { width: 40%; height: 43%; right: 0; left: auto; top: 8%; }
+.ct-4 { width: 40%; height: 43%; right: 0; top: 53%; }
+
+.cat-rail { position: relative; padding: 40px 0 0; }
+.rail-head {
+  position: relative; z-index: 1;
+  padding: 0 clamp(24px, 4vw, 64px); margin: 0 0 40px;
+  opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease-io), transform .7s var(--ease-io);
+}
+.rail-head.inview { opacity: 1; transform: translateY(0); }
+.rail-eyebrow { color: var(--naranja); font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+
+/* the wheel/trackpad only drives the horizontal slide while the pointer is
+   actually over this viewport (JS intercepts 'wheel' here and calls
+   preventDefault while there's still room to slide) — scrolling anywhere
+   else on the page (below the rail, over the dock, etc.) always scrolls
+   the page normally, never gets captured by the carousel */
+.rail-viewport {
+  position: relative;
+  display: flex; flex-direction: column; gap: 20px;
+  overflow: hidden;
+}
+.rail-wrap { position: relative; z-index: 1; width: 100%; padding: 0 clamp(24px, 4vw, 64px); }
+.rail {
+  display: flex; gap: clamp(18px, 1.6vw, 26px);
+  padding: 10px 0 8px; cursor: grab; user-select: none;
+  will-change: transform;
+}
+.rail.dragging { cursor: grabbing; }
+
+/* ---------- TARJETA TALENTO — CLEAN BLUR, CHIPS ABAJO (Figma node 97:242) ---------- */
+.bcard {
+  flex: 0 0 clamp(280px, 19vw, 380px); aspect-ratio: 307 / 527; position: relative;
+  perspective: 800px;
+  opacity: 0; transform: translateY(44px) scale(.96);
+}
+/* 3D tilt on hover (ported from reactbits.dev's TiltedCard: npx shadcn add
+   @react-bits/TiltedCard-JS-CSS). The whole visible card — photo, rounded
+   frame and all — rotates together as one rigid piece via .bcard-tilt
+   (transform-style:preserve-3d), which also owns the rounded-corner clip
+   (overflow:hidden) so nothing looks like it's sliding underneath a separate
+   static frame. `perspective` stays on the outer .bcard because .bcard's own
+   `transform` is already owned by the cardReveal/cardNudge scroll-in
+   animations (fill:forwards keeps that animation's effect in control of
+   `transform`, so a second transform-writer on the same element/property
+   would fight it). No CSS transition on .bcard-tilt's transform — it's
+   rewritten every animation frame while the pointer moves. */
+.bcard-tilt {
+  position: absolute; inset: 0; border-radius: 32px; overflow: hidden; background: #d9d9d9;
+  transform-style: preserve-3d;
+  transition: box-shadow .35s var(--ease-io);
+}
+.bcard-tilt.tilting { box-shadow: 0 26px 48px rgba(13,13,23,.3); }
+/* cards fade/rise in one after another (using the --i index already set on
+   each .bcard) once their rail scrolls into view — a dedicated keyframe
+   animation, kept separate from the hover transition above, so the stagger
+   delay never bleeds into hover/lift interactions afterwards */
+@keyframes cardReveal { to { opacity: 1; transform: translateY(0) scale(1); } }
+/* the stagger stops growing after the 8th card: those start off-screen
+   anyway, and an uncapped delay left the last ones invisible for ~1 s when
+   a rail was slid straight to its end */
+.rail.inview .bcard {
+  animation: cardReveal .9s var(--ease-io) forwards;
+  animation-delay: calc(min(var(--i, 0), 7) * 60ms);
+}
+@keyframes cardNudge {
+  0%, 100% { transform: translateX(0); }
+  32% { transform: translateX(16px); }
+  64% { transform: translateX(-8px); }
+}
+/* the first couple cards also get the "invite to slide" nudge — chained
+   after their own reveal finishes (same selector weight as the rule above
+   plus .hint-nudge, so it wins outright instead of fighting it for the
+   `transform` property) */
+.rail.inview .bcard.hint-nudge {
+  animation:
+    cardReveal .9s var(--ease-io) calc(min(var(--i, 0), 7) * 60ms) 1 forwards,
+    cardNudge 1.7s cubic-bezier(.45,0,.2,1) calc(.95s + min(var(--i, 0), 7) * 60ms) 1;
+}
+.bcard-photo {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center top; pointer-events: none;
+  transition: opacity .6s ease, scale .9s var(--ease-io);
+}
+/* lazy photos fade/settle in once decoded instead of popping over the grey */
+.bcard-photo.is-pending { opacity: 0; scale: 1.06; }
+.bcard-tilt.tilting .bcard-photo { scale: 1.045; }
+/* soft light that follows the pointer while the card tilts (--gx/--gy set
+   by the tilt loop) */
+.bcard-tilt::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255,255,255,.2), rgba(255,255,255,0) 58%);
+  opacity: 0; transition: opacity .45s ease;
+}
+.bcard-tilt.tilting::after { opacity: 1; }
+/* dark vignette at both the top (name) and bottom (chips) — the chips no
+   longer sit on their own background bar, so the photo needs to darken
+   under them directly for contrast */
+.bcard-top-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(13,13,23,0) 76%, rgba(13,13,23,.8) 100%),
+    linear-gradient(to bottom, rgba(13,13,23,.95) 0%, rgba(13,13,23,0) 19%);
+}
+.bcard-top { position: absolute; top: 26px; left: 24px; right: 24px; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.bcard-name { color: var(--blanco); font-size: 32px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+.bcard-role { color: rgba(255,255,255,.8); font-size: 13px; }
+.bcard-bottom {
+  position: absolute; left: 24px; right: 24px; bottom: 24px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+}
+.bcard-chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 7px 10px 7px 8px; border-radius: 999px;
+  background: rgba(255,255,255,.35); border: 1px solid rgba(255,255,255,.25);
+  -webkit-backdrop-filter: blur(2.5px); backdrop-filter: blur(2.5px);
+  color: var(--blanco); font-size: 12px; font-weight: 700; letter-spacing: -0.02em;
+  text-decoration: none; white-space: nowrap; flex-shrink: 0;
   transition: background .2s ease, transform .2s ease;
 }
-.cta:hover { background: var(--fondo); transform: translateY(-2px); }
-.cta .flag { font-size: 18px; }
+.bcard-chip:hover { background: rgba(255,255,255,.5); transform: translateY(-2px); }
+.bcard-chip svg { display: block; flex-shrink: 0; }
+.bcard-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--naranja); border: 1px solid #994712;
+  color: var(--blanco); font-weight: 700; font-size: 13px;
+  padding: 8px 14px; border-radius: 999px; text-decoration: none; white-space: nowrap; flex-shrink: 0;
+  transition: background .2s ease, transform .2s ease;
+}
+.bcard-btn:hover { background: #F58C56; transform: translateY(-2px); }
 
-@media (max-width: 640px) {
+.rail-arrow {
+  position: absolute; top: 42%; transform: translateY(-50%);
+  width: 46px; height: 46px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(243,111,44,.16); color: var(--naranja);
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  transition: background .25s ease, transform .25s ease, opacity .3s ease, visibility .3s;
+  z-index: 3;
+}
+.rail-arrow.is-off { opacity: 0; visibility: hidden; pointer-events: none; }
+.rail-arrow:hover { background: var(--naranja); color: var(--blanco); transform: translateY(-50%) scale(1.08); }
+.rail-arrow.prev { left: 4px; }
+.rail-arrow.next { right: 4px; }
+
+.progress-track { position: relative; z-index: 1; padding: 0 clamp(24px, 4vw, 64px); }
+.progress-bar { height: 3px; background: transparent; border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; width: 100%; background: var(--naranja); border-radius: 3px; transform: scaleX(0); transform-origin: left center; }
+
+.cat-toggle { display: none; }
+
+@media (max-width: 480px) {
   .nav { padding: 14px 16px; }
-  .hero { border-radius: 0 0 32px 32px; padding: 110px 20px 70px; }
+  .nav-right { gap: 8px; }
+  .dock-item { padding: 9px 12px; font-size: 11px; }
+  .cat-menu-btn { padding: 9px 10px; }
+  .lang-dock { padding: 7px; }
+  .lang-dock .dock-item { padding: 5px 8px; font-size: 16px; }
+}
+/* below ~400px the brand + both docks were wider than the screen and the
+   flag selector got cut off at the right edge (iPhone SE/mini, 320–375px);
+   tighten the same controls instead of hiding any of them */
+@media (max-width: 400px) {
+  .nav { padding: 12px; }
+  .nav-brand { padding: 7px; border-radius: 10px; }
+  .nav-right { gap: 6px; }
+  .nav-dock { padding: 6px; }
+  .dock-item { padding: 8px 9px; font-size: 10.5px; letter-spacing: .01em; }
+  .cat-menu-btn { padding: 8px 9px; }
+  .dock-sep { margin: 4px 3px; }
+  .lang-dock { padding: 5px; }
+  .lang-dock .dock-item { padding: 4px 6px; font-size: 15px; }
+}
+@media (max-width: 340px) {
+  .dock-item { padding: 7px 7px; font-size: 9.5px; letter-spacing: 0; }
+  .cat-menu-btn { padding: 7px; }
+  .cat-menu-btn svg { width: 14px; }
+  .lang-dock .dock-item { padding: 3px 5px; font-size: 14px; }
+}
+
+@media (max-width: 860px) {
+  .cat-cover { min-height: 0; padding: 56px 0 20px; }
+  .cat-cover .section-inner { grid-template-columns: 1fr; }
+  .cat-cover h1, .section-inner.no-collage h1 { font-size: clamp(38px, 13vw, 64px); }
+  .cat-collage { height: 280px; order: -1; }
+  .portada { border-radius: 0 0 32px 32px; }
+
+  /* the 8 secondary (PDF) categories collapse into a tappable accordion row
+     so the page reads as a short scannable list first — Mujeres/Hombres stay
+     open since they're the two primary sections */
+  .category.collapsible .cat-cover {
+    flex-direction: column; align-items: stretch;
+    padding-bottom: 0; cursor: pointer;
+  }
+  .category.collapsible .rail-head { display: none; }
+  .category.collapsible .cat-rail { padding-top: 0; }
+  .cat-toggle {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; margin-top: 22px; padding: 16px 32px;
+    background: none; border: none; border-top: 1.5px solid rgba(243,111,44,.3);
+    color: var(--naranja); font-family: inherit; font-weight: 700; font-size: 13px;
+    letter-spacing: .04em; text-transform: uppercase; cursor: pointer;
+  }
+  .cat-toggle svg { transition: transform .3s ease; flex-shrink: 0; }
+  .category.collapsible.open .cat-toggle svg { transform: rotate(180deg); }
+  .category.collapsible .cat-rail {
+    max-height: 0; overflow: hidden; padding-top: 0; opacity: 0;
+    transition: max-height .55s cubic-bezier(.65,0,.35,1), opacity .35s ease;
+  }
+  .category.collapsible.open .cat-rail { opacity: 1; transition: max-height .55s cubic-bezier(.65,0,.35,1), opacity .5s ease .1s; }
+
+  /* the scroll-pinned horizontal rail is a desktop (mouse-wheel/trackpad)
+     trick — on touch it's a native swipeable, snap-to-card row instead,
+     full-bleed with overlaid arrow buttons (one card in view at a time) */
+  .rail-viewport { height: auto !important; display: block !important; }
+  .rail-wrap { padding: 0 22px; }
+  .rail {
+    transform: none !important;
+    overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    padding: 4px 0 8px; gap: 14px;
+  }
+  .bcard { flex: 0 0 min(82vw, 420px); scroll-snap-align: center; }
+  .progress-track { display: none; }
+  .rail-arrow {
+    display: flex; width: 38px; height: 38px; top: 45%;
+    background: rgba(13,13,23,.4); color: var(--blanco);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  }
+  .rail-arrow:hover { background: rgba(13,13,23,.6); }
+  .rail-arrow.prev { left: 10px; }
+  .rail-arrow.next { right: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; scroll-behavior: auto !important;
+  }
 }
 </style>
 
-<nav class="nav">
-  <a class="nav-brand" href="/" aria-label="Volver al roster de Argentina">
-    <svg viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
-  </a>
-</nav>
-
-<section class="hero">
-  <div class="hero-inner">
-    <span class="eyebrow">🇪🇸 Roster España · Próximamente</span>
-    <h1>Estamos armando<br>el roster de España</h1>
-    <p>Muy pronto vas a poder descubrir acá a los talentos que representamos en España. Mientras tanto, explorá el roster de Argentina.</p>
-    <a class="cta" href="/"><span class="flag">🇦🇷</span> Ver roster Argentina</a>
+<svg class="icon-sprite" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+<g id="ic-instagram"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.6568 13 13 11.6568 13 10C13 8.34315 11.6568 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6568 8.34315 13 10 13ZM10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z" fill="white"/>
+<path d="M13 6.5C12.7239 6.5 12.5 6.72386 12.5 7C12.5 7.27614 12.7239 7.5 13 7.5C13.2762 7.5 13.5 7.27614 13.5 7C13.5 6.72386 13.2762 6.5 13 6.5Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4.82698 6.13803C4.5 6.77977 4.5 7.61985 4.5 9.3V10.7C4.5 12.3801 4.5 13.2202 4.82698 13.8619C5.1146 14.4264 5.57354 14.8854 6.13803 15.173C6.77977 15.5 7.61985 15.5 9.3 15.5H10.7C12.3801 15.5 13.2202 15.5 13.8619 15.173C14.4264 14.8854 14.8854 14.4264 15.173 13.8619C15.5 13.2202 15.5 12.3801 15.5 10.7V9.3C15.5 7.61985 15.5 6.77977 15.173 6.13803C14.8854 5.57354 14.4264 5.1146 13.8619 4.82698C13.2202 4.5 12.3801 4.5 10.7 4.5H9.3C7.61985 4.5 6.77977 4.5 6.13803 4.82698C5.57354 5.1146 5.1146 5.57354 4.82698 6.13803ZM10.7 5.5H9.3C8.44342 5.5 7.86113 5.50078 7.41104 5.53755C6.97262 5.57337 6.74842 5.6383 6.59202 5.71799C6.2157 5.90974 5.90974 6.2157 5.71799 6.59202C5.6383 6.74842 5.57337 6.97262 5.53755 7.41104C5.50078 7.86113 5.5 8.44342 5.5 9.3V10.7C5.5 11.5566 5.50078 12.1388 5.53755 12.5889C5.57337 13.0274 5.6383 13.2516 5.71799 13.408C5.90974 13.7843 6.2157 14.0902 6.59202 14.282C6.74842 14.3617 6.97262 14.4267 7.41104 14.4625C7.86113 14.4992 8.44342 14.5 9.3 14.5H10.7C11.5566 14.5 12.1388 14.4992 12.5889 14.4625C13.0274 14.4267 13.2516 14.3617 13.408 14.282C13.7843 14.0902 14.0902 13.7843 14.282 13.408C14.3617 13.2516 14.4267 13.0274 14.4625 12.5889C14.4992 12.1388 14.5 11.5566 14.5 10.7V9.3C14.5 8.44342 14.4992 7.86113 14.4625 7.41104C14.4267 6.97262 14.3617 6.74842 14.282 6.59202C14.0902 6.2157 13.7843 5.90974 13.408 5.71799C13.2516 5.6383 13.0274 5.57337 12.5889 5.53755C12.1388 5.50078 11.5566 5.5 10.7 5.5Z" fill="white"/></g>
+<g id="ic-tiktok"><path d="M12.9314 6.22392C12.5107 5.76167 12.2578 5.15893 12.2578 4.5H11.7306C11.8664 5.22023 12.3137 5.83829 12.9314 6.22392Z" fill="white"/>
+<path d="M8.05382 9.94764C7.14061 9.94764 6.3978 10.6602 6.3978 11.5362C6.3978 12.1467 6.75989 12.6778 7.28704 12.9434C7.09003 12.683 6.97288 12.3637 6.97288 12.0164C6.97288 11.1404 7.71569 10.4278 8.62891 10.4278C8.7993 10.4278 8.96435 10.4558 9.11879 10.5018V8.57106C8.95902 8.5506 8.79663 8.53782 8.62891 8.53782C8.59961 8.53782 8.57299 8.54038 8.5437 8.54038V10.0217C8.38662 9.97569 8.22421 9.94764 8.05382 9.94764Z" fill="white"/>
+<path d="M14.4249 7.07184V8.54038C13.4026 8.54038 12.4548 8.22626 11.6826 7.69501V11.5387C11.6826 13.4568 10.0559 15.0199 8.05377 15.0199C7.28168 15.0199 6.56283 14.7849 5.97444 14.389C6.63737 15.0709 7.58253 15.5 8.62887 15.5C10.6283 15.5 12.2577 13.9395 12.2577 12.0189V8.17516C13.0298 8.70641 13.9776 9.02051 15 9.02051V7.13061C14.8003 7.13061 14.6086 7.11016 14.4249 7.07184Z" fill="white"/>
+<path d="M11.6826 11.5387V7.69501C12.4548 8.22626 13.4026 8.54038 14.4249 8.54038V7.07184C13.8339 6.95183 13.3148 6.64535 12.9314 6.22392C12.3137 5.83829 11.869 5.22023 11.7279 4.5H10.2849L10.2822 12.0776C10.2503 12.9256 9.52076 13.6075 8.62887 13.6075C8.07507 13.6075 7.58785 13.3444 7.28434 12.946C6.75718 12.6778 6.3951 12.1492 6.3951 11.5387C6.3951 10.6628 7.13791 9.95017 8.05111 9.95017C8.2215 9.95017 8.38657 9.97828 8.541 10.0243V8.54293C6.58147 8.5838 5 10.1264 5 12.0189C5 12.9332 5.37008 13.7658 5.97444 14.389C6.56283 14.7849 7.28168 15.0199 8.05377 15.0199C10.0532 15.0199 11.6826 13.4568 11.6826 11.5387Z" fill="white"/></g>
+<g id="ic-youtube"><path fill-rule="evenodd" clip-rule="evenodd" d="M7,5 H13 A3,3 0 0 1 16,8 V12 A3,3 0 0 1 13,15 H7 A3,3 0 0 1 4,12 V8 A3,3 0 0 1 7,5 Z M9,8.3 L9,11.7 L12.3,10 Z" fill="white"/></g>
+</defs></svg>
+<div class="page-flow" id="pageFlow">
+  <div class="intro-logo" id="introLogo" aria-hidden="true">
+    <div class="intro-logo-enter">
+      <div class="intro-logo-tilt" id="introLogoTilt">
+        <svg class="" width="60" height="60" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+      </div>
+    </div>
   </div>
-</section>
+  <nav class="nav">
+    <button class="nav-brand" id="navBrand" style="opacity:0">
+      <svg class="" width="24" height="24" viewBox="0 0 410.71 466.33" style="color:#FFFFFF"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+    </button>
+    <div class="nav-right">
+      <div class="nav-dock" id="navDock">
+        <button class="dock-item dock-tab" data-cat="Mujeres">Mujeres</button>
+        <button class="dock-item dock-tab" data-cat="Hombres">Hombres</button>
+        <div class="dock-sep"></div>
+        <div class="cat-menu" id="catMenu">
+          <button class="dock-item cat-menu-btn" id="catMenuBtn" aria-expanded="false" aria-label="Explorar por categorías">
+            <span class="dock-tooltip">Categorías</span>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect y="0" width="16" height="2" rx="1" fill="currentColor"/>
+              <rect y="5" width="16" height="2" rx="1" fill="currentColor"/>
+              <rect y="10" width="16" height="2" rx="1" fill="currentColor"/>
+            </svg>
+          </button>
+          <div class="cat-menu-panel" id="catMenuPanel">
+            <a href="#cat-lifestyle" class="cat-menu-link" data-slug="lifestyle">Lifestyle</a>
+<a href="#cat-beauty-moda" class="cat-menu-link" data-slug="beauty-moda">Beauty &amp; Moda</a>
+<a href="#cat-humor-entretenimiento" class="cat-menu-link" data-slug="humor-entretenimiento">Humor &amp; Entretenimiento</a>
+<a href="#cat-viajes" class="cat-menu-link" data-slug="viajes">Viajes</a>
+<a href="#cat-deporte" class="cat-menu-link" data-slug="deporte">Deporte &amp; Running</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-dock lang-dock" id="langDock">
+        <a class="dock-item lang-item" href="/" aria-label="Roster Argentina">
+          <span class="dock-tooltip">Argentina</span>
+          🇦🇷
+        </a>
+        <a class="dock-item lang-item active" href="/espana/" aria-label="Roster España">
+          <span class="dock-tooltip">España</span>
+          🇪🇸
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="portada-pin-wrap" id="portadaPinWrap">
+    <section class="portada" id="portada">
+      <div class="section-inner">
+        <h1>Roster<span class="lima">de Talentos</span></h1>
+        <p>Creadores y creadoras de España que conectan marcas con audiencias reales, en cada categoría y en cada red.</p>
+      </div>
+      <button class="scroll-cue" id="scrollCue">
+        Explorar más <span class="chev">↓</span>
+      </button>
+    </section>
+  </div>
+
+  <div class="below-hero">
+    <div class="bg-fondo" aria-hidden="true"><svg viewBox="0 0 1464 1080" preserveAspectRatio="xMidYMid slice">
+<path d="M5.82742 843.998L8.07747 831.373C53.3729 533.454 402.48 344.956 678.9 480.311C1111.55 654.031 1418.59 1085 1418.2 1573.77C1418.2 1590.85 1422.02 1607.93 1430.92 1622.51C1475.09 1694.93 1601.68 1680.84 1624.97 1596.57C1628.93 1582.28 1628.98 1567.21 1626.24 1552.68C1518.92 975.927 1075.8 485.449 532.399 276.593C528.926 275.076 525.502 273.461 522.127 271.7C267.523 120.734 350.141 -311.022 647.105 -352.324C667.258 -356.043 687.949 -358 709.129 -358H2009V1924H1.08264C4.65345 1879.08 -6.15679 908.592 5.82742 844.047V843.998Z" fill="black" fill-opacity="0.07"/>
+</svg></div>
+    <div class="cat-viewport" id="catViewport">
+
+
+  <section class="category" data-cat="Mujeres" data-slug="mujeres" id="cat-mujeres">
+    <div class="cat-cover">
+      <div class="section-inner">
+        <div>
+          <h1>Mujeres</h1>
+        </div>
+        <div class="cat-collage collage-4">
+          <img class="collage-tile ct-1" src="assets/photos/luli-liff.webp" alt="Luli Liff" loading="lazy" decoding="async"><img class="collage-tile ct-2" src="assets/photos/sofi-sea.webp" alt="Sofi Sea" loading="lazy" decoding="async"><img class="collage-tile ct-3" src="assets/photos/juli-forcato.webp" alt="Juli Forcato" loading="lazy" decoding="async"><img class="collage-tile ct-4" src="assets/photos/mica-tozzi.webp" alt="Mica Tozzi" loading="lazy" decoding="async">
+        </div>
+      </div>
+      
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">17 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Mujeres, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/luli-liff.webp" alt="Luli Liff" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Luli Liff</h3>
+          <p class="bcard-role">Entretenimiento · Humor</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/luliliff/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>128 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@lulilifschitz2" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.1 M</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>33.7 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/sofi-sea.webp" alt="Sofi Sea" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Sofi Sea</h3>
+          <p class="bcard-role">Lifestyle · Viajes</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/sofiisea/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>289 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@sofiiseaa" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>413 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>3 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/jo-valicenti.webp" alt="Jo Valicenti" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Jo Valicenti</h3>
+          <p class="bcard-role">Fitness · Deporte</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/jovalicenti/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>125 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@jovalicenti" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>240 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/andrea.webp" alt="Andrea" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Andrea</h3>
+          <p class="bcard-role">Beauty · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/andreeaguual/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>84.3 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@andreeaguual" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>240 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:4">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/juli-forcato.webp" alt="Juli Forcato" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Juli Forcato</h3>
+          <p class="bcard-role">Entretenimiento · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/juli.forcato/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>209 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@julietaforcato" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>114 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:5">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/clara.webp" alt="Clara" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Clara</h3>
+          <p class="bcard-role">Fitness · Running</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/clarisssrv/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>94.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@clarissrv" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>194 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:6">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/mica-tozzi.webp" alt="Mica Tozzi" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Mica Tozzi</h3>
+          <p class="bcard-role">Lifestyle · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/micatozzi.jpg/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>135 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@micatozzi.jpg" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>123 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:7">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/patri-leonor.webp" alt="Patri Leonor" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Patri Leonor</h3>
+          <p class="bcard-role">Educación · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/patricialeonors/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>116 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@patricialeonors" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>129 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>10.9 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:8">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/cami-yanez.webp" alt="Cami Yáñez" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Cami Yáñez</h3>
+          <p class="bcard-role">Creatividad · Beauty · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/_camilayanez_/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>70.9 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@_camilayanez_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>176 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:9">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/lorena.webp" alt="Lorena" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Lorena</h3>
+          <p class="bcard-role">Selfcare · Belleza</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/imlorema/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>119 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@imlorema__" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>116 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>9.8 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:10">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/juli-garcia.webp" alt="Juli García" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Juli García</h3>
+          <p class="bcard-role">Entretenimiento · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/jugarciaok/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>82.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@jugarciaok" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>111 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>4.3 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:11">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/betlem.webp" alt="Betlem" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Betlem</h3>
+          <p class="bcard-role">Belleza · Cuidado capilar</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/betlem_pradas/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>4.7 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@betlempradas" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>192 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:12">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/maria-gp.webp" alt="María GP" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">María GP</h3>
+          <p class="bcard-role">Hábitos saludables · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/marianinigp/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>102 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@marianiniazrisgp" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>15.5 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:13">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/dani.webp" alt="Dani" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Dani</h3>
+          <p class="bcard-role">Fitness · Running</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/dani.thlete/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>53.4 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@dani.thlete" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>14.2 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:14">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/noelia.webp" alt="Noelia" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Noelia</h3>
+          <p class="bcard-role">Lifestyle · Belleza</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/chicasinsentido/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>26.3 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@chicasinsentido" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>28.5 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:15">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/ani.webp" alt="Ani" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Ani</h3>
+          <p class="bcard-role">Beauty · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/aniisategna/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>35.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@aniisategna1" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>6.2 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:16">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/judit.webp" alt="Judit" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Judit</h3>
+          <p class="bcard-role">Running · Bienestar</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/judithuguet/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>23.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@judithuguet" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>9.7 K</span></a>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category" data-cat="Hombres" data-slug="hombres" id="cat-hombres">
+    <div class="cat-cover">
+      <div class="section-inner">
+        <div>
+          <h1>Hombres</h1>
+        </div>
+        <div class="cat-collage">
+          <img class="collage-tile ct-1" src="assets/photos/panchi.webp" alt="Panchi" loading="lazy" decoding="async"><img class="collage-tile ct-2" src="assets/photos/unay-ferrer.webp" alt="Unay Ferrer" loading="lazy" decoding="async"><img class="collage-tile ct-3" src="assets/photos/joaquin.webp" alt="Joaquín" loading="lazy" decoding="async">
+        </div>
+      </div>
+      
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">10 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Hombres, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/alex.webp" alt="Alex" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Alex</h3>
+          <p class="bcard-role">Fútbol · Deporte · Entretenimiento</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/theexal04/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>386 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@theexal04_official" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.4 M</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>3.5 M</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/gian-pugliese.webp" alt="Gian Pugliese" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Gian Pugliese</h3>
+          <p class="bcard-role">Lifestyle · Viajes · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/pugliese_gian/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>345 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@gianlucapugliesee" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.4 M</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/panchi.webp" alt="Panchi" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Panchi</h3>
+          <p class="bcard-role">Travel · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/panchireynoso/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>226 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@banshh" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.3 M</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/joaquin.webp" alt="Joaquín" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Joaquín</h3>
+          <p class="bcard-role">Actor · Humor · Entretenimiento</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/joaquin__castellano/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>340 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@joaquin__castellano" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>357 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:4">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/unay-ferrer.webp" alt="Unay Ferrer" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Unay Ferrer</h3>
+          <p class="bcard-role">Entretenimiento · Humor</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/unay_ferrer/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>61.4 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@unay_ferrer_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>203 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:5">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/omar-vieira.webp" alt="Omar Vieira" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Omar Vieira</h3>
+          <p class="bcard-role">Viajes · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/portuvieira/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>154 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@portuvieira" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>81.7 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:6">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/diego-montu.webp" alt="Diego Montu" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Diego Montu</h3>
+          <p class="bcard-role">Deporte · Fitness · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/diemontu/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>145 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@diemontu" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>74.7 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:7">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/david.webp" alt="David" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">David</h3>
+          <p class="bcard-role">Fitness · Health</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/davidchacon.podo/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>55 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@davidchacon.podo" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>12.9 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:8">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/antonio.webp" alt="Antonio" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Antonio</h3>
+          <p class="bcard-role">Running · Bienestar</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/antoniocollados_/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>26.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@antoniocollados_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>3.3 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:9">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/hugo.webp" alt="Hugo" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Hugo</h3>
+          <p class="bcard-role">Running · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/hugorunsthecity/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>8.6 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@hugorunsthecity" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>13.3 K</span></a>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categorias-divider" id="categorias-divider">
+    <div class="section-inner">
+      <h1>Categorías</h1>
+      <p>Explorá a nuestros creadores por temática y estilo de contenido.</p>
+    </div>
+  </section>
+
+  <section class="category collapsible" data-cat="Lifestyle" data-slug="lifestyle" id="cat-lifestyle">
+    <div class="cat-cover">
+      <div class="section-inner no-collage">
+        <div>
+          <h1>Lifestyle</h1>
+        </div>
+      </div>
+      
+      <button class="cat-toggle" aria-expanded="false">
+        <span>10 creadores</span>
+        <svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">10 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Lifestyle, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/gian-pugliese.webp" alt="Gian Pugliese" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Gian Pugliese</h3>
+          <p class="bcard-role">Lifestyle · Viajes · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/pugliese_gian/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>345 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@gianlucapugliesee" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.4 M</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/sofi-sea.webp" alt="Sofi Sea" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Sofi Sea</h3>
+          <p class="bcard-role">Lifestyle · Viajes</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/sofiisea/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>289 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@sofiiseaa" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>413 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>3 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/juli-forcato.webp" alt="Juli Forcato" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Juli Forcato</h3>
+          <p class="bcard-role">Entretenimiento · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/juli.forcato/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>209 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@julietaforcato" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>114 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/mica-tozzi.webp" alt="Mica Tozzi" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Mica Tozzi</h3>
+          <p class="bcard-role">Lifestyle · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/micatozzi.jpg/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>135 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@micatozzi.jpg" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>123 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:4">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/patri-leonor.webp" alt="Patri Leonor" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Patri Leonor</h3>
+          <p class="bcard-role">Educación · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/patricialeonors/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>116 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@patricialeonors" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>129 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>10.9 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:5">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/cami-yanez.webp" alt="Cami Yáñez" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Cami Yáñez</h3>
+          <p class="bcard-role">Creatividad · Beauty · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/_camilayanez_/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>70.9 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@_camilayanez_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>176 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:6">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/lorena.webp" alt="Lorena" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Lorena</h3>
+          <p class="bcard-role">Selfcare · Belleza</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/imlorema/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>119 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@imlorema__" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>116 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>9.8 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:7">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/juli-garcia.webp" alt="Juli García" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Juli García</h3>
+          <p class="bcard-role">Entretenimiento · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/jugarciaok/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>82.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@jugarciaok" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>111 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>4.3 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:8">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/maria-gp.webp" alt="María GP" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">María GP</h3>
+          <p class="bcard-role">Hábitos saludables · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/marianinigp/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>102 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@marianiniazrisgp" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>15.5 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:9">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/noelia.webp" alt="Noelia" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Noelia</h3>
+          <p class="bcard-role">Lifestyle · Belleza</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/chicasinsentido/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>26.3 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@chicasinsentido" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>28.5 K</span></a>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category collapsible" data-cat="Beauty &amp; Moda" data-slug="beauty-moda" id="cat-beauty-moda">
+    <div class="cat-cover">
+      <div class="section-inner no-collage">
+        <div>
+          <h1>Beauty &amp; Moda</h1>
+        </div>
+      </div>
+      
+      <button class="cat-toggle" aria-expanded="false">
+        <span>7 creadores</span>
+        <svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">7 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Beauty &amp; Moda, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/andrea.webp" alt="Andrea" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Andrea</h3>
+          <p class="bcard-role">Beauty · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/andreeaguual/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>84.3 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@andreeaguual" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>240 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/mica-tozzi.webp" alt="Mica Tozzi" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Mica Tozzi</h3>
+          <p class="bcard-role">Lifestyle · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/micatozzi.jpg/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>135 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@micatozzi.jpg" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>123 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/cami-yanez.webp" alt="Cami Yáñez" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Cami Yáñez</h3>
+          <p class="bcard-role">Creatividad · Beauty · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/_camilayanez_/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>70.9 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@_camilayanez_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>176 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/lorena.webp" alt="Lorena" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Lorena</h3>
+          <p class="bcard-role">Selfcare · Belleza</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/imlorema/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>119 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@imlorema__" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>116 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>9.8 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:4">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/betlem.webp" alt="Betlem" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Betlem</h3>
+          <p class="bcard-role">Belleza · Cuidado capilar</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/betlem_pradas/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>4.7 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@betlempradas" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>192 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:5">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/noelia.webp" alt="Noelia" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Noelia</h3>
+          <p class="bcard-role">Lifestyle · Belleza</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/chicasinsentido/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>26.3 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@chicasinsentido" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>28.5 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:6">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/ani.webp" alt="Ani" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Ani</h3>
+          <p class="bcard-role">Beauty · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/aniisategna/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>35.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@aniisategna1" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>6.2 K</span></a>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category collapsible" data-cat="Humor &amp; Entretenimiento" data-slug="humor-entretenimiento" id="cat-humor-entretenimiento">
+    <div class="cat-cover">
+      <div class="section-inner no-collage">
+        <div>
+          <h1>Humor &amp; Entretenimiento</h1>
+        </div>
+      </div>
+      
+      <button class="cat-toggle" aria-expanded="false">
+        <span>6 creadores</span>
+        <svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">6 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Humor &amp; Entretenimiento, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/alex.webp" alt="Alex" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Alex</h3>
+          <p class="bcard-role">Fútbol · Deporte · Entretenimiento</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/theexal04/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>386 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@theexal04_official" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.4 M</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>3.5 M</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/luli-liff.webp" alt="Luli Liff" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Luli Liff</h3>
+          <p class="bcard-role">Entretenimiento · Humor</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/luliliff/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>128 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@lulilifschitz2" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.1 M</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>33.7 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/joaquin.webp" alt="Joaquín" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Joaquín</h3>
+          <p class="bcard-role">Actor · Humor · Entretenimiento</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/joaquin__castellano/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>340 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@joaquin__castellano" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>357 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/juli-forcato.webp" alt="Juli Forcato" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Juli Forcato</h3>
+          <p class="bcard-role">Entretenimiento · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/juli.forcato/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>209 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@julietaforcato" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>114 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:4">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/unay-ferrer.webp" alt="Unay Ferrer" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Unay Ferrer</h3>
+          <p class="bcard-role">Entretenimiento · Humor</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/unay_ferrer/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>61.4 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@unay_ferrer_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>203 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:5">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/juli-garcia.webp" alt="Juli García" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Juli García</h3>
+          <p class="bcard-role">Entretenimiento · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/jugarciaok/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>82.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@jugarciaok" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>111 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>4.3 K</span></span>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category collapsible" data-cat="Viajes" data-slug="viajes" id="cat-viajes">
+    <div class="cat-cover">
+      <div class="section-inner no-collage">
+        <div>
+          <h1>Viajes</h1>
+        </div>
+      </div>
+      
+      <button class="cat-toggle" aria-expanded="false">
+        <span>4 creadores</span>
+        <svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">4 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Viajes, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/gian-pugliese.webp" alt="Gian Pugliese" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Gian Pugliese</h3>
+          <p class="bcard-role">Lifestyle · Viajes · Moda</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/pugliese_gian/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>345 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@gianlucapugliesee" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.4 M</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/panchi.webp" alt="Panchi" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Panchi</h3>
+          <p class="bcard-role">Travel · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/panchireynoso/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>226 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@banshh" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.3 M</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/sofi-sea.webp" alt="Sofi Sea" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Sofi Sea</h3>
+          <p class="bcard-role">Lifestyle · Viajes</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/sofiisea/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>289 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@sofiiseaa" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>413 K</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>3 K</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/omar-vieira.webp" alt="Omar Vieira" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Omar Vieira</h3>
+          <p class="bcard-role">Viajes · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/portuvieira/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>154 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@portuvieira" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>81.7 K</span></a>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category collapsible" data-cat="Deporte &amp; Running" data-slug="deporte" id="cat-deporte">
+    <div class="cat-cover">
+      <div class="section-inner no-collage">
+        <div>
+          <h1>Deporte &amp; Running</h1>
+        </div>
+      </div>
+      
+      <button class="cat-toggle" aria-expanded="false">
+        <span>10 creadores</span>
+        <svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cat-rail">
+      <div class="rail-head">
+        <div class="rail-eyebrow">10 creadores</div>
+      </div>
+      <div class="rail-viewport">
+        <div class="rail-wrap">
+          <button class="rail-arrow prev" aria-label="Anterior">‹</button>
+          <button class="rail-arrow next" aria-label="Siguiente">›</button>
+          <div class="rail" tabindex="0" role="region" aria-label="Creadores de Deporte &amp; Running, pasar el mouse y scrollear para deslizar">
+            
+    <article class="bcard" style="--i:0">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/alex.webp" alt="Alex" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Alex</h3>
+          <p class="bcard-role">Fútbol · Deporte · Entretenimiento</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/theexal04/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>386 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@theexal04_official" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>1.4 M</span></a>
+          <span class="bcard-chip"><svg width="16" height="13" viewBox="4 5 12 10" aria-hidden="true"><use href="#ic-youtube"/></svg><span>3.5 M</span></span>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:1">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/jo-valicenti.webp" alt="Jo Valicenti" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Jo Valicenti</h3>
+          <p class="bcard-role">Fitness · Deporte</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/jovalicenti/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>125 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@jovalicenti" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>240 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:2">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/clara.webp" alt="Clara" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Clara</h3>
+          <p class="bcard-role">Fitness · Running</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/clarisssrv/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>94.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@clarissrv" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>194 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:3">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/diego-montu.webp" alt="Diego Montu" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Diego Montu</h3>
+          <p class="bcard-role">Deporte · Fitness · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/diemontu/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>145 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@diemontu" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>74.7 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:4">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/maria-gp.webp" alt="María GP" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">María GP</h3>
+          <p class="bcard-role">Hábitos saludables · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/marianinigp/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>102 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@marianiniazrisgp" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>15.5 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:5">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/david.webp" alt="David" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">David</h3>
+          <p class="bcard-role">Fitness · Health</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/davidchacon.podo/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>55 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@davidchacon.podo" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>12.9 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:6">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/dani.webp" alt="Dani" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Dani</h3>
+          <p class="bcard-role">Fitness · Running</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/dani.thlete/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>53.4 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@dani.thlete" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>14.2 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:7">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/judit.webp" alt="Judit" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Judit</h3>
+          <p class="bcard-role">Running · Bienestar</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/judithuguet/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>23.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@judithuguet" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>9.7 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:8">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/antonio.webp" alt="Antonio" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Antonio</h3>
+          <p class="bcard-role">Running · Bienestar</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/antoniocollados_/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>26.2 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@antoniocollados_" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>3.3 K</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="bcard" style="--i:9">
+      <div class="bcard-tilt">
+        <img class="bcard-photo" src="assets/photos/hugo.webp" alt="Hugo" loading="lazy" decoding="async" width="307" height="527">
+        <div class="bcard-top-scrim" aria-hidden="true"></div>
+        <div class="bcard-top">
+          <h3 class="bcard-name">Hugo</h3>
+          <p class="bcard-role">Running · Lifestyle</p>
+        </div>
+        <div class="bcard-bottom">
+          <a class="bcard-chip" href="https://www.instagram.com/hugorunsthecity/" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-instagram"/></svg><span>8.6 K</span></a>
+          <a class="bcard-chip" href="https://www.tiktok.com/@hugorunsthecity" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="4.5 4.5 11 11" aria-hidden="true"><use href="#ic-tiktok"/></svg><span>13.3 K</span></a>
+        </div>
+      </div>
+    </article>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const tabEls = Array.from(document.querySelectorAll('.dock-tab'));
+let currentActive = null;
+
+const SLUG_MAP = {"Mujeres": "mujeres", "Hombres": "hombres", "Lifestyle": "lifestyle", "Beauty & Moda": "beauty-moda", "Humor & Entretenimiento": "humor-entretenimiento", "Viajes": "viajes", "Deporte & Running": "deporte"};
+const CATEGORY_SLUGS = ["lifestyle", "beauty-moda", "humor-entretenimiento", "viajes", "deporte"];
+const catMenu = document.getElementById('catMenu');
+const catMenuBtn = document.getElementById('catMenuBtn');
+const catMenuLinks = Array.from(document.querySelectorAll('.cat-menu-link'));
+const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SCROLL_BEHAVIOR = REDUCE_MOTION ? 'auto' : 'smooth';
+const DESKTOP_QUERY = window.matchMedia('(min-width: 861px)');
+const COARSE_POINTER = window.matchMedia('(pointer: coarse)').matches;
+
+// ---------- shared frame scheduler ----------
+// every scroll-linked effect (intro FLIP, collage parallax) runs from ONE
+// passive scroll listener and at most one rAF per frame. Tasks only read
+// values cached at measure time and then write styles, so a frame never
+// alternates layout reads with style writes, and nothing runs while the
+// page sits still.
+const scrollTasks = [];
+let scrollQueued = false;
+function runScrollTasks() {
+  scrollQueued = false;
+  const y = window.scrollY;
+  scrollTasks.forEach(task => task(y));
+}
+window.addEventListener('scroll', () => {
+  if (scrollQueued) return;
+  scrollQueued = true;
+  requestAnimationFrame(runScrollTasks);
+}, { passive: true });
+
+// ---------- weighted smooth scroll ----------
+// critically damped spring: from rest it accelerates, then settles into the
+// target without overshooting. Shared by the page scroll and the rails.
+function springStep(s, target, omega, dt) {
+  const steps = Math.max(1, Math.ceil(dt * 240));
+  const h = dt / steps;
+  for (let i = 0; i < steps; i++) {
+    s.v += (omega * omega * (target - s.x) - 2 * omega * s.v) * h;
+    s.x += s.v * h;
+  }
+}
+const easeInOutQuart = p => p < .5 ? 8 * p * p * p * p : 1 - Math.pow(-2 * p + 2, 4) / 2;
+
+// Mouse wheel / trackpad and the scroll keys move a target; the real window
+// scroll then follows it through the spring, which gives the page weight.
+// It still scrolls the actual document (sticky hero, scrollbar, anchors and
+// observers all keep working natively). Touch keeps the device's own
+// momentum, and reduced motion keeps plain native scrolling.
+// Nav jumps (dock, menu, logo, "Explorar más") use a timed ease-in-out
+// instead, so long trips accelerate and land softly on every device.
+const SMOOTH_WHEEL = !REDUCE_MOTION && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const PAGE_OMEGA = 9; // lower = heavier
+const pageScroll = { x: window.scrollY, v: 0 };
+let pageTarget = window.scrollY, pageRaf = null, pageLast = 0, expectedY = null, pageTween = null;
+let scrollLimit = 0;
+const readScrollLimit = () => { scrollLimit = Math.max(0, document.documentElement.scrollHeight - window.innerHeight); };
+const clampY = y => Math.min(scrollLimit, Math.max(0, y));
+
+function pageFrame(now) {
+  const dt = Math.min(0.05, pageLast ? (now - pageLast) / 1000 : 1 / 60);
+  pageLast = now;
+  if (pageTween) {
+    const p = Math.min(1, (now - pageTween.t0) / pageTween.dur);
+    pageScroll.x = pageTarget = pageTween.from + (pageTween.to - pageTween.from) * easeInOutQuart(p);
+    pageScroll.v = 0;
+    if (p === 1) pageTween = null;
+  } else {
+    springStep(pageScroll, pageTarget, PAGE_OMEGA, dt);
+  }
+  const settled = !pageTween && Math.abs(pageTarget - pageScroll.x) < 0.4 && Math.abs(pageScroll.v) < 6;
+  if (settled) { pageScroll.x = pageTarget; pageScroll.v = 0; }
+  pageScroll.x = clampY(pageScroll.x);
+  expectedY = pageScroll.x;
+  window.scrollTo(0, pageScroll.x);
+  // update the scroll-linked effects in this same frame, so the parallax and
+  // the hero never trail the page by a frame
+  runScrollTasks();
+  if (settled) { pageRaf = null; pageLast = 0; return; }
+  pageRaf = requestAnimationFrame(pageFrame);
+}
+function kickPage() { if (!pageRaf) pageRaf = requestAnimationFrame(pageFrame); }
+function stopPage() {
+  if (pageRaf) cancelAnimationFrame(pageRaf);
+  pageRaf = null; pageLast = 0; pageTween = null;
+  pageScroll.x = pageTarget = window.scrollY; pageScroll.v = 0;
+}
+// anything that moves the page besides the engine (scrollbar drag, find in
+// page, focus, a finger) takes over immediately
+window.addEventListener('scroll', () => {
+  // idle engine: nothing to reconcile (pushPage re-syncs on the next input)
+  if (!pageRaf) { expectedY = null; return; }
+  if (expectedY !== null && Math.abs(window.scrollY - expectedY) <= 2) return;
+  expectedY = null;
+  stopPage();
+}, { passive: true });
+window.addEventListener('touchstart', () => { if (pageRaf) stopPage(); }, { passive: true });
+
+function pushPage(delta) {
+  if (!pageRaf || pageTween) stopPage();
+  readScrollLimit();
+  pageTarget = clampY(pageTarget + delta);
+  kickPage();
+}
+function scrollToY(y) {
+  readScrollLimit();
+  const to = clampY(y);
+  if (REDUCE_MOTION) { window.scrollTo(0, to); return; }
+  stopPage();
+  const dist = Math.abs(to - pageScroll.x);
+  if (dist < 1) return;
+  pageTween = { from: pageScroll.x, to, t0: performance.now(), dur: Math.min(1700, Math.max(750, 520 + dist * 0.08)) };
+  kickPage();
+}
+const scrollToEl = el => scrollToY(el.getBoundingClientRect().top + window.scrollY);
+
+if (SMOOTH_WHEEL) {
+  window.addEventListener('wheel', (e) => {
+    // a rail already claimed this (horizontal swipe), pinch-zoom, or a
+    // mostly sideways gesture: leave it alone
+    if (e.defaultPrevented || e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    pushPage(e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY);
+  }, { passive: false });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    const el = document.activeElement;
+    if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+    const page = window.innerHeight * 0.88;
+    let delta = null;
+    if (e.key === 'ArrowDown') delta = 140;
+    else if (e.key === 'ArrowUp') delta = -140;
+    else if (e.key === 'PageDown') delta = page;
+    else if (e.key === 'PageUp') delta = -page;
+    else if (e.key === ' ' && !(el && el.closest('button, a'))) delta = e.shiftKey ? -page : page;
+    else if (e.key === 'Home') { e.preventDefault(); scrollToY(0); return; }
+    else if (e.key === 'End') { e.preventDefault(); readScrollLimit(); scrollToY(scrollLimit); return; }
+    if (delta === null) return;
+    e.preventDefault();
+    pushPage(delta);
+  });
+}
+
+// resizes are coalesced into one frame too. On phones the browser toolbar
+// showing/hiding mid-scroll fires height-only resizes; re-measuring on those
+// is what made the hero logo jump, so they're ignored.
+const resizeTasks = [];
+let measuredW = window.innerWidth, measuredH = window.innerHeight, resizeQueued = false;
+window.addEventListener('resize', () => {
+  if (resizeQueued) return;
+  resizeQueued = true;
+  requestAnimationFrame(() => {
+    resizeQueued = false;
+    const w = window.innerWidth, h = window.innerHeight;
+    if (COARSE_POINTER && w === measuredW && Math.abs(h - measuredH) < 160) return;
+    measuredW = w; measuredH = h;
+    resizeTasks.forEach(task => task());
+    runScrollTasks();
+  });
+});
+
+// ---------- dock: sliding active pill ----------
+// a single pill glides between Mujeres / Hombres / categorías as the
+// scrollspy changes section, instead of each button swapping its own
+// background (see .dock-pill in the CSS)
+const navDock = document.getElementById('navDock');
+const dockPill = document.createElement('span');
+dockPill.className = 'dock-pill';
+dockPill.setAttribute('aria-hidden', 'true');
+navDock.prepend(dockPill);
+navDock.classList.add('has-pill');
+let dockPillShown = false;
+function placeDockPill() {
+  const target = tabEls.find(t => t.classList.contains('active'))
+    || (catMenuBtn.classList.contains('in-category') ? catMenuBtn : null);
+  if (!target) {
+    dockPill.classList.remove('is-on');
+    dockPillShown = false;
+    return;
+  }
+  const dockRect = navDock.getBoundingClientRect();
+  const r = target.getBoundingClientRect();
+  // first appearance lands in place; only later changes slide
+  if (!dockPillShown) dockPill.classList.add('no-slide');
+  dockPill.style.width = r.width + 'px';
+  dockPill.style.height = r.height + 'px';
+  dockPill.style.transform = `translate(${r.left - dockRect.left}px, ${r.top - dockRect.top}px)`;
+  if (!dockPillShown) {
+    void dockPill.offsetWidth;
+    dockPill.classList.remove('no-slide');
+  }
+  dockPill.classList.add('is-on');
+  dockPillShown = true;
+}
+resizeTasks.push(placeDockPill);
+
+function setActive(cat) {
+  if (cat === currentActive) return;
+  currentActive = cat;
+  tabEls.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  const slug = cat ? SLUG_MAP[cat] : null;
+  catMenuLinks.forEach(l => l.classList.toggle('active', l.dataset.slug === slug));
+  catMenuBtn.classList.toggle('in-category', CATEGORY_SLUGS.includes(slug));
+  placeDockPill();
+}
+
+const catSections = {};
+document.querySelectorAll('.category').forEach(el => { catSections[el.dataset.slug] = el; });
+
+// ---------- mobile accordion (secondary/PDF categories only) ----------
+const MOBILE_QUERY = window.matchMedia('(max-width: 860px)');
+
+// replays the cards' staggered entrance, so opening an accordion row deals
+// its creators in instead of showing a rail that already animated while
+// collapsed
+function replayCards(section) {
+  const rail = section.querySelector('.rail');
+  rail.classList.remove('inview');
+  void rail.offsetWidth;
+  rail.classList.add('inview');
+}
+function openCategory(section) {
+  if (!section.classList.contains('collapsible') || section.classList.contains('open')) return;
+  const railEl = section.querySelector('.cat-rail');
+  const toggle = section.querySelector('.cat-toggle');
+  section.classList.add('open');
+  toggle.setAttribute('aria-expanded', 'true');
+  railEl.style.maxHeight = railEl.scrollHeight + 'px';
+  if (!REDUCE_MOTION) replayCards(section);
+}
+function closeCategory(section) {
+  const railEl = section.querySelector('.cat-rail');
+  const toggle = section.querySelector('.cat-toggle');
+  section.classList.remove('open');
+  toggle.setAttribute('aria-expanded', 'false');
+  railEl.style.maxHeight = '0px';
+}
+function syncAccordionState() {
+  document.querySelectorAll('.category.collapsible').forEach(section => {
+    const railEl = section.querySelector('.cat-rail');
+    if (!MOBILE_QUERY.matches) { railEl.style.maxHeight = ''; return; }
+    railEl.style.maxHeight = section.classList.contains('open') ? railEl.scrollHeight + 'px' : '0px';
+  });
+}
+syncAccordionState();
+MOBILE_QUERY.addEventListener('change', syncAccordionState);
+resizeTasks.push(() => { if (MOBILE_QUERY.matches) syncAccordionState(); });
+
+document.querySelectorAll('.category.collapsible .cat-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const section = toggle.closest('.category');
+    section.classList.contains('open') ? closeCategory(section) : openCategory(section);
+  });
+});
+
+tabEls.forEach(t => {
+  t.addEventListener('click', () => {
+    const slug = SLUG_MAP[t.dataset.cat];
+    scrollToEl(catSections[slug]);
+  });
+});
+document.getElementById('navBrand').addEventListener('click', () => scrollToY(0));
+document.getElementById('scrollCue').addEventListener('click', () => scrollToEl(document.getElementById('catViewport')));
+
+// menu links cascade in one after another when the panel opens (--k feeds
+// the per-link transition delay in the CSS)
+catMenuLinks.forEach((link, k) => link.style.setProperty('--k', k));
+catMenuBtn.addEventListener('click', () => {
+  const open = catMenu.classList.toggle('open');
+  catMenuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+catMenuLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const section = catSections[link.dataset.slug];
+    if (MOBILE_QUERY.matches) openCategory(section);
+    scrollToEl(section);
+    catMenu.classList.remove('open');
+    catMenuBtn.setAttribute('aria-expanded', 'false');
+  });
+});
+document.addEventListener('click', (e) => {
+  if (!catMenu.contains(e.target)) {
+    catMenu.classList.remove('open');
+    catMenuBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    catMenu.classList.remove('open');
+    catMenuBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+
+// scrollspy: highlight whichever category section (Mujeres / Hombres, both
+// stacked in the same continuous page) currently sits in the viewport centre
+const portadaObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) setActive(null); });
+}, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+portadaObserver.observe(document.getElementById('portada'));
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) setActive(e.target.dataset.cat); });
+}, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+Object.values(catSections).forEach(el => sectionObserver.observe(el));
+
+// observing .category (never display:none, even for collapsed mobile
+// accordions — only its .cat-rail height collapses) rather than .rail-head
+// directly, since .rail-head IS display:none on collapsed mobile categories
+// and a display:none element never reports as intersecting, which would
+// otherwise leave those categories' cards stuck at opacity:0 forever on mobile
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const rail = e.target.querySelector('.rail');
+    e.target.querySelector('.rail-head')?.classList.add('inview');
+    rail.classList.add('inview');
+    // one-shot "invite to slide" nudge on the first couple cards of this rail
+    Array.from(rail.children).slice(0, 2).forEach(c => c.classList.add('hint-nudge'));
+    io.unobserve(e.target);
+  });
+}, { threshold: .15 });
+document.querySelectorAll('.category').forEach(el => io.observe(el));
+
+// ---------- headline word reveal ----------
+// each word of a cover headline rises out of its own mask, one after the
+// other. Words are wrapped at runtime so the markup stays plain text (the
+// h1 reads the same to screen readers); until this runs, the CSS keeps the
+// original whole-headline rise as the fallback.
+function splitWords(h) {
+  const words = h.textContent.trim().split(/\s+/);
+  h.textContent = '';
+  words.forEach((word, i) => {
+    const mask = document.createElement('span');
+    mask.className = 'w';
+    const inner = document.createElement('span');
+    inner.textContent = word;
+    inner.style.setProperty('--w', i);
+    mask.appendChild(inner);
+    h.appendChild(mask);
+    if (i < words.length - 1) h.appendChild(document.createTextNode(' '));
+  });
+  h.classList.add('split');
+}
+const splitHeadlines = Array.from(document.querySelectorAll('.cat-cover h1, .categorias-divider h1'));
+splitHeadlines.forEach(splitWords);
+
+// a single long word (ENTRETENIMIENTO) can't wrap, so on phones it ran past
+// the screen edge and got cut off; shrink only a headline whose widest word
+// doesn't fit its column. All reads happen before any write.
+function fitHeadlines() {
+  splitHeadlines.forEach(h => { h.style.fontSize = ''; });
+  const sizes = splitHeadlines.map(h => {
+    const inner = h.closest('.section-inner');
+    const cs = getComputedStyle(inner);
+    const avail = inner.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const widest = Math.max(...Array.from(h.querySelectorAll('.w > span'), w => w.offsetWidth));
+    return widest > avail ? parseFloat(getComputedStyle(h).fontSize) * (avail / widest) * 0.97 : 0;
+  });
+  splitHeadlines.forEach((h, i) => { if (sizes[i]) h.style.fontSize = sizes[i].toFixed(1) + 'px'; });
+}
+fitHeadlines();
+document.fonts?.ready.then(fitHeadlines);
+resizeTasks.push(fitHeadlines);
+
+// section cover headline/paragraph reveal-on-scroll (Categorías divider and
+// every category cover, collage included) — see the .inview CSS rules above
+const coverObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('inview');
+    coverObserver.unobserve(e.target);
+  });
+}, { threshold: .25 });
+document.querySelectorAll('.portada, .cat-cover, .categorias-divider').forEach(el => coverObserver.observe(el));
+
+// ---------- hero intro: big centered logo FLIPs onto the nav, headline rises ----------
+// FLIP technique: measure the logo's natural (big, centered) rect and the
+// real nav-brand's rect, then on scroll interpolate a translate+scale between
+// them — pure transform/opacity per frame, no layout thrash. --intro-progress
+// (0 to 1, smoothstep-eased) also drives the headline's rise/grow in the CSS
+// above, so both stay perfectly in lockstep off the same scroll math. The
+// variable is written on #portada, not :root — on the root it would restyle
+// the whole document every frame; here only the hero's own subtree.
+const introLogo = document.getElementById('introLogo');
+const navBrandEl = document.getElementById('navBrand');
+const portadaEl = document.getElementById('portada');
+const portadaPinWrap = document.getElementById('portadaPinWrap');
+const INTRO_DISTANCE = 480; // px of scroll over which the intro completes
+const INTRO_FADE_FROM = 0.97; // logo/nav-brand crossfade — kept short and late so the two logos barely overlap
+
+let introStart, introEnd, lastIntroKey = '';
+function layoutIntroLogo() {
+  // pin-wrap is exactly portada's own height + the intro distance, so the
+  // sticky release lines up perfectly with the moment the intro finishes
+  portadaPinWrap.style.height = REDUCE_MOTION
+    ? portadaEl.offsetHeight + 'px'
+    : (portadaEl.offsetHeight + INTRO_DISTANCE) + 'px';
+  if (REDUCE_MOTION) return;
+
+  let size = Math.max(220, window.innerWidth * 0.28);
+  size = Math.min(size, 440, window.innerHeight * 0.48);
+  introLogo.style.width = size + 'px';
+  introLogo.style.height = size + 'px';
+  introLogo.style.borderRadius = (size * 0.2857) + 'px'; // same radius:size ratio as .nav-brand
+  introLogo.style.left = (window.innerWidth / 2 - size / 2) + 'px';
+  introLogo.style.top = (window.innerHeight * 0.4 - size / 2) + 'px';
+  introLogo.style.transform = 'none';
+  introStart = introLogo.getBoundingClientRect();
+  introEnd = navBrandEl.getBoundingClientRect();
+  lastIntroKey = '';
+  updateIntro(window.scrollY);
+}
+
+function updateIntro(y) {
+  const raw = Math.min(1, Math.max(0, y / INTRO_DISTANCE));
+  const p = raw * raw * (3 - 2 * raw); // smoothstep
+  // once the intro has finished (or not started) the values stop changing,
+  // so the rest of the page scrolls without any writes from here
+  const key = p.toFixed(4);
+  if (key === lastIntroKey) return;
+  lastIntroKey = key;
+  portadaEl.style.setProperty('--intro-progress', key);
+
+  const scale = 1 + (introEnd.width / introStart.width - 1) * p;
+  const startCx = introStart.left + introStart.width / 2;
+  const startCy = introStart.top + introStart.height / 2;
+  const endCx = introEnd.left + introEnd.width / 2;
+  const endCy = introEnd.top + introEnd.height / 2;
+  const tx = (endCx - startCx) * p;
+  const ty = (endCy - startCy) * p;
+  introLogo.style.transform = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+
+  introLogo.style.opacity = p < INTRO_FADE_FROM ? 1 : Math.max(0, 1 - (p - INTRO_FADE_FROM) / (1 - INTRO_FADE_FROM));
+  navBrandEl.style.opacity = p < INTRO_FADE_FROM ? 0 : Math.min(1, (p - INTRO_FADE_FROM) / (1 - INTRO_FADE_FROM));
+  // a fully faded logo must not swallow clicks meant for the page below it
+  introLogo.style.visibility = p >= 1 ? 'hidden' : '';
+}
+
+// same 3D tilt as the talent cards (see initCardTilt below), ported onto the
+// intro logo -- lives on its own .intro-logo-tilt wrapper so it never fights
+// #introLogo's scroll-driven transform above for the same property
+if (!REDUCE_MOTION && window.matchMedia('(hover: hover)').matches) {
+  const logoTilt = document.getElementById('introLogoTilt');
+  const LOGO_ROTATE_AMPLITUDE = 16;
+  const LOGO_SCALE_ON_HOVER = 1.06;
+  const LOGO_LERP = 0.18;
+  let logoCurX = 0, logoCurY = 0, logoCurScale = 1;
+  let logoTargetX = 0, logoTargetY = 0, logoTargetScale = 1;
+  let logoRaf = null;
+  function renderLogoTilt() {
+    logoCurX += (logoTargetX - logoCurX) * LOGO_LERP;
+    logoCurY += (logoTargetY - logoCurY) * LOGO_LERP;
+    logoCurScale += (logoTargetScale - logoCurScale) * LOGO_LERP;
+    logoTilt.style.transform = `rotateX(${logoCurX.toFixed(2)}deg) rotateY(${logoCurY.toFixed(2)}deg) scale(${logoCurScale.toFixed(3)})`;
+    const settled = Math.abs(logoTargetX - logoCurX) < 0.03 && Math.abs(logoTargetY - logoCurY) < 0.03 && Math.abs(logoTargetScale - logoCurScale) < 0.001;
+    if (settled) { logoRaf = null; } else { logoRaf = requestAnimationFrame(renderLogoTilt); }
+  }
+  function ensureLogoLoop() { if (!logoRaf) logoRaf = requestAnimationFrame(renderLogoTilt); }
+  introLogo.addEventListener('pointermove', (e) => {
+    const rect = introLogo.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    logoTargetX = (offsetY / (rect.height / 2)) * -LOGO_ROTATE_AMPLITUDE;
+    logoTargetY = (offsetX / (rect.width / 2)) * LOGO_ROTATE_AMPLITUDE;
+    logoTargetScale = LOGO_SCALE_ON_HOVER;
+    ensureLogoLoop();
+  });
+  introLogo.addEventListener('pointerleave', () => {
+    logoTargetX = 0; logoTargetY = 0; logoTargetScale = 1;
+    ensureLogoLoop();
+  });
+}
+
+if (REDUCE_MOTION) {
+  introLogo.style.display = 'none';
+  navBrandEl.style.opacity = 1;
+  portadaEl.style.setProperty('--intro-progress', 1);
+  layoutIntroLogo();
+  resizeTasks.push(layoutIntroLogo);
+} else {
+  scrollTasks.push(updateIntro);
+  resizeTasks.push(layoutIntroLogo);
+  layoutIntroLogo();
+}
+
+// ---------- collage tile parallax (Mujeres/Hombres cat-cover) ----------
+// same "moves continuously with scroll position" feel as the intro logo above,
+// but driven from JS instead of the CSS animation-timeline: view() trick used
+// for .bg-fondo — that CSS feature still isn't supported in Safari, and this
+// needs to actually work everywhere.
+// ct-1/ct-2 (stacked left column) always share the exact same shift vector, and
+// so do ct-3/ct-4 (stacked right column, only present in the 4-photo collage) --
+// tiles stacked directly on top of each other have almost no gap between them, so
+// if they moved by DIFFERENT amounts they could drift into each other at the
+// extremes. Moving each column as one rigid block guarantees zero relative
+// motion within a pair (can never touch), while the two columns still drift
+// against each other for the parallax depth effect, since they sit side by side
+// with a wide horizontal gap that comfortably absorbs both shifts.
+// Each tile's resting position is measured once (offsetTop ignores the
+// parallax transform, so it can't feed back into itself) and every scroll
+// frame is pure arithmetic + one transform write per tile that actually moved.
+const TILE_SHIFT = { 'ct-1': [0, -28], 'ct-2': [0, -28], 'ct-3': [-22, -20], 'ct-4': [-22, -20] };
+const parallaxTiles = Array.from(document.querySelectorAll('.collage-tile')).map(el => {
+  const cls = Object.keys(TILE_SHIFT).find(c => el.classList.contains(c));
+  return { el, shift: TILE_SHIFT[cls] || [0, 0], top: 0, height: 0, last: '' };
+});
+let tileViewH = window.innerHeight;
+function measureTiles() {
+  const sy = window.scrollY;
+  tileViewH = window.innerHeight;
+  parallaxTiles.forEach(t => {
+    t.top = t.el.offsetParent.getBoundingClientRect().top + sy + t.el.offsetTop;
+    t.height = t.el.offsetHeight;
+    t.last = '';
+  });
+}
+function updateTileParallax(y) {
+  parallaxTiles.forEach(t => {
+    // progress 0 -> 1 as the tile travels from just entering the bottom of the
+    // viewport to just leaving the top; (progress-0.5)*2 gives a -1..1 range so
+    // the tile sits at its natural position when centered in the viewport.
+    const progress = Math.min(1, Math.max(0, (tileViewH - (t.top - y)) / (tileViewH + t.height)));
+    const k = (progress - 0.5) * 2;
+    const v = `translate3d(${(t.shift[0] * k).toFixed(1)}px, ${(t.shift[1] * k).toFixed(1)}px, 0)`;
+    if (v === t.last) return;
+    t.last = v;
+    t.el.style.transform = v;
+  });
+}
+if (!REDUCE_MOTION && parallaxTiles.length) {
+  const remeasureTiles = () => { measureTiles(); updateTileParallax(window.scrollY); };
+  scrollTasks.push(updateTileParallax);
+  resizeTasks.push(measureTiles);
+  remeasureTiles();
+  // web fonts and late images can shift the covers after first paint
+  document.fonts?.ready.then(remeasureTiles);
+  window.addEventListener('load', remeasureTiles, { once: true });
+}
+
+// ---------- photos fade in once decoded ----------
+// lazy card photos used to pop in over the grey placeholder as a rail slid
+// them into view; now each one fades/settles in when it's actually ready
+document.querySelectorAll('.bcard-photo').forEach(img => {
+  if (img.complete && img.naturalWidth) return;
+  img.classList.add('is-pending');
+  const reveal = () => img.classList.remove('is-pending');
+  img.addEventListener('load', () => {
+    (img.decode ? img.decode() : Promise.resolve()).catch(() => {}).then(reveal);
+  }, { once: true });
+  img.addEventListener('error', reveal, { once: true });
+});
+
+// ---------- card tilt (ported from reactbits.dev's TiltedCard: npx shadcn add
+// @react-bits/TiltedCard-JS-CSS) ----------
+// Trimmed the reference down to just rotateX/rotateY + scale on hover (dropped
+// its floating caption tooltip and mobile warning banner, not relevant to a
+// card that already has its own name/chips baked in). The reference smooths
+// motion with framer-motion's useSpring; here it's a plain rAF lerp toward the
+// pointer target instead, since there's no springs library loaded on this
+// page — visually reads the same for a movement this small. A soft glare
+// (--gx/--gy, see .bcard-tilt::after) follows the pointer across the face.
+// Desktop-only ((hover: hover)): on touch the rail is a native swipeable
+// scroller (see mobile media query above), so pointer input there belongs
+// entirely to scrolling, not tilt. And even on desktop, if the rail is being
+// dragged (see .dragging toggled below), pointermove on a card is ignored —
+// otherwise dragging the carousel would also spin every card it passes under.
+function initCardTilt(card) {
+  const tilt = card.querySelector('.bcard-tilt');
+  if (!tilt) return;
+  const ROTATE_AMPLITUDE = 10; // deg, at the card's edge
+  const SCALE_ON_HOVER = 1.035;
+  const LERP = 0.18;
+  let curX = 0, curY = 0, curScale = 1;
+  let targetX = 0, targetY = 0, targetScale = 1;
+  let raf = null;
+
+  function render() {
+    curX += (targetX - curX) * LERP;
+    curY += (targetY - curY) * LERP;
+    curScale += (targetScale - curScale) * LERP;
+    tilt.style.transform = `rotateX(${curX.toFixed(2)}deg) rotateY(${curY.toFixed(2)}deg) scale(${curScale.toFixed(3)})`;
+    tilt.style.setProperty('--gx', (50 + (curY / ROTATE_AMPLITUDE) * 50).toFixed(1) + '%');
+    tilt.style.setProperty('--gy', (50 - (curX / ROTATE_AMPLITUDE) * 50).toFixed(1) + '%');
+    const settled = Math.abs(targetX - curX) < 0.03 && Math.abs(targetY - curY) < 0.03 && Math.abs(targetScale - curScale) < 0.001;
+    if (settled) {
+      raf = null;
+      if (targetScale === 1) tilt.classList.remove('tilting');
+    } else {
+      raf = requestAnimationFrame(render);
+    }
+  }
+  function ensureLoop() { if (!raf) raf = requestAnimationFrame(render); }
+
+  card.addEventListener('pointermove', (e) => {
+    const rail = card.closest('.rail');
+    if (rail && rail.classList.contains('dragging')) return;
+    // measured on the untilted card, so the tilt never skews its own input
+    const rect = card.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    targetX = (offsetY / (rect.height / 2)) * -ROTATE_AMPLITUDE;
+    targetY = (offsetX / (rect.width / 2)) * ROTATE_AMPLITUDE;
+    targetScale = SCALE_ON_HOVER;
+    tilt.classList.add('tilting');
+    ensureLoop();
+  });
+  card.addEventListener('pointerleave', () => {
+    targetX = 0; targetY = 0; targetScale = 1;
+    ensureLoop();
+  });
+}
+if (!REDUCE_MOTION && window.matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.bcard').forEach(initCardTilt);
+}
+
+// ---------- horizontal rail: eased motion engine ----------
+// plain vertical scroll (mouse wheel, or a trackpad swipe that's mostly
+// vertical) is NEVER captured — the page just scrolls normally no matter
+// where the pointer is. Ways to move the carousel instead:
+//   1. resting the pointer over the card at the left/right edge auto-slides
+//      in that direction, easing in and out instead of starting/stopping dead;
+//   2. a trackpad's horizontal swipe slides the rail 1:1 (the trackpad
+//      already supplies its own momentum);
+//   3. dragging with the mouse, released with its speed so the rail glides
+//      to a stop;
+//   4. the arrow buttons and the ← → / Home / End keys, which glide to the
+//      next card edge.
+// Everything writes a target; one rAF loop per rail moves the rendered
+// position toward it on the same critically damped spring as the page
+// (accelerates, then settles without overshoot) and stops once settled.
+const RAIL_OMEGA = 12; // higher = snappier
+const HOVER_SLIDE_SPEED = 5; // px per 60 fps frame while parked on an edge card
+
+document.querySelectorAll('.cat-rail').forEach(catRail => {
+  const viewport = catRail.querySelector('.rail-viewport');
+  const wrap = catRail.querySelector('.rail-wrap');
+  const rail = catRail.querySelector('.rail');
+  const progressFill = catRail.querySelector('.progress-fill');
+  const prevBtn = catRail.querySelector('.rail-arrow.prev');
+  const nextBtn = catRail.querySelector('.rail-arrow.next');
+  let maxDistance = 0, padLeft = 0, padX = 0, step = 300;
+  let pos = 0, target = 0;
+  const spring = { x: 0, v: 0 };
+  let hoverDir = 0, hoverVel = 0;
+  let raf = null, lastTime = 0;
+  let isDown = false, startX = 0, dragFrom = 0, moved = false, samples = [];
+  let arrowState = '';
+
+  const isDesktop = () => DESKTOP_QUERY.matches;
+  const clamp = v => Math.min(maxDistance, Math.max(0, v));
+
+  function measure() {
+    // .rail itself has no padding — the left/right inset lives on .rail-wrap
+    // — so it has to be added back in, otherwise the carousel stops short
+    // and the last card's far edge gets clipped by the viewport's overflow
+    const wrapStyle = getComputedStyle(wrap);
+    padLeft = parseFloat(wrapStyle.paddingLeft) || 0;
+    padX = padLeft + (parseFloat(wrapStyle.paddingRight) || 0);
+    maxDistance = Math.max(0, rail.scrollWidth + padX - viewport.clientWidth);
+    const first = rail.firstElementChild;
+    const gap = parseFloat(getComputedStyle(rail).columnGap) || 26;
+    step = (first ? first.offsetWidth : 300) + gap;
+    target = clamp(target);
+    pos = clamp(pos);
+    render();
+  }
+  function render() {
+    rail.style.transform = `translate3d(${(-pos).toFixed(2)}px, 0, 0)`;
+    progressFill.style.transform = `scaleX(${maxDistance > 0 ? (pos / maxDistance).toFixed(4) : 0})`;
+    syncArrows();
+  }
+  // arrows fade out at the ends of the rail, where they would do nothing
+  function syncArrows() {
+    let atStart, atEnd;
+    if (isDesktop()) {
+      atStart = target <= 1;
+      atEnd = target >= maxDistance - 1;
+    } else {
+      atStart = rail.scrollLeft <= 4;
+      atEnd = rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 4;
+    }
+    const state = (atStart ? 's' : '') + (atEnd ? 'e' : '');
+    if (state === arrowState) return;
+    arrowState = state;
+    prevBtn.classList.toggle('is-off', atStart);
+    nextBtn.classList.toggle('is-off', atEnd);
+  }
+
+  function tick(now) {
+    const f = (lastTime ? Math.min(50, now - lastTime) : 16.7) / 16.7;
+    lastTime = now;
+    const wanted = isDown ? 0 : hoverDir * HOVER_SLIDE_SPEED;
+    hoverVel += (wanted - hoverVel) * (1 - Math.pow(0.86, f));
+    if (wanted === 0 && Math.abs(hoverVel) < 0.02) hoverVel = 0;
+    if (hoverVel) target = clamp(target + hoverVel * f);
+    if (REDUCE_MOTION) {
+      pos = target; spring.v = 0;
+    } else {
+      spring.x = pos;
+      springStep(spring, target, RAIL_OMEGA, f / 60);
+      pos = Math.min(maxDistance, Math.max(0, spring.x));
+    }
+    if (Math.abs(target - pos) < 0.2 && Math.abs(spring.v) < 6) { pos = target; spring.v = 0; }
+    render();
+    const blocked = (hoverVel > 0 && target >= maxDistance) || (hoverVel < 0 && target <= 0);
+    if (pos === target && (hoverVel === 0 || blocked)) {
+      raf = null; lastTime = 0; hoverVel = 0;
+      return;
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+  function glideTo(v) { target = clamp(v); kick(); }
+
+  viewport.addEventListener('mousemove', (e) => {
+    if (!isDesktop() || maxDistance <= 0) return;
+    // only the card sitting right at the left/right edge triggers auto-slide —
+    // every other card in the middle is a dead zone so it stays clickable
+    const rect = viewport.getBoundingClientRect();
+    const edgeZone = step;
+    const x = e.clientX - rect.left;
+    let dir = 0;
+    if (x < edgeZone) dir = -1;
+    else if (x > rect.width - edgeZone) dir = 1;
+    if (dir !== hoverDir) {
+      hoverDir = dir;
+      if (dir !== 0) kick();
+    }
+  });
+  viewport.addEventListener('mouseleave', () => { hoverDir = 0; });
+
+  viewport.addEventListener('wheel', (e) => {
+    // only a clearly horizontal gesture belongs to the rail; a vertical swipe
+    // with a little sideways drift keeps scrolling the page
+    if (!isDesktop() || Math.abs(e.deltaX) < 1 || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    const dx = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
+    const canConsume = (dx > 0 && target < maxDistance) || (dx < 0 && target > 0);
+    if (!canConsume) return;
+    e.preventDefault();
+    target = clamp(target + dx);
+    if (Math.abs(dx) < 60) { pos = target; spring.v = 0; }
+    kick();
+  }, { passive: false });
+
+  rail.addEventListener('pointerdown', (e) => {
+    moved = false;
+    if (e.target.closest('a') || e.pointerType === 'touch' || !isDesktop() || e.button !== 0) return;
+    isDown = true; hoverDir = 0;
+    startX = e.clientX; dragFrom = pos; target = pos;
+    samples = [{ x: e.clientX, t: e.timeStamp }];
+    rail.classList.add('dragging');
+    rail.setPointerCapture(e.pointerId);
+  });
+  rail.addEventListener('pointermove', (e) => {
+    if (!isDown) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    target = pos = clamp(dragFrom - dx);
+    spring.v = 0;
+    samples.push({ x: e.clientX, t: e.timeStamp });
+    if (samples.length > 6) samples.shift();
+    kick();
+  });
+  function endDrag(e) {
+    if (!isDown) return;
+    isDown = false;
+    rail.classList.remove('dragging');
+    // carry the pointer's speed over its last ~100ms into a glide
+    const last = samples[samples.length - 1];
+    const recent = samples.filter(s => last.t - s.t <= 100);
+    const first = recent[0];
+    const span = last.t - first.t;
+    if (moved && span > 0 && e.timeStamp - last.t < 80) {
+      const velocity = (last.x - first.x) / span; // px per ms
+      // hand the throw's speed to the spring so the glide starts at the
+      // pointer's pace and decelerates from there
+      spring.v = -velocity * 1000;
+      glideTo(pos - velocity * 280);
+    }
+  }
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => rail.addEventListener(ev, endDrag));
+  rail.addEventListener('click', (e) => { if (moved) e.preventDefault(); }, true);
+
+  function scrollByCards(dir) {
+    if (isDesktop()) {
+      // glide to the next card edge rather than an arbitrary offset
+      glideTo((Math.round(target / step) + dir) * step);
+    } else {
+      // mobile rail is native overflow-x scroll, not transform-driven
+      rail.scrollBy({ left: dir * step, behavior: SCROLL_BEHAVIOR });
+    }
+  }
+  prevBtn.addEventListener('click', () => scrollByCards(-1));
+  nextBtn.addEventListener('click', () => scrollByCards(1));
+
+  rail.addEventListener('keydown', (e) => {
+    if (!isDesktop()) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      scrollByCards(e.key === 'ArrowRight' ? 1 : -1);
+    } else if (e.key === 'Home' || e.key === 'End') {
+      e.preventDefault();
+      glideTo(e.key === 'Home' ? 0 : maxDistance);
+    }
+  });
+  // tabbing onto a chip of an off-screen card: the browser would scroll the
+  // clipped viewport natively (desyncing the transform); undo that and glide
+  // the card into view through the rail's own motion instead
+  rail.addEventListener('focusin', (e) => {
+    if (!isDesktop()) return;
+    const resetNative = () => { viewport.scrollLeft = 0; };
+    resetNative();
+    requestAnimationFrame(resetNative);
+    const card = e.target.closest('.bcard');
+    if (!card) return;
+    const left = card.offsetLeft - padLeft;
+    const visible = viewport.clientWidth - padX;
+    if (left < target) glideTo(left);
+    else if (left + card.offsetWidth > target + visible) glideTo(left + card.offsetWidth - visible);
+  });
+
+  rail.addEventListener('scroll', () => { if (!isDesktop()) syncArrows(); }, { passive: true });
+  DESKTOP_QUERY.addEventListener('change', () => { arrowState = ''; measure(); });
+  new ResizeObserver(measure).observe(viewport);
+});
+</script>
