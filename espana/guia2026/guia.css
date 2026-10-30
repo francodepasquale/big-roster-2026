@@ -143,6 +143,7 @@ html[data-os="mac"] [data-win],html[data-os="win"] [data-mac]{display:none!impor
 .code{display:flex;align-items:flex-start;gap:.8rem;background:var(--bg);border-radius:12px;padding:.85rem .85rem .85rem 1rem;border:1px solid var(--line)}
 .code code{flex:1;background:none;padding:0;font-size:.86rem;white-space:pre-wrap;line-height:1.55;color:var(--text)}
 .code--prompt code{font-family:Inter,system-ui,sans-serif;font-size:.9rem}
+.code--long{margin-top:.9rem}.code--long code{max-height:340px;overflow-y:auto;font-size:.84rem}
 .copy{flex:none;border:1px solid var(--line-2);border-radius:8px;padding:.4rem .7rem;background:var(--panel-2);color:var(--text);font:600 .76rem Inter,system-ui,sans-serif;cursor:pointer;transition:background .25s var(--ease),color .25s var(--ease)}
 .copy:hover{border-color:var(--accent)}
 .copy.is-done{background:var(--accent);border-color:var(--accent);color:var(--bg)}
