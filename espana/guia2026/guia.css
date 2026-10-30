@@ -436,3 +436,7 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
   .code{flex-direction:column}.copy{align-self:flex-end}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Aviso de versión nueva */
+.version-nueva{position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%);z-index:200;display:flex;align-items:center;gap:1rem;padding:.6rem .6rem .6rem 1.2rem;border-radius:999px;background:rgba(13,13,20,.88);backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);box-shadow:0 12px 40px rgba(0,0,0,.4);font-size:.92rem;animation:version-in .5s var(--ease) both}
+@keyframes version-in{from{opacity:0;transform:translate(-50%,16px)}}

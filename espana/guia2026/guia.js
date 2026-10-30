@@ -217,3 +217,24 @@ catch (err) { console.warn('Sin WebGL', err); window.guideLoading?.track('escena
 
 route();
 document.addEventListener('guide:ready', () => route(), { once: true });
+
+// ── Versión nueva. Si se republica la guía mientras está abierta, se avisa para recargar
+// (si no, las descargas de la versión nueva no coinciden con esta página).
+if (info?.v) {
+  let avisado = false;
+  const revisar = async () => {
+    if (avisado || document.hidden) return;
+    try {
+      const v = (await (await fetch('version.txt', { cache: 'no-store' })).text()).trim();
+      if (!v || v === info.v) return;
+      avisado = true;
+      const aviso = Object.assign(document.createElement('div'), { className: 'version-nueva', role: 'status' });
+      aviso.innerHTML = '<span>Hay una versión nueva de la guía.</span><button class="btn btn--accent">Recargar</button>';
+      aviso.querySelector('button').addEventListener('click', () => location.reload());
+      document.body.append(aviso);
+    } catch {}
+  };
+  setInterval(revisar, 120000);
+  addEventListener('focus', revisar);
+  document.addEventListener('visibilitychange', revisar);
+}
