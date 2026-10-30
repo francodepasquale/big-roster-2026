@@ -115,10 +115,10 @@ if (!reduced && matchMedia('(hover: hover)').matches) {
 }
 
 // ── Descargas. En la versión publicada con contraseña cada archivo está cifrado (descargas/<archivo>.cifrado:
-// 16 bytes de IV + AES-256-CTR). La clave sale de la que se escribió al entrar (la guarda la pantalla de clave).
-const LLAVE = 'big-clave:' + location.pathname.replace(/[^/]*$/, '');
-const clave = (() => { try { return localStorage.getItem(LLAVE) || sessionStorage.getItem(LLAVE); } catch { return null; } })();
-const cifrado = !!clave;
+// 16 bytes de IV + AES-256-CTR).
+// La publicación mete en la página (cifrada) la clave de las descargas y la huella SHA-256 de cada archivo.
+const info = (() => { try { return JSON.parse(document.getElementById('descargas-info').textContent); } catch { return null; } })();
+const cifrado = !!info;
 const unhex = h => new Uint8Array(h.match(/../g).map(x => parseInt(x, 16)));
 const tamano = n => n > 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + ' MB' : Math.round(n / 1e3) + ' KB';
 document.querySelectorAll('[data-size]').forEach(async el => {
@@ -133,11 +133,15 @@ async function descargarCifrado(link) {
   const original = link.innerHTML;
   link.setAttribute('aria-busy', 'true'); link.textContent = 'Preparando…';
   try {
-    const hk = await crypto.subtle.importKey('raw', unhex(clave).slice(0, 32), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-    const k = await crypto.subtle.sign('HMAC', hk, new TextEncoder().encode('descargas'));
-    const aes = await crypto.subtle.importKey('raw', k, 'AES-CTR', false, ['decrypt']);
-    const buf = new Uint8Array(await (await fetch('descargas/' + nombre + '.cifrado')).arrayBuffer());
+    const aes = await crypto.subtle.importKey('raw', unhex(info.k), 'AES-CTR', false, ['decrypt']);
+    const buf = new Uint8Array(await (await fetch('descargas/' + nombre + '.cifrado', { cache: 'no-store' })).arrayBuffer());
     const plano = await crypto.subtle.decrypt({ name: 'AES-CTR', counter: buf.slice(0, 16), length: 64 }, aes, buf.slice(16));
+    const huella = [...new Uint8Array(await crypto.subtle.digest('SHA-256', plano))].map(b => b.toString(16).padStart(2, '0')).join('');
+    if (huella !== info.h[nombre]) {
+      // La página quedó abierta de una publicación anterior: los archivos ya no son los suyos.
+      alert('Hay una versión nueva de la guía. Se va a recargar; después vuelve a descargar.');
+      location.reload(); return;
+    }
     const url = URL.createObjectURL(new Blob([plano]));
     const a = Object.assign(document.createElement('a'), { href: url, download: nombre });
     document.body.append(a); a.click(); a.remove();
