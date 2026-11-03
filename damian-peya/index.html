@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070508">
+  <meta name="description" content="Función completa. Damián recomienda una película como todos los días y, en el medio de la historia, llega su pedido. Propuesta de BIG para PedidosYa con Hablemos de Cine.">
+  <title>Función completa — Hablemos de Cine × PedidosYa · BIG</title>
+  <!--
+    Hablemos de Cine × PedidosYa · «Función completa»
+    Recorrido: cuenta regresiva de película (el cargador) → portada en una sala de cine 3D (el celular y la mochila de PedidosYa;
+    al bajar se van como un swipe) → la idea → el video → así se ve (guion fijado; el seguimiento del pedido llega en
+    «La entrega», la mochila cae al lado del celular y sale la bolsa) → la serie (cuatro afiches) → lo que queda claro y cómo
+    lo hacemos (tarjetas) → Damián → cierre.
+    Bibliotecas locales: Three.js, GSAP 3 + ScrollTrigger, Lenis. Abrir siempre con http:// (ver LEEME).
+  -->
+  <style>
+    .loader{display:none}html.is-loading{overflow:hidden}
+    .is-loading .loader{display:block;position:fixed;inset:0;z-index:200;background:#0b0b0c}
+    .is-loading main,.is-loading .island,.is-loading .hud{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.deckFallback = setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      document.dispatchEvent(new Event('deck:ready'));
+    }, 18000);
+  </script>
+  <link rel="icon" href="assets/img/peya-iso.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/damion.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/graduate.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+
+  <!-- CARGADOR: la cuenta regresiva de una película. Cada número pasa cuando terminó de cargar su parte de verdad -->
+  <div class="loader" id="loader" aria-label="Cargando la presentación">
+    <div class="leader">
+      <div class="leader__frame">
+        <div class="leader__sweep"></div>
+        <svg class="leader__marks" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <circle cx="200" cy="200" r="176" /><circle cx="200" cy="200" r="150" />
+        </svg>
+        <i class="leader__cross leader__cross--h" aria-hidden="true"></i><i class="leader__cross leader__cross--v" aria-hidden="true"></i>
+        <div class="leader__num" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">5</span></div>
+        <p class="leader__line">Hablemos de Cine × PedidosYa · <span id="load-pct">0</span> %</p>
+      </div>
+      <canvas class="leader__fx" aria-hidden="true"></canvas>
+      <i class="leader__holes leader__holes--l" aria-hidden="true"></i><i class="leader__holes leader__holes--r" aria-hidden="true"></i>
+      <i class="leader__flash" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <a class="skip" href="#idea">Saltar a la idea</a>
+
+  <!-- Lienzo 3D fijo: la sala de cine, el celular de la portada y la mochila de PedidosYa -->
+  <div class="stage" aria-hidden="true"><canvas id="stage"></canvas></div>
+  <div class="shade" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="letterbox" aria-hidden="true"><i></i><i></i></div>
+
+  <!-- Índice tipo isla (arriba, como la del iPhone) -->
+  <nav class="island" aria-label="Índice de la presentación">
+    <button class="island__toggle" type="button" aria-expanded="false" aria-controls="island-list">
+      <i class="island__rec" aria-hidden="true"></i><span class="island__current">Función completa</span>
+    </button>
+    <ul class="island__list" id="island-list"></ul>
+  </nav>
+
+  <!-- Seguimiento del pedido: avanza con el scroll y llega en «La entrega» -->
+  <aside class="hud" id="hud" aria-label="Seguimiento de tu pedido">
+    <div class="hud__card">
+      <div class="hud__top">
+        <span class="hud__icon"><img src="assets/img/peya-iso-blanco.svg" alt="" width="48" height="45"></span>
+        <div class="hud__text">
+          <p class="hud__title"><span>Confirmamos tu pedido</span></p>
+          <p class="hud__sub"><span>Función completa · Damián × PedidosYa</span></p>
+        </div>
+        <p class="hud__eta" aria-label="Tiempo estimado"><b class="hud__min">18</b><span class="hud__unit">min</span></p>
+      </div>
+      <div class="hud__track" aria-hidden="true">
+        <i class="hud__seg"><b></b></i><i class="hud__seg"><b></b></i><i class="hud__seg"><b></b></i><i class="hud__seg"><b></b></i>
+        <span class="hud__knob">
+          <svg viewBox="0 0 24 24" class="hud__ico is-on" data-ico="0"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+          <svg viewBox="0 0 24 24" class="hud__ico" data-ico="1"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+          <svg viewBox="0 0 24 24" class="hud__ico" data-ico="2"><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="17.5" cy="16.5" r="2.5"/><path d="M9 16.5h6l-2.5-6H8.5M12.5 10.5h3l2 6M14 7h3"/></svg>
+          <svg viewBox="0 0 24 24" class="hud__ico" data-ico="3"><path d="M4 11.5L12 5l8 6.5"/><path d="M6.5 10v9h11v-9"/><path d="M10.5 19v-5h3v5"/></svg>
+          <svg viewBox="0 0 24 24" class="hud__ico" data-ico="4"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9.2 14.2l2 2 3.8-4"/></svg>
+        </span>
+      </div>
+      <div class="hud__more">
+        <div class="hud__more-inner">
+          <p class="hud__window">Llegada estimada <b class="hud__range">21:40 – 21:50</b></p>
+          <ul class="hud__items">
+            <li><b>1 ×</b> Función completa, la idea</li>
+            <li><b>1 ×</b> Damián, de Hablemos de Cine</li>
+            <li><b>4 ×</b> Película + pedido, la serie</li>
+          </ul>
+          <div class="hud__rate">
+            <p class="hud__rate-q">¿Qué te pareció la función?</p>
+            <div class="hud__stars" role="group" aria-label="Calificar la función">
+              <button type="button" aria-label="1 estrella"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>
+              <button type="button" aria-label="2 estrellas"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>
+              <button type="button" aria-label="3 estrellas"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>
+              <button type="button" aria-label="4 estrellas"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>
+              <button type="button" aria-label="5 estrellas"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hud__confetti" aria-hidden="true"></div>
+  </aside>
+
+  <main>
+
+    <!-- PORTADA -->
+    <section class="cover" id="portada" data-chapter="Función completa">
+      <div class="cover__pin">
+        <header class="cover__brands">
+          <img src="assets/img/big.svg" alt="BIG" width="410" height="466">
+          <span aria-hidden="true">×</span>
+          <img src="assets/img/peya-blanco.svg" alt="PedidosYa" width="200" height="45">
+        </header>
+        <div class="cover__title">
+          <h1><span class="cover__word">Función</span> <span class="script">completa</span></h1>
+        </div>
+        <!-- Sin WebGL: el mismo celular, en plano -->
+        <div class="cover__fallback">
+          <div class="iphone" style="--w:min(300px,60vw)"><div class="iphone__body"><div class="iphone__screen">
+            <video data-src="assets/video/damian-gancho.mp4" poster="assets/video/damian-gancho.webp" muted loop playsinline preload="none"></video>
+          </div><i class="iphone__island"></i></div></div>
+        </div>
+        <p class="cover__cue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>Deslizá para dar play</p>
+      </div>
+    </section>
+
+    <!-- LA IDEA -->
+    <section class="idea" id="idea" data-chapter="La idea">
+      <div class="panel panel--lg idea__panel">
+      <h2 class="idea__text" data-words>Damián recomienda una película como todos los días. <em class="red">En el medio de la historia, llega su pedido.</em></h2>
+      <p class="idea__note reveal">Es un video más de los suyos. PedidosYa entra recién pasada la mitad, cuando la película ya atrapó, y la llegada es el giro.</p>
+      </div>
+    </section>
+
+    <!-- EL VIDEO: la idea en cuatro momentos, en un solo vertical que pasa los clips en el mismo lugar -->
+    <section class="format" id="formato" data-chapter="El video">
+      <div class="format__pin">
+        <div class="panel format__copy">
+          <h2 class="format__title">Una recomendación con un pedido adentro</h2>
+          <ol class="format__steps">
+            <li class="fstep is-on"><span class="tc">0:00</span><b>Arranca como siempre</b><p>Gancho a cámara y la película de la que va a hablar. Ni una palabra de marca.</p></li>
+            <li class="fstep"><span class="tc">0:14</span><b>Cuenta la película</b><p>Los planos de la película, con su voz y sus subtítulos.</p></li>
+            <li class="fstep"><span class="tc">0:34</span><b>Pide en la parte más tensa</b><p>La película le da ganas de comer algo. Pide en PedidosYa, en pocos toques.</p></li>
+            <li class="fstep"><span class="tc">0:53</span><b>Llega en el giro</b><p>Suena el timbre justo antes del final y la entrega es una escena más de la película.</p></li>
+          </ol>
+        </div>
+        <div class="format__phone">
+          <div class="iphone" style="--w:var(--phone-format)"><div class="iphone__body"><div class="iphone__screen">
+            <div class="stories" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+            <video class="fclip is-on" data-src="assets/video/damian-gancho.mp4" poster="assets/video/damian-gancho.webp" muted loop playsinline preload="none"></video>
+            <video class="fclip" data-src="assets/video/peli-sinopsis.mp4" poster="assets/video/peli-sinopsis.webp" muted loop playsinline preload="none"></video>
+            <video class="fclip" data-src="assets/video/damian-dia.mp4" poster="assets/video/damian-dia.webp" muted loop playsinline preload="none"></video>
+            <video class="fclip fclip--heist" data-src="assets/video/peli-rojo.mp4" poster="assets/video/peli-rojo.webp" muted loop playsinline preload="none"></video>
+            <p class="reelcap"><b>hablemosdecinee_</b> La nueva película viral</p>
+          </div><i class="iphone__island"></i></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASÍ SE VE: guion fijado. El pedido llega en «La entrega» -->
+    <section class="script-sec" id="guion" data-chapter="Así se ve">
+      <div class="cine">
+        <div class="panel cine__beats">
+          <h2 class="cine__title">Así se ve</h2>
+          <div class="cine__stack">
+            <article class="beat is-on" data-shot="0"><span class="tc">0:00</span><h3>El gancho</h3><p>A cámara, como siempre. «La nueva película viral, con un final 10 de 10».</p></article>
+            <article class="beat" data-shot="1"><span class="tc">0:09</span><h3>Se presenta</h3><p>Su presentación de siempre. Todavía no hay marca.</p></article>
+            <article class="beat" data-shot="2"><span class="tc">0:14</span><h3>La película</h3><p>Cuenta la historia sobre los planos: el ladrón, el plan, la cómplice, el detective.</p></article>
+            <article class="beat" data-shot="3"><span class="tc">0:34</span><h3>Pide</h3><p>En la parte más tensa corta: «esta parte te pone tan nervioso que necesitás comer algo». Pide en PedidosYa, en pocos toques.</p></article>
+            <article class="beat" data-shot="4"><span class="tc">0:40</span><h3>Sigue la película</h3><p>Vuelve a la historia. El seguimiento del pedido avanza en una esquina.</p></article>
+            <article class="beat" data-shot="5"><span class="tc">0:50</span><h3>El timbre</h3><p>Está por contar el giro y suena el timbre. «Y justo cuando el plan está por salir…»</p></article>
+            <article class="beat beat--arrive" data-shot="6"><span class="tc">0:53</span><h3>La entrega</h3><p>Luz roja, cámara lenta: la bolsa pasa de mano en mano como un botín. Sin voz, con la música de la película.</p></article>
+            <article class="beat" data-shot="7"><span class="tc">1:00</span><h3>Come</h3><p>Abre la bolsa: «Llegó antes que el FBI».</p></article>
+            <article class="beat" data-shot="8"><span class="tc">1:08</span><h3>Los títulos</h3><p>La película, dónde verla y lo que pidió. Así termina, como termina siempre.</p></article>
+          </div>
+        </div>
+
+        <div class="cine__phone">
+          <div class="iphone" style="--w:var(--phone-cine)"><div class="iphone__body"><div class="iphone__screen">
+            <div class="shot is-on" data-shot="0"><video data-src="assets/video/damian-gancho.mp4" poster="assets/video/damian-gancho.webp" muted loop playsinline preload="none"></video></div>
+            <div class="shot" data-shot="1"><video data-src="assets/video/damian-dia.mp4" poster="assets/video/damian-dia.webp" muted loop playsinline preload="none"></video></div>
+            <div class="shot" data-shot="2"><video data-src="assets/video/peli-sinopsis.mp4" poster="assets/video/peli-sinopsis.webp" muted loop playsinline preload="none"></video></div>
+
+            <!-- Pide: la app de PedidosYa en pantalla -->
+            <div class="shot shot--app" data-shot="3">
+              <div class="app">
+                <div class="app__bar"><img src="assets/img/peya-blanco.svg" alt="" width="200" height="45"></div>
+                <div class="app__step app__step--search">
+                  <p class="app__ask">¿Qué pedís para la peli?</p>
+                  <p class="app__field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><span class="app__typed" data-text="Hamburguesa doble"></span><i class="app__caret"></i></p>
+                  <div class="app__result">
+                    <div class="burger" aria-hidden="true"><i class="b-top"></i><i class="b-lettuce"></i><i class="b-cheese"></i><i class="b-patty"></i><i class="b-bottom"></i></div>
+                    <div><b>Hamburguesa doble con queso</b><span>25 – 35 min · Envío a tu casa</span></div>
+                  </div>
+                  <p class="app__cta"><span>Hacer pedido</span></p>
+                </div>
+                <div class="app__step app__step--done">
+                  <span class="app__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span>
+                  <b>¡Pedido confirmado!</b>
+                  <span>Ya lo están preparando</span>
+                </div>
+              </div>
+              <i class="tap" aria-hidden="true"></i>
+            </div>
+
+            <!-- Sigue: la película con el seguimiento en la esquina -->
+            <div class="shot" data-shot="4">
+              <video data-src="assets/video/peli-reloj.mp4" poster="assets/video/peli-reloj.webp" muted loop playsinline preload="none"></video>
+              <div class="live" aria-hidden="true">
+                <img src="assets/img/peya-iso.svg" alt="" width="48" height="45">
+                <div><b>Juan Pablo está en camino</b><i class="live__bar"><b></b></i></div>
+                <span class="live__min">4 min</span>
+              </div>
+            </div>
+
+            <!-- Timbre: notificación y temblor -->
+            <div class="shot shot--ring" data-shot="5">
+              <video data-src="assets/video/damian-mira.mp4" poster="assets/video/damian-mira.webp" muted loop playsinline preload="none"></video>
+              <div class="notif" aria-hidden="true">
+                <img src="assets/img/peya-iso-blanco.svg" alt="" width="48" height="45">
+                <div><b>PedidosYa</b><span>Tu pedido está en la puerta</span></div>
+              </div>
+            </div>
+
+            <!-- La entrega: luz roja, cámara lenta -->
+            <div class="shot shot--heist" data-shot="6">
+              <video data-src="assets/video/peli-rojo.mp4" poster="assets/video/peli-rojo.webp" muted loop playsinline preload="none"></video>
+              <p class="slowmo" aria-hidden="true">Cámara lenta</p>
+            </div>
+
+            <!-- Come -->
+            <div class="shot shot--eat" data-shot="7">
+              <img src="assets/img/damian-come.webp" alt="" width="800" height="1200" loading="lazy">
+              <p class="subtitle">Llegó <span>antes</span> que el FBI</p>
+            </div>
+
+            <!-- Los títulos -->
+            <div class="shot shot--titles" data-shot="8">
+              <div class="titles">
+                <p class="titles__film">Caminos del crimen</p>
+                <p class="titles__where">En Prime Video</p>
+                <p class="titles__order"><img src="assets/img/peya-blanco.svg" alt="" width="200" height="45"><span>Hamburguesa doble con queso</span></p>
+              </div>
+            </div>
+
+            <i class="reelbar" aria-hidden="true"><b></b></i>
+          </div><i class="iphone__island"></i></div></div>
+        </div>
+
+        <div class="panel panel--sm cine__clock" aria-hidden="true"><span class="cine__tc">0:00</span><span class="cine__total">/ 1:15</span></div>
+      </div>
+    </section>
+
+    <!-- LA SERIE: cuatro afiches -->
+    <section class="series" id="serie" data-chapter="La serie">
+      <div class="series__pin">
+        <div class="series__head">
+          <div class="panel">
+            <h2>Película <span class="red">+</span> pedido</h2>
+            <p>Una serie de videos. Cambian la película, el pedido y la forma en que llega.</p>
+          </div>
+        </div>
+        <div class="series__track">
+          <article class="poster poster--robos">
+            <p class="poster__star">Damián</p>
+            <img class="poster__img" src="assets/img/damian-05-foto.webp" alt="Damián con los brazos cruzados" width="800" height="1200" loading="lazy">
+            <h3 class="poster__title">Robos</h3>
+            <p class="poster__order">Pedido: hamburguesas</p>
+            <p class="poster__line">Llega como un botín: luz roja y cámara lenta.</p>
+            <p class="poster__billing">Hablemos de Cine presenta una producción de BIG · Damián en Robos · Pedido hamburguesas · Música de la película · Muy pronto en su cuenta</p>
+            <img class="poster__logo" src="assets/img/peya-blanco.svg" alt="PedidosYa" width="200" height="45">
+          </article>
+          <article class="poster poster--terror">
+            <p class="poster__star">Damián</p>
+            <img class="poster__img" src="assets/img/damian-01-foto.webp" alt="Damián parado de costado, mirando a cámara" width="800" height="1200" loading="lazy">
+            <h3 class="poster__title">Terror</h3>
+            <p class="poster__order">Pedido: pizza para compartir</p>
+            <p class="poster__line">El timbre suena en el pasillo a oscuras. Nadie quiere ir a abrir.</p>
+            <p class="poster__billing">Hablemos de Cine presenta una producción de BIG · Damián en Terror · Pedido pizza para compartir · No la mires solo · Muy pronto en su cuenta</p>
+            <img class="poster__logo" src="assets/img/peya-rojo.svg" alt="PedidosYa" width="200" height="45">
+          </article>
+          <article class="poster poster--romance">
+            <p class="poster__star">Damián</p>
+            <img class="poster__img" src="assets/img/damian-08-foto.webp" alt="Damián sentado en el piso, con la mano detrás de la cabeza" width="800" height="1200" loading="lazy">
+            <h3 class="poster__title">Romance</h3>
+            <p class="poster__order">Pedido: helado</p>
+            <p class="poster__line">Música de comedia romántica. Amor a primera vista con la bolsa.</p>
+            <p class="poster__billing">Hablemos de Cine presenta una producción de BIG · Damián en Romance · Pedido helado · Para ver de a dos · Muy pronto en su cuenta</p>
+            <img class="poster__logo" src="assets/img/peya-rojo.svg" alt="PedidosYa" width="200" height="45">
+          </article>
+          <article class="poster poster--accion">
+            <p class="poster__star">Damián</p>
+            <img class="poster__img" src="assets/img/damian-04-foto.webp" alt="Damián con las dos manos arriba" width="800" height="1200" loading="lazy">
+            <h3 class="poster__title">Acción</h3>
+            <p class="poster__order">Pedido: empanadas</p>
+            <p class="poster__line">Golpe de cámara y entrada en cámara lenta.</p>
+            <p class="poster__billing">Hablemos de Cine presenta una producción de BIG · Damián en Acción · Pedido empanadas · Sin dobles de riesgo · Muy pronto en su cuenta</p>
+            <img class="poster__logo" src="assets/img/peya-blanco.svg" alt="PedidosYa" width="200" height="45">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- LO QUE TIENE QUE QUEDAR CLARO: una pantalla, cuatro tarjetas -->
+    <section class="keys" id="claves" data-chapter="Lo que queda claro">
+      <h2 class="keys__head reveal">Lo que tiene que quedar claro</h2>
+      <div class="cards cards--4">
+        <article class="card reveal"><h3>Fácil</h3><p>La app en pantalla, en pocos toques y sin cortes.</p>
+          <div class="mini mini--tap" aria-hidden="true"><span class="mini__btn">Hacer pedido</span><i class="mini__ring"></i></div></article>
+        <article class="card card--red reveal"><h3>Rápido</h3><p>Lo pide a mitad del video y llega antes de que termine de contar la película. El seguimiento en pantalla muestra el tiempo real.</p>
+          <div class="mini mini--track" aria-hidden="true"><i class="mini__bar"><b></b></i><span>Llegó</span></div></article>
+        <article class="card reveal"><h3>Natural</h3><p>Si sacás a PedidosYa, sigue siendo un video suyo de siempre.</p>
+          <div class="mini mini--reel" aria-hidden="true"><i class="mini__seg"></i><i class="mini__seg mini__seg--brand"></i><span>0:00 su formato · 0:34 PedidosYa</span></div></article>
+        <article class="card reveal"><h3>Plan completo</h3><p>Película y comida, una sola cosa. El último plano es él comiendo y dándole play.</p>
+          <div class="mini mini--combo" aria-hidden="true"><span>Película</span><b>+</b><span>Pedido</span></div></article>
+      </div>
+    </section>
+
+    <!-- CÓMO LO HACEMOS: una pantalla, cinco tarjetas -->
+    <section class="make" id="produccion" data-chapter="Cómo lo hacemos">
+      <h2 class="make__head reveal">Cómo lo hacemos</h2>
+      <div class="cards cards--5">
+        <article class="card reveal"><h3>La película</h3><p>La elige Damián, con su criterio de siempre.</p><p class="card__fact">Su criterio</p></article>
+        <article class="card reveal"><h3>El rodaje</h3><p>Una jornada por video, en su set.</p><p class="card__fact">1 jornada por video</p></article>
+        <article class="card reveal"><h3>La entrega</h3><p>Se filma con luz y cámara lenta. Equipo mínimo, no solo el celular.</p><p class="card__fact">Luz + cámara lenta</p></article>
+        <article class="card reveal"><h3>La publicación</h3><p>En su cuenta, como uno más de sus videos.</p><p class="card__fact">En su cuenta</p></article>
+        <article class="card card--red reveal"><h3>La inversión</h3><p>A confirmar: honorarios, producción, derechos de uso y pauta.</p><p class="card__fact">A confirmar</p></article>
+      </div>
+    </section>
+
+    <!-- DAMIÁN: quién es y sus números, al final -->
+    <section class="damian" id="damian" data-chapter="Damián">
+      <figure class="damian__card">
+        <div class="damian__glow" aria-hidden="true"></div>
+        <img src="assets/img/damian-07-foto.webp" alt="Damián sentado en un banco, con la mano en el mentón" width="800" height="1200" loading="lazy">
+      </figure>
+      <div class="panel damian__body">
+        <h2 class="damian__name reveal">Dami Nakache</h2>
+        <p class="damian__show reveal"><span class="script">Hablemos de Cine</span></p>
+        <div class="stats">
+          <p class="stat reveal"><b class="num" data-count="782">0</b><span class="stat__unit">mil</span><span class="stat__label">seguidores en Instagram</span></p>
+          <p class="stat reveal"><b class="num" data-count="5536">0</b><span class="stat__label">publicaciones</span></p>
+        </div>
+        <ul class="points">
+          <li class="reveal">Periodista. Recomienda películas y series en sus reels.</li>
+          <li class="reveal">Lo miran cuando están eligiendo el plan de esta noche: qué ver y, en el mismo momento, qué comer.</li>
+          <li class="reveal">Habla de géneros con mucha emoción. Suspenso, terror, robos, romance.</li>
+        </ul>
+        <p class="source reveal">Fuente: su perfil de Instagram, <a href="https://www.instagram.com/hablemosdecinee_/" target="_blank" rel="noopener">@hablemosdecinee_</a>, tal como se ve en uno de sus reels.</p>
+      </div>
+    </section>
+
+    <!-- CIERRE -->
+    <section class="end" id="cierre" data-chapter="Cierre">
+      <div class="end__pin">
+        <div class="end__final">
+          <h2><span>Función</span> <span class="script">completa</span></h2>
+          <div class="panel end__panel">
+          <p class="end__next">Próximo paso: elegir la primera película y la fecha de rodaje.</p>
+          <div class="end__brands">
+            <img src="assets/img/big.svg" alt="BIG" width="410" height="466">
+            <span aria-hidden="true">×</span>
+            <img src="assets/img/peya-blanco.svg" alt="PedidosYa" width="200" height="45">
+          </div>
+          <p class="end__credit">En la pantalla del cine: «Tears of Steel», Blender Foundation, licencia CC BY 3.0.</p>
+          </div>
+        </div>
+        <div class="end__phone">
+          <div class="iphone" style="--w:var(--phone-end)"><div class="iphone__body"><div class="iphone__screen">
+            <img src="assets/img/damian-10-foto.webp" alt="Damián saludando" width="800" height="1200" loading="lazy">
+            <p class="subtitle subtitle--end">Nos vemos en la <span>función</span></p>
+          </div><i class="iphone__island"></i></div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
