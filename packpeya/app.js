@@ -220,7 +220,9 @@ addEventListener('pointermove', e => {
 gsap.ticker.add(() => { pintarPerfil(); scene?.tick(); moto(scene?.app.velocidad ?? 0); botonSonido.classList.toggle('is-bloqueado', sonidoBloqueado()); });
 
 // ── Carga real: fuentes, fotos y escena, contada como el seguimiento de un pedido. Cuando llega, se levanta el rojo
-const loader = $('.loader'), etapaCarga = $('.carga__etapa'), barras = [...document.querySelectorAll('.carga__barra b')];
+const loader = $('.loader'), etapaCarga = $('.carga__etapa'), barraCarga = $('.carga__barra'), barras = [...barraCarga.querySelectorAll('b')], avisoSonido = $('.carga__sonido');
+// Tocar en cualquier parte del cargador destraba el audio: así la apertura se escucha entera
+loader.addEventListener('click', () => sonar('prendido'), { once: true });
 const tareas = [
   ...['800 40px Poppins', '700 40px Poppins', '500 16px Inter'].map(f => document.fonts.load(f)),
   ...PERFILES.map(p => new Promise(ok => { const i = new Image(); i.onload = i.onerror = ok; i.src = foto(p); })),
@@ -230,10 +232,12 @@ let hechas = 0, vista = 0;
 tareas.forEach(t => Promise.resolve(t).catch(() => {}).then(() => { hechas++; }));
 const decir = texto => { if (etapaCarga.textContent === texto) return; sonar('etapa', texto === 'Ya llegó' ? 3 : 1); etapaCarga.textContent = texto; etapaCarga.classList.remove('is-nueva'); void etapaCarga.offsetWidth; etapaCarga.classList.add('is-nueva'); };
 function cargar(_, dt) {
-  // avanza con la carga real, pero a un ritmo que deja leer cada etapa
-  vista = Math.min(hechas / tareas.length, vista + dt / 2300);
+  // avanza con la carga real, pero a un ritmo que deja leer cada etapa y, si hace falta, tocar el aviso de sonido
+  const bloqueado = sonidoBloqueado();
+  vista = Math.min(hechas / tareas.length, vista + dt / (bloqueado ? 3800 : 2300));
+  if (!bloqueado && !avisoSonido.classList.contains('is-activo')) { avisoSonido.classList.add('is-activo'); avisoSonido.lastElementChild.textContent = 'Sonido activado'; }
   barras.forEach((b, i) => { b.style.width = clamp(vista * 3 - i) * 100 + '%'; });
-  loader.setAttribute('aria-valuenow', Math.round(vista * 100));
+  barraCarga.setAttribute('aria-valuenow', Math.round(vista * 100));
   decir(vista >= 1 ? 'Ya llegó' : vista > .45 ? 'En camino' : 'Armando tu pedido');
   if (vista < 1) return;
   gsap.ticker.remove(cargar);

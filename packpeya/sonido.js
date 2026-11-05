@@ -10,9 +10,10 @@
 //
 // Las notas confirmado, titulo y logro comparten el mismo motivo (MOTIVO): es la firma sonora del deck.
 // Volúmenes: cada efecto tiene el suyo en VOL. medir() los mide sin que suene nada.
-// El navegador no deja sonar nada hasta el primer toque o tecla: mientras tanto, el botón de sonido late (sonidoBloqueado).
+// Viene encendido en cada visita. El navegador no deja sonar nada hasta el primer toque o tecla: por eso el cargador
+// ofrece activarlo y, mientras siga bloqueado (sonidoBloqueado), el botón del riel late.
 // Nunca se acumulan sonidos para después, y con la pestaña oculta no suena nada.
-const SALIDA = 1.05, MAX_VOCES = 10, RECUERDA = 'ya-llego-sonido';
+const SALIDA = 1.05, MAX_VOCES = 10;
 const MOTIVO = [783.99, 1046.5, 1318.51]; // sol, do, mi
 const PICO = .26;
 
@@ -300,11 +301,9 @@ export function sonidoPrendido() { return activo; }
 export const sonidoBloqueado = () => activo && ctx?.state !== 'running';
 export function alternarSonido() {
   activo = !activo;
-  try { localStorage.setItem(RECUERDA, activo ? 'on' : 'off'); } catch { /* sin almacenamiento: vale para esta visita */ }
   if (activo) { despertar(); sonar('prendido'); } else moto(0);
   return activo;
 }
-try { activo = localStorage.getItem(RECUERDA) !== 'off'; } catch { /* prendido */ }
 // el navegador deja arrancar el audio recién con un gesto; en cada gesto se lo despierta si quedó dormido
 for (const ev of ['pointerdown', 'keydown', 'touchend', 'click']) addEventListener(ev, despertar, { capture: true, passive: true });
 document.addEventListener('visibilitychange', () => { if (document.hidden) moto(0); });
