@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e9e5df">
+  <title>Ya llegó — PedidosYa × BIG</title>
+  <link rel="icon" href="assets/img/peya-iso.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/poppins-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/poppins-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body class="is-loading">
+  <div class="loader" role="progressbar" aria-label="Cargando" aria-valuemin="0" aria-valuemax="100"><div class="carga"><p class="carga__etapa">Armando tu pedido</p><div class="carga__barra"><i><b></b></i><i><b></b></i><i><b></b></i></div></div></div>
+
+  <!-- Una sola pantalla: la ciudad en su ventana y, encima, la app -->
+  <div class="pantalla">
+    <div class="ventana"></div>
+    <canvas id="ciudad" aria-hidden="true"></canvas>
+    <div class="canto"></div>
+
+    <div class="marca"><img src="assets/img/peya-rojo.svg" alt="PedidosYa" width="200" height="45"><i aria-hidden="true">×</i><img src="assets/img/big-rojo.svg" alt="BIG" width="410" height="466"></div>
+    <h1 class="titulo">Ya llegó</h1>
+    <button class="grab" type="button" aria-label="Girar el objeto"></button>
+    <div class="aviso" aria-hidden="true"><img src="assets/img/peya-iso.svg" alt="" width="48" height="45"><div><b>Confirmado</b><i><b></b></i></div></div>
+    <aside class="app" aria-label="Armá tu pedido"></aside>
+    <div class="mando" role="group" aria-label="Mapa">
+      <button type="button" data-mapa="mas" aria-label="Acercar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button type="button" data-mapa="menos" aria-label="Alejar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <button type="button" data-mapa="centro" aria-label="Centrar el mapa"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/></svg></button>
+    </div>
+    <nav class="riel" aria-label="Secciones">
+      <svg>
+        <defs><filter id="brillo" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"><feMorphology in="SourceAlpha" operator="erode" radius=".9" result="adentro"/><feComposite in="SourceAlpha" in2="adentro" operator="out" result="aro"/><feFlood class="brillo"/><feComposite in2="aro" operator="in" result="luz"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="luz"/></feMerge></filter></defs>
+        <g class="vidrios" filter="url(#brillo)"></g><g class="trazos"></g><g class="textos"></g>
+      </svg>
+      <button class="sonido" type="button" aria-pressed="true" aria-label="Sonido"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="sonido__parlante" d="M4 9.5v5h3.6L12.5 19V5L7.6 9.5z"/><path class="sonido__ondas" d="M15.8 9a4.2 4.2 0 0 1 0 6M18.3 6.6a7.6 7.6 0 0 1 0 10.8"/><path class="sonido__mudo" d="M16 9.6l4.6 4.8M20.6 9.6L16 14.4"/></svg></button>
+      <button class="perilla" type="button" role="switch" aria-checked="false" aria-label="Modo oscuro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v3M12 17v3M4 12h3M17 12h3M6.3 6.3l2.2 2.2M15.5 15.5l2.2 2.2M6.3 17.7l2.2-2.2M15.5 8.5l2.2-2.2"/></svg></button>
+    </nav>
+  </div>
+</body>
+</html>
