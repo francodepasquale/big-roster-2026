@@ -1,20 +1,34 @@
-// El sonido del deck: todo sintetizado con Web Audio, nada grabado ni copiado. Tiene el estilo de Cerebro y del
-// portfolio (gel y vidrio, ataques redondeados, colas cortas) más los efectos de un delivery.
+// El sonido del deck: todo sintetizado con Web Audio, nada grabado ni copiado. La interfaz y los avisos usan los 24 sonidos
+// de Bencho (bencho.js); lo propio del delivery y de la apertura, que Bencho no tiene, se arma acá con el estilo de
+// Cerebro y del portfolio. Cada acción lleva siempre el mismo sonido.
 //
-// Interfaz   tic (apuntar, agarrar) · pip (botones) · suma y resta (el pop sube con cada video) · gota (zoom) ·
-//            whoosh (se abre una historia) · thup (se cierra) · slide (cambia el panel) · key (buscar)
-// Delivery   confirmado (el aviso de la app) · etapa (cada paso del seguimiento) · moto (motor continuo, según la
-//            velocidad) · bocina (llega) · timbre · cierre (la mochila) · tapa · golpe · bolsa (papel) · enviar
-// Apertura   etapa (el cargador) · telon · caida · golpe · cierre · sube · tapa · vuelo · titulo · arranque · pin (uno por creador)
-// Otros      dia y noche (la perilla) · logro (el pedido llegó) · prendido
+// Efecto       Cuándo                                Sale de
+// tic          apuntar un pin, agarrar               Bencho buzz
+// key          escribir en el buscador               Bencho sigh
+// pip          botones                               Bencho tick
+// suma, resta  videos (suma sube con cada uno)       Bencho plop y bump
+// gota         zoom                                  Bencho float y drape
+// whoosh       se abre una historia                  Bencho glide
+// slide        cambia el panel                       Bencho whisk
+// thup         se cierra                             Bencho step
+// centro       centrar el mapa                       Bencho lull
+// suelta       soltar el mapa en movimiento          Bencho drift
+// prendido, apagado  el botón de sonido              Bencho boot y hush
+// confirmado   pedido hecho                          Bencho paid
+// etapa        cada paso del seguimiento             Bencho perk, y beacon en el último
+// titulo, logro  «Ya llegó», en la apertura y al final  Bencho landed con destellos
+// pin          aparecen los pines, en escala         Bencho wisp
+// enviar       escribir a BIG                        Bencho hail
+// dia, noche   la perilla                            Bencho latch, dos notas y un pájaro o un grillo
+// Propios: moto (voz continua según la velocidad), arranque, bocina, timbre, cierre, tapa, golpe, bolsa, telon, caida, sube, vuelo
 //
-// Las notas confirmado, titulo y logro comparten el mismo motivo (MOTIVO): es la firma sonora del deck.
 // Volúmenes: cada efecto tiene el suyo en VOL. medir() los mide sin que suene nada.
 // Viene encendido en cada visita. El navegador no deja sonar nada hasta el primer toque o tecla: por eso el cargador
 // ofrece activarlo y, mientras siga bloqueado (sonidoBloqueado), el botón del riel late.
 // Nunca se acumulan sonidos para después, y con la pestaña oculta no suena nada.
+import { SOUNDS as BENCHO } from './bencho.js';
+
 const SALIDA = 1.05, MAX_VOCES = 10;
-const MOTIVO = [783.99, 1046.5, 1318.51]; // sol, do, mi
 const PICO = .26;
 
 let ctx = null, master = null, bus = null, ruido = null, activo = true, gesto = !!navigator.userActivation?.hasBeenActive;
@@ -59,12 +73,35 @@ function noise(t, { f = 2000, to, q = 1, type = 'bandpass', a = .003, d = .05, g
   s.onended = () => v.disconnect();
   s.start(t, Math.random() * .4); s.stop(t + d + .03);
 }
-// Una tecla de marimba: la base, un armónico que se apaga enseguida y el golpe de la baqueta
-const marimba = (t, f, d = .3, g = .13, pan = 0) => {
-  osc(t, { f, a: .002, d, g, pan });
-  osc(t, { f: f * 3.93, a: .001, d: d * .22, g: g * .24, pan });
-  noise(t, { f: f * 2.4, q: 2, a: .001, d: .012, g: g * .2 });
-};
+// Toca un sonido de Bencho en este motor: bend lo sube o lo baja (1,12 son unos dos semitonos)
+function notas(nombre, t0, bend = 1) {
+  for (const n of BENCHO[nombre]) {
+    const a = t0 + (n.at ?? 0) / 1000, b = a + n.ms / 1000, c = n.glide ? a + n.glide / 1000 : b, v = ctx.createGain();
+    let fuente, cola;
+    if (n.noise) {
+      if (!ruido) noise(a, { d: .01, g: .0002 }); // deja listo el ruido
+      fuente = ctx.createBufferSource(); fuente.buffer = ruido; fuente.loop = true;
+      cola = ctx.createBiquadFilter(); cola.type = n.noise;
+      cola.frequency.setValueAtTime(n.hz * bend, a);
+      if (n.q !== undefined) cola.Q.value = n.q;
+      fuente.connect(cola);
+    } else {
+      fuente = cola = ctx.createOscillator();
+      fuente.type = n.wave ?? 'sine';
+      fuente.frequency.setValueAtTime(n.hz * bend, a);
+      if (n.to) fuente.frequency.exponentialRampToValueAtTime(n.to * bend, c);
+    }
+    if (n.cut) { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = n.cut; cola.connect(f); cola = f; }
+    const ataque = Math.min((n.atk ?? 4) / 1000, n.ms / 1000 * .6);
+    v.gain.setValueAtTime(.0001, a);
+    v.gain.exponentialRampToValueAtTime(n.gain ?? .05, a + ataque);
+    v.gain.exponentialRampToValueAtTime(.0001, b);
+    cola.connect(v); salida(v);
+    fuente.onended = () => v.disconnect();
+    fuente.start(a); fuente.stop(b + .02);
+  }
+  return Math.max(...BENCHO[nombre].map(n => (n.at ?? 0) + n.ms)) / 1000;
+}
 // Una barra de timbre: parciales inarmónicos, como una campanilla de metal
 const barra = (t, f, d, g, pan = 0) => {
   osc(t, { f, a: .002, d, g, pan });
@@ -79,35 +116,39 @@ const destello = (t, notas, paso = .06, g = .05) => {
 
 /* ── los efectos: agendan sus voces desde t, con j = una leve variación de afinación, y devuelven cuánto duran ── */
 const PENTA = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66];
-const ESCALA = [659.25, 783.99, 987.77, 1174.66];
+// «Ya llegó» suena igual en la apertura y al final
+const yaLlego = t => { const d = notas('landed', t); destello(t + .24, [2093, 2637, 3136], .05, .03); return d; };
 export const RECETAS = {
   // interfaz
-  tic: (t, j) => { osc(t, { f: 1750 * j, to: 1300 * j, glide: .02, type: 'triangle', a: .002, d: .03, g: .045 }); noise(t, { f: 5000 * j, q: 2, a: .002, d: .018, g: .02 }); return .04; },
-  key: (t, j) => { noise(t, { f: 3800 * j, q: 3, a: .002, d: .016, g: .02 }); osc(t, { f: 900 * j, a: .002, d: .02, g: .01 }); return .03; },
-  pip: (t, j) => { osc(t, { f: 1480 * j, to: 1760 * j, glide: .03, d: .07, g: .07 }); osc(t, { f: 1480 * 2.76 * j, d: .035, g: .012 }); return .08; },
-  suma: (t, j, n = 1) => { const k = 2 ** (Math.min(n, 5) * 2 / 12); osc(t, { f: 420 * k * j, to: 980 * k * j, glide: .035, a: .002, d: .08, g: .13 }); noise(t, { f: 2000, q: 1.2, a: .002, d: .012, g: .03 }); return .09; },
-  resta: (t, j) => { osc(t, { f: 760 * j, to: 340 * j, glide: .05, a: .002, d: .09, g: .11 }); noise(t, { f: 1400, q: 1.2, a: .002, d: .012, g: .025 }); return .1; },
-  gota: (t, j, sube = true) => { osc(t, { f: (sube ? 780 : 1500) * j, to: (sube ? 1500 : 780) * j, glide: .045, a: .004, d: .1, g: .1 }); return .11; },
-  whoosh: (t, j) => { noise(t, { f: 500, to: 2600, q: .9, a: .05, d: .22, g: .07 }); osc(t + .05, { f: 1568 * j, d: .14, g: .035 }); osc(t + .05, { f: 1568 * 2.76 * j, d: .08, g: .01 }); return .24; },
-  slide: (t, j) => { noise(t, { f: 2400, to: 700, q: 1.1, a: .02, d: .15, g: .055 }); osc(t, { f: 560 * j, to: 400 * j, d: .11, g: .035 }); return .16; },
-  thup: (t, j) => { osc(t, { f: 240 * j, to: 110 * j, glide: .06, a: .003, d: .1, g: .12 }); noise(t, { f: 420, type: 'lowpass', q: .5, d: .05, g: .05 }); return .11; },
-  prendido: (t, j) => { osc(t, { f: 420 * j, to: 900 * j, glide: .07, a: .01, d: .14, g: .12 }); osc(t, { f: 840 * j, to: 1800 * j, glide: .07, a: .01, d: .1, g: .03 }); return .16; },
+  tic: (t, j) => notas('buzz', t, j),
+  key: (t, j) => notas('sigh', t, j),
+  pip: (t, j) => notas('tick', t, j),
+  suma: (t, j, n = 1) => notas('plop', t, 2 ** (Math.min(n, 5) * 2 / 12) * j),
+  resta: (t, j) => notas('bump', t, j),
+  gota: (t, j, sube = true) => (sube ? notas('float', t, 1.12 * j) : notas('drape', t, j)),
+  whoosh: (t, j) => notas('glide', t, j),
+  slide: (t, j) => notas('whisk', t, j),
+  thup: (t, j) => notas('step', t, j),
+  centro: (t, j) => notas('lull', t, j),
+  suelta: (t, j) => notas('drift', t, j),
+  prendido: t => notas('boot', t),
+  apagado: t => notas('hush', t),
   // la perilla: un clic doble, dos notas y, de fondo, un grillo o un pájaro
   noche: (t, j) => {
-    noise(t, { f: 3000, q: 1.5, a: .002, d: .012, g: .06 }); osc(t, { f: 1300 * j, type: 'triangle', a: .002, d: .025, g: .05 });
+    notas('latch', t, j);
     osc(t + .05, { f: 659.25, type: 'triangle', a: .01, d: .32, g: .08 }); osc(t + .17, { f: 493.88, type: 'triangle', a: .01, d: .5, g: .08 });
     [.34, .41, .48, .72, .79].forEach(s => osc(t + s, { f: 4300, a: .006, d: .05, g: .016, pan: .4 }));
     return .9;
   },
   dia: (t, j) => {
-    noise(t, { f: 3000, q: 1.5, a: .002, d: .012, g: .06 }); osc(t, { f: 950 * j, type: 'triangle', a: .002, d: .025, g: .05 });
+    notas('latch', t, j);
     osc(t + .05, { f: 493.88, type: 'triangle', a: .01, d: .28, g: .08 }); osc(t + .17, { f: 659.25, type: 'triangle', a: .01, d: .5, g: .08 });
     [[.34, 2700, 3500], [.46, 3000, 3900], [.68, 2600, 3300]].forEach(([s, f, to]) => osc(t + s, { f, to, glide: .05, a: .006, d: .08, g: .02, pan: -.4 }));
     return .85;
   },
   // delivery
-  confirmado: t => { MOTIVO.forEach((f, i) => marimba(t + i * .085, f, i === 2 ? .55 : .24, .13, (i - 1) * .14)); return .75; },
-  etapa: (t, j, i = 0) => { marimba(t, ESCALA[i] ?? ESCALA[0], .22, .11); return .24; },
+  confirmado: t => notas('paid', t),
+  etapa: (t, j, i = 0) => (i >= 3 ? notas('beacon', t) : notas('perk', t, 2 ** (i * 3 / 12))),
   bocina: t => {
     [[0, .1], [.16, .15]].forEach(([s, d]) => [440, 554.37].forEach(f => osc(t + s, { f, type: 'square', a: .006, d, g: .06, lp: 1700 })));
     return .34;
@@ -143,12 +184,7 @@ export const RECETAS = {
     for (let i = 0; i < 16; i++) noise(t + Math.random() * .36, { f: (2200 + Math.random() * 5000) * j, q: 2 + Math.random() * 3, a: .001, d: .012 + Math.random() * .03, g: .04 + Math.random() * .08, pan: Math.random() * .5 - .25 });
     return .44;
   },
-  enviar: (t, j) => {
-    osc(t, { f: 1600 * j, to: 540 * j, glide: .03, a: .003, d: .08, g: .13 });
-    noise(t, { f: 1900, q: 7, a: .002, d: .04, g: .05 });
-    osc(t + .09, { f: 1318.5 * j, d: .14, g: .05 }); osc(t + .14, { f: 1975.5 * j, d: .22, g: .04 });
-    return .38;
-  },
+  enviar: t => notas('hail', t),
   // la apertura
   telon: (t, j) => { noise(t, { f: 300, to: 3000, q: .9, a: .28, d: .7, g: .07 }); osc(t + .04, { f: 330 * j, to: 990 * j, glide: .3, a: .08, d: .4, g: .03 }); return .72; },
   // cae girando: un silbido que baja y un soplido por cada media vuelta. Dura hasta el golpe
@@ -172,26 +208,18 @@ export const RECETAS = {
     [.42, .62, .84, 1.1].forEach((s, i) => noise(t + s, { f: 800, to: 2100, q: 1.1, a: .05, d: .16 + i * .03, g: .036, pan: i % 2 ? .3 : -.3 })); // la isla girando
     return 1.45;
   },
-  titulo: t => {
-    MOTIVO.forEach((f, i) => marimba(t + i * .1, f, i === 2 ? .8 : .3, .14, (i - 1) * .16));
-    [261.63, 392, 523.25].forEach(f => osc(t + .2, { f, type: 'triangle', a: .03, d: 1, g: .05 }));
-    destello(t + .24, [2093, 2637, 3136], .05, .03);
-    return 1.25;
-  },
-  pin: (t, j, i = 0) => { const f = PENTA[i % PENTA.length] * j; osc(t, { f, to: f * 1.5, glide: .05, d: .13, g: .085 }); osc(t + .02, { f: f * 3, d: .1, g: .018 }); noise(t, { f: 4500, type: 'highpass', q: .8, d: .04, g: .01 }); return .15; },
-  logro: t => {
-    [...MOTIVO, 1567.98].forEach((f, i) => marimba(t + i * .09, f, i === 3 ? .9 : .28, .13, (i - 1.5) * .12));
-    destello(t + .3, [2093, 2637, 3136, 4186], .04, .034);
-    return 1.3;
-  },
+  titulo: yaLlego,
+  pin: (t, j, i = 0) => notas('wisp', t, PENTA[i % PENTA.length] / PENTA[0] * j),
+  logro: yaLlego,
 };
-// Medidos con medir(): cada familia queda pareja. Interfaz cerca de −43 dB, delivery de −38 a −30, apertura de −40 a −29
+// Medidos con medir(), con la interfaz cerca de −37 dB y el delivery de −33 a −26. Bencho va un poco más arriba porque es
+// grave y los parlantes de una notebook lo apagan
 const VOL = {
-  tic: 2.2, key: 3.2, pip: 1.57, suma: 1.25, resta: 1.1, gota: 1.1, whoosh: 2.6, slide: 2.5, thup: 1.2,
-  confirmado: 1.25, etapa: 1.45, bocina: 1.7, cierre: 5.2, bolsa: 4.7, enviar: 1.35,
-  telon: 1.6, caida: 1.7, sube: 1.1, titulo: 1.2, pin: 1.25, logro: 1.2,
+  tic: 2.5, key: .84, pip: 1.48, suma: 3, resta: 3.76, gota: 1.35, whoosh: 1.76, slide: 1.9, thup: 1.93, centro: 1.84, suelta: 1.62,
+  prendido: 1.6, apagado: 3.6, confirmado: 3.3, etapa: 1.8, bocina: 1.7, cierre: 5.2, bolsa: 4.7, enviar: 1.8,
+  telon: 1.6, caida: 1.7, sube: 1.1, titulo: 3.1, logro: 3.1, pin: 4.1,
 };
-const VARIA = { tic: .14, key: .2, bolsa: .1 };
+const VARIA = { key: .12, bolsa: .1 };
 
 /* ── el motor ── */
 function montar(c) {
@@ -300,6 +328,7 @@ RECETAS.viaje = t => {
 export function sonidoPrendido() { return activo; }
 export const sonidoBloqueado = () => activo && ctx?.state !== 'running';
 export function alternarSonido() {
+  if (activo) sonar('apagado');
   activo = !activo;
   if (activo) { despertar(); sonar('prendido'); } else moto(0);
   return activo;

@@ -7,7 +7,7 @@ export function crearMando(pantalla, libre, { activo, tocar, alArrastrar }) {
   let movido = 0, pinza = 0, vx = 0, vy = 0, antes = 0, agarro = false;
   const propio = e => e.target.closest('.app, .mando, .grab, .tab, .perilla, .sonido');
   const acercar = (f, x, y) => { sonar('gota', f < 1); libre.acercar(f, x, y); };
-  const centrar = () => { sonar('slide'); libre.centrar(); };
+  const centrar = () => { sonar('centro'); libre.centrar(); };
 
   pantalla.addEventListener('pointerdown', e => {
     if (propio(e) || !activo()) return;
@@ -41,7 +41,7 @@ export function crearMando(pantalla, libre, { activo, tocar, alArrastrar }) {
     root.classList.remove('is-agarrado');
     if (activo()) libre.agarrar(false);
     if (movido < 6) return tocar(e.clientX, e.clientY);
-    if (activo() && e.timeStamp - antes < 90) libre.soltar(vx, vy); // si soltó en movimiento, sigue por inercia
+    if (activo() && e.timeStamp - antes < 90) { libre.soltar(vx, vy); sonar('suelta'); } // si soltó en movimiento, sigue por inercia
   };
   pantalla.addEventListener('pointerup', soltar);
   pantalla.addEventListener('pointercancel', soltar);
