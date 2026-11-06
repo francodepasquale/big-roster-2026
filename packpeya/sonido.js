@@ -16,7 +16,7 @@
 // prendido, apagado  el botón de sonido              Bencho boot y hush
 // confirmado   pedido hecho                          Bencho paid
 // etapa        cada paso del seguimiento             Bencho perk, y beacon en el último
-// titulo, logro  «Ya llegó», en la apertura y al final  Bencho landed con destellos
+// titulo, logro  «¡Llegamos!», en la apertura y al final  Bencho landed con destellos
 // pin          aparecen los pines, en escala         Bencho wisp
 // enviar       escribir a BIG                        Bencho hail
 // dia, noche   la perilla                            Bencho latch, dos notas y un pájaro o un grillo
@@ -115,8 +115,8 @@ const destello = (t, notas, paso = .06, g = .05) => {
 };
 
 /* ── los efectos: agendan sus voces desde t, con j = una leve variación de afinación, y devuelven cuánto duran ── */
-const PENTA = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66];
-// «Ya llegó» suena igual en la apertura y al final
+const PENTA = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+// «¡Llegamos!» suena igual en la apertura y al final
 const yaLlego = t => { const d = notas('landed', t); destello(t + .24, [2093, 2637, 3136], .05, .03); return d; };
 export const RECETAS = {
   // interfaz

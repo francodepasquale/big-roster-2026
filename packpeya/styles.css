@@ -1,4 +1,4 @@
-/* PedidosYa × BIG · «Ya llegó». Una pantalla: una maqueta isométrica blanca, y arriba lo justo para contar la historia. */
+/* PedidosYa × BIG · «¡Llegamos!». Una pantalla: una maqueta isométrica blanca, y arriba lo justo para contar la historia. */
 @font-face{font-family:'Poppins';src:url(assets/fonts/poppins-700.woff2) format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Poppins';src:url(assets/fonts/poppins-800.woff2) format('woff2');font-weight:800;font-display:swap}
 @font-face{font-family:'Inter';src:url(assets/fonts/inter-variable.woff2) format('woff2');font-weight:100 900;font-display:swap}
@@ -41,7 +41,7 @@ h1{font-weight:800}
 .loader.is-out{clip-path:inset(0 0 100% 0)}
 .carga{width:min(620px,calc(100vw - 48px))}
 .carga__etapa{font-size:clamp(30px,4.6vw,58px);line-height:1.12;white-space:nowrap}
-.carga__etapa.is-nueva{animation:etapa .5s var(--ease) both}
+.carga__etapa.is-nueva{animation:etapa .4s var(--ease) both}
 @keyframes etapa{from{opacity:0;transform:translateY(14px)}}
 .carga__barra{display:flex;gap:8px;margin-top:22px}
 .carga__barra i{flex:1;height:8px;border-radius:9px;background:rgba(255,255,255,.28);overflow:hidden}
@@ -78,7 +78,7 @@ html,body{height:100%;overflow:hidden}
 .marca img:first-child{left:calc(var(--vl) + var(--vR) + 4px);top:calc(var(--vt) / 2);height:18px;width:auto;translate:0 -50%}
 .marca i{left:calc(var(--vl) + var(--vR) - (var(--vR) + var(--vl) / 2) * .7071);top:calc(var(--vt) + var(--vR) - (var(--vR) + var(--vt) / 2) * .7071);font:500 15px/1 Inter,sans-serif;color:var(--gray)}
 .marca img:last-child{left:calc(var(--vl) / 2);top:calc(var(--vt) + var(--vR) + 6px);height:21px;width:auto;translate:-50% 0}
-.titulo{position:absolute;z-index:3;left:var(--vl);right:var(--vr);top:50%;translate:0 -54%;text-align:center;font-size:clamp(76px,13.5vw,250px);color:var(--red);text-shadow:0 0 50px var(--fondo),0 0 120px var(--fondo);pointer-events:none}
+.titulo{position:absolute;z-index:3;left:var(--vl);right:var(--vr);top:50%;translate:0 -54%;text-align:center;white-space:nowrap;font-size:clamp(76px,13.5vw,250px);color:var(--red);text-shadow:0 0 50px var(--fondo),0 0 120px var(--fondo);pointer-events:none}
 
 /* el aviso de PedidosYa sobre el video del perfil */
 .aviso{color:#141414;position:absolute;z-index:3;left:var(--x,50%);top:var(--y,20%);width:var(--w,240px);display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(14px) saturate(170%);backdrop-filter:blur(14px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 14px 30px -14px rgba(50,35,45,.5);translate:-50% 0;transform:translateY(-14px) scale(.96);opacity:0;pointer-events:none;transition:opacity .35s,transform .7s var(--ease)}
@@ -107,7 +107,8 @@ html,body{height:100%;overflow:hidden}
 .row{display:flex;align-items:center;gap:11px;padding:7px 6px;border-radius:14px;cursor:pointer;transition:background .25s,opacity .3s}
 .row:hover{background:rgba(var(--t),.045)}
 .row.is-off{opacity:.55}
-.row>img{flex:none;width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:50% 16%}
+.cara{display:block;flex:none;background-repeat:no-repeat;border-radius:50%}
+.row>.cara{width:46px;height:46px}
 .row__t{flex:1;min-width:0}
 .row__t b{display:block;font-weight:650;font-size:14.5px}
 .row__r{display:flex;gap:9px;margin-top:3px;font-size:12px;font-weight:500;color:var(--gray);white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -152,16 +153,14 @@ html,body{height:100%;overflow:hidden}
 .t__usuario:hover{color:var(--ink)}
 .chip{flex:none;padding:2px 8px;border-radius:7px;background:rgba(var(--t),.06);font-weight:600;color:var(--t2)}
 .chip.is-on{background:rgba(250,0,80,.1);color:var(--chip)}
-.t__foto{flex:none;width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:50% 16%;box-shadow:0 0 0 2px rgb(var(--p)),0 3px 10px -3px rgba(50,35,45,.4)}
+.t__foto{width:44px;height:44px;box-shadow:0 0 0 2px rgb(var(--p)),0 3px 10px -3px rgba(50,35,45,.4)}
 .t__bio{margin-top:12px;font-size:13.5px;line-height:1.42;color:var(--t1)}
 .t__redes{display:flex;gap:6px;margin-top:12px}
 .t__redes li{flex:1;min-width:0}
-.t__redes a,.t__eng{display:flex;flex-direction:column;gap:4px;height:100%;padding:8px 9px;border-radius:12px;background:rgba(var(--t),.045);text-decoration:none;color:inherit;transition:background .25s}
+.t__redes a{display:flex;flex-direction:column;gap:4px;height:100%;padding:8px 9px;border-radius:12px;background:rgba(var(--t),.045);text-decoration:none;color:inherit;transition:background .25s}
 .t__redes a:hover{background:rgba(var(--t),.08)}
 .t__redes svg{width:13px;height:13px;fill:var(--gray)}
 .t__redes b{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-.t__eng{flex:1.25}
-.t__eng span{font-size:10.5px;color:var(--gray);order:2}
 .pasos{margin:10px -6px 0}
 .paso{border-radius:12px;transition:background .3s}
 .paso.is-on{background:rgba(var(--t),.04)}
@@ -194,9 +193,10 @@ html,body{height:100%;overflow:hidden}
 .fin span{display:block}
 .fin span:last-child{color:var(--red)}
 .caras{display:flex;margin-top:20px}
-.caras img{width:42px;height:42px;margin-left:-10px;border-radius:50%;object-fit:cover;object-position:50% 16%;box-shadow:0 0 0 2.5px rgb(var(--p))}
-.caras img:first-child{margin-left:0}
+.caras .cara{width:42px;height:42px;margin-left:min(-10px,calc((100% - 42px * var(--n)) / max(var(--n) - 1,1))); /* se solapan más cuanto más son: siempre entran */box-shadow:0 0 0 2.5px rgb(var(--p))}
+.caras .cara:first-child{margin-left:0}
 a.cta{display:grid;place-items:center;margin-top:20px;text-decoration:none}
+.correo{margin-top:10px;text-align:center;font-size:12.5px;color:var(--gray);user-select:text}
 
 /* los controles del mapa */
 .mando{position:absolute;z-index:5;right:calc((var(--vr) - 46px) / 2);top:50%;translate:0 -50%;display:flex;flex-direction:column;gap:2px;padding:5px;border-radius:23px;cursor:auto;opacity:0;transform:translateX(16px);pointer-events:none;transition:opacity .4s,transform .7s var(--ease)}
@@ -205,7 +205,7 @@ a.cta{display:grid;place-items:center;margin-top:20px;text-decoration:none}
 .mando button:hover{background:rgba(255,255,255,.7)}
 .mando button:active{transform:scale(.9)}
 .mando svg{width:19px;height:19px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.no-webgl .mando{display:none}
+.no-webgl .mando,.no-webgl .aviso{display:none}
 
 /* el riel del canto: pestañas que doblan las esquinas y la perilla de claro y oscuro */
 .riel{position:absolute;inset:0;z-index:5;pointer-events:none}
@@ -250,7 +250,7 @@ a.cta{display:grid;place-items:center;margin-top:20px;text-decoration:none}
 
 @media (max-width:900px){
   :root{--vt:46px;--vr:46px;--vb:8px;--vl:8px;--vR:26px;--carril:31px}
-  .titulo{font-size:clamp(58px,16.5vw,130px)}
+  .titulo{font-size:clamp(46px,12.5vw,110px)}
   .app{left:8px;right:8px;top:auto;bottom:calc(14px + env(safe-area-inset-bottom));width:auto;max-height:58svh;border-radius:28px;transform:translateY(calc(100% + 30px))}
   .tarjeta{padding:12px;max-height:60svh;transition:max-height .5s var(--ease),padding .5s var(--ease),opacity .25s}
   .app.is-min .tarjeta{max-height:0;padding-block:0;opacity:0;overflow:hidden}

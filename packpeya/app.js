@@ -1,4 +1,4 @@
-// PedidosYa × BIG · «Ya llegó». El mapa es todo: tocar a cada creador va desarrollando su historia, click a click.
+// PedidosYa × BIG · «¡Llegamos!». El mapa es todo: tocar a cada creador va desarrollando su historia, click a click.
 import { PERFILES } from './perfiles.js';
 import { crearEscena } from './escena.js';
 import { crearPedido } from './pedido.js';
@@ -72,8 +72,34 @@ const tocarTimbre = () => { if (scene) gsap.fromTo(scene.app, { timbre: .001 }, 
 const clip = Object.assign(document.createElement('video'), { muted: true, loop: true, playsInline: true, preload: 'auto' });
 clip.setAttribute('muted', ''); clip.setAttribute('playsinline', '');
 let perfilOn = null, paso = 0, videoListo = false;
+// la pantalla del celular se enciende recién cuando el video de este perfil tiene imagen propia (nunca se ve el cuadro del anterior)
+const encender = () => { if (perfilOn !== null) gsap.delayedCall(.08, () => { if (perfilOn !== null) scene?.visor?.pantallaOn(true); }); };
+clip.addEventListener('playing', encender); clip.addEventListener('loadeddata', encender);
 const clips = new Map(); // cada clip se baja una sola vez
-const bajarClip = async src => { if (!clips.has(src)) clips.set(src, URL.createObjectURL(await (await fetch(src)).blob())); return clips.get(src); };
+const bajarClip = async src => { // sin clip todavía devuelve null
+  if (!clips.has(src)) {
+    let url = null;
+    try { const r = await fetch(src); if (r.ok && /video/.test(r.headers.get('content-type') || '')) url = URL.createObjectURL(await r.blob()); } catch {}
+    clips.set(src, url);
+  }
+  return clips.get(src);
+};
+// Perfil sin clip: su foto con un acercamiento lento, 9:16, hasta que se sume el mp4 (mismo nombre en assets/video)
+const kb = { id: 0, cv: Object.assign(document.createElement('canvas'), { width: 1080, height: 1920 }), img: null, raf: 0, stream: null };
+function fotoEnMovimiento(p) {
+  cancelAnimationFrame(kb.raf);
+  const id = ++kb.id; // si llega primero el video real, la foto que todavía decodifica no lo pisa
+  if (!p) return;
+  const dibujar = t => {
+    const { cv, img } = kb, g = cv.getContext('2d'), z = 1 + .12 * (.5 - .5 * Math.cos(t / 12000 * Math.PI * 2));
+    const k = Math.max(cv.width / img.naturalWidth, cv.height / img.naturalHeight) * z, w = img.naturalWidth * k, h = img.naturalHeight * k;
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(img, (cv.width - w) / 2, (cv.height - h) * .3, w, h);
+    kb.raf = requestAnimationFrame(dibujar);
+  };
+  const img = Object.assign(new Image(), { src: foto(p) });
+  img.decode().then(() => { if (id !== kb.id || perfilOn === null || PERFILES[perfilOn] !== p) return; kb.img = img; kb.stream ||= kb.cv.captureStream(30); clip.removeAttribute('src'); clip.srcObject = kb.stream; dibujar(0); clip.play().catch(() => {}); }).catch(() => {});
+}
 const caida = { y: 1.2 }, entrada = { k: 0 }, aviso = $('.aviso');
 const posePerfil = () => {
   const m = mobile(), H = innerHeight;
@@ -89,7 +115,7 @@ function abrirPerfil(i) {
   perfilOn = i;
   root.classList.toggle('is-perfil', i !== null);
   if (i === null) {
-    clip.pause(); aviso.classList.remove('is-on');
+    clip.pause(); fotoEnMovimiento(null); aviso.classList.remove('is-on');
     if (!scene) return;
     gsap.killTweensOf(scene.app, 'perfilK');
     gsap.to(caida, { y: 1.2, duration: .3, ease: 'power2.in', overwrite: true });
@@ -97,9 +123,14 @@ function abrirPerfil(i) {
     gsap.to(scene.app, { perfilK: 0, seguirK: 0, duration: .8, ease: 'power2.inOut', overwrite: 'auto' });
     return;
   }
-  bajarClip(`assets/video/${PERFILES[i].foto}.mp4`).then(url => {
+  const pf = PERFILES[i];
+  clip.pause(); clip.removeAttribute('src'); clip.srcObject = null; clip.load(); // suelta el video del perfil anterior
+  scene?.visor?.pantallaOn(false);
+  fotoEnMovimiento(pf); // mientras carga el video, el celular muestra la foto: nunca una pantalla negra
+  bajarClip(`assets/video/${pf.foto}.mp4`).then(url => {
     if (perfilOn !== i) return;
-    clip.src = url;
+    if (!url) return; // sin clip queda la foto
+    fotoEnMovimiento(null); clip.srcObject = null; clip.src = url;
     if (!reduced) clip.play().catch(() => {});
   });
   caida.y = 1.2;
@@ -184,7 +215,7 @@ function llego() {
   gsap.delayedCall(reduced ? .3 : 1.5, () => sonar('logro'));
   root.classList.add('is-llego');
   pedido.ir('llego');
-  if (!reduced) gsap.from('.fin span, .caras img, .tarjeta .cta', { y: 16, opacity: 0, duration: .7, stagger: .045, delay: .15, ease: 'expo.out', clearProps: 'all' });
+  if (!reduced) gsap.from('.fin span, .caras .cara, .tarjeta .cta, .correo', { y: 16, opacity: 0, duration: .7, stagger: .03, delay: .15, ease: 'expo.out', clearProps: 'transform,opacity' }); // las caras llevan su foto en el estilo: no se borra
   const v = scene?.visor;
   if (!v) return;
   const p = POSE_VISOR(), cae = { y: 1.1 };
@@ -230,18 +261,20 @@ const tareas = [
 ];
 let hechas = 0, vista = 0;
 tareas.forEach(t => Promise.resolve(t).catch(() => {}).then(() => { hechas++; }));
-const decir = texto => { if (etapaCarga.textContent === texto) return; sonar('etapa', texto === 'Ya llegó' ? 3 : 1); etapaCarga.textContent = texto; etapaCarga.classList.remove('is-nueva'); void etapaCarga.offsetWidth; etapaCarga.classList.add('is-nueva'); };
+const LLEGAMOS = '¡Llegamos!';
+const decir = texto => { if (etapaCarga.textContent === texto) return; sonar('etapa', texto === LLEGAMOS ? 3 : 1); etapaCarga.textContent = texto; etapaCarga.classList.remove('is-nueva'); void etapaCarga.offsetWidth; etapaCarga.classList.add('is-nueva'); };
+const RITMO_CARGA = 1.25; // velocidad de la pantalla de carga: 1 = la original, 1,25 = un 25 % más rápida
 function cargar(_, dt) {
   // avanza con la carga real, pero a un ritmo que deja leer cada etapa y, si hace falta, tocar el aviso de sonido
   const bloqueado = sonidoBloqueado();
-  vista = Math.min(hechas / tareas.length, vista + dt / (bloqueado ? 3800 : 2300));
+  vista = Math.min(hechas / tareas.length, vista + dt * RITMO_CARGA / (bloqueado ? 3800 : 2300));
   if (!bloqueado && !avisoSonido.classList.contains('is-activo')) { avisoSonido.classList.add('is-activo'); avisoSonido.lastElementChild.textContent = 'Sonido activado'; }
   barras.forEach((b, i) => { b.style.width = clamp(vista * 3 - i) * 100 + '%'; });
   barraCarga.setAttribute('aria-valuenow', Math.round(vista * 100));
-  decir(vista >= 1 ? 'Ya llegó' : vista > .45 ? 'En camino' : 'Armando tu pedido');
+  decir(vista >= 1 ? LLEGAMOS : vista > .45 ? 'En camino' : 'Armando tu pedido');
   if (vista < 1) return;
   gsap.ticker.remove(cargar);
-  gsap.delayedCall(.55, () => {
+  gsap.delayedCall(.55 / RITMO_CARGA, () => {
     sonar('telon');
     document.body.classList.remove('is-loading');
     loader.classList.add('is-out');
@@ -261,9 +294,9 @@ function abrir() {
     alLlegar();
     return fin();
   }
-  // los pines aparecen casi juntos: sus notas se escalonan y forman una escala que sube
+  // los pines aparecen casi juntos: suena uno de cada dos y las notas se escalonan en una escala que sube
   let primero = 0;
-  scene.app.alPin = i => { const ahora = performance.now(); primero ||= ahora; gsap.delayedCall(Math.max(0, primero + i * 85 - ahora) / 1000, () => sonar('pin', i)); };
+  scene.app.alPin = i => { if (i % 2) return; const ahora = performance.now(); primero ||= ahora; gsap.delayedCall(Math.max(0, primero + i * 50 - ahora) / 1000, () => sonar('pin', i / 2)); };
   const tl = crearApertura(scene, { titulo: $('.titulo'), alLlegar, alTerminar: fin });
   window.__deck.apertura = tl;
 }

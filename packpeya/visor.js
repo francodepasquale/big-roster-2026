@@ -88,7 +88,7 @@ export function crearVisor(renderer, env, { iso, word, reduced = false }) {
     if (pose.tel) {
       celular.group.scale.setScalar(pose.tel.s * view.unit);
       celular.group.position.set(pose.tel.x * view.w, pose.tel.y * view.h, -1);
-      celular.group.rotation.set(-.04 + cur.py * .04, -.2 + cur.px * .1, .015);
+      celular.group.rotation.set(0, 0, 0); // siempre recto, sin inclinación ni balanceo: la pantalla coincide exacta con el video
     }
 
     // la bolsa sale de adentro de la mochila; con foco, va al centro
@@ -141,6 +141,7 @@ export function crearVisor(renderer, env, { iso, word, reduced = false }) {
     setFocus(cual) { const bolsaOn = cual === 'bolsa'; want.focus = bolsaOn ? 1 : 0; want.open = bolsaOn ? 1 : 0; want.burger = 0; this.face(); },
     face() { turn.vel = 0; turn.to = Math.round(turn.y / (Math.PI * 2)) * Math.PI * 2; },
     kick() { spring.swingVel += 2.4; },
+    pantallaOn(on) { celular.pantalla.color.set(on ? '#ffffff' : '#000000'); }, // en negro mientras carga el video de otro perfil: no se ve el cuadro anterior
     medidas() { return view; },
     // Lo que tapa a la isla cuando sale: solo la mitad de adelante de la mochila, sin el forro ni la tapa
     dibujarFrente() {

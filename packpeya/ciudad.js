@@ -232,7 +232,7 @@ export function crearRuta(puntos) {
 
 // Una casita con techo rojo, y si hay foto, el cartel del creador mirando a la cámara. La casa y el cartel van uno al
 // lado del otro, sin tocarse. El cartel se levanta cuando la cámara se acerca (en el mapa, la cara la muestra el pin)
-export function crearCasa(centro, tex) {
+export function crearCasa(centro, tex, rostro) {
   const g = new THREE.Group(), mat = c => new THREE.MeshLambertMaterial({ color: c, toneMapped: false });
   const conFoto = !!tex, cx = conFoto ? 2.7 : 0, cz = conFoto ? -2.7 : 0, s = conFoto ? 3.2 : 5.4;
   const cuerpo = new THREE.Mesh(new THREE.BoxGeometry(s, s * .9, s), mat('#ffffff')); cuerpo.position.set(cx, LOSA + s * .45, cz);
@@ -241,13 +241,20 @@ export function crearCasa(centro, tex) {
   g.add(cuerpo, techo, puerta);
   let cartel = null;
   if (conFoto) {
-    const w = 6.2, h = w * 1.5 / .816; // el alto compensa el escorzo de la vista isométrica
+    // Cartel redondo. La vista isométrica achata lo vertical (cos 35,26° = .816): se estira para que en pantalla sea un círculo
+    const R = 4.2, ESTIRO = 1 / .816, alto = (R + .6) * 2 * ESTIRO;
     cartel = new THREE.Group();
-    const marco = new THREE.Mesh(new THREE.BoxGeometry(w + .44, h + .44, .3), new THREE.MeshBasicMaterial({ color: '#ffffff', toneMapped: false })); marco.position.y = h / 2 + .4;
-    const foto = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })); foto.position.set(0, h / 2 + .4, .16);
-    const base = new THREE.Mesh(new THREE.BoxGeometry(w + .44, .4, .3), new THREE.MeshBasicMaterial({ color: '#FA0050', toneMapped: false })); base.position.y = .2;
-    cartel.add(marco, foto, base);
-    cartel.position.set(-2, LOSA, 2); cartel.rotation.y = Math.PI / 4;
+    const disco = new THREE.Group(); disco.scale.y = ESTIRO; disco.position.y = alto / 2 + .4;
+    const basic = c => new THREE.MeshBasicMaterial({ color: c, toneMapped: false });
+    const aro = new THREE.Mesh(new THREE.CylinderGeometry(R + .6, R + .6, .3, 72), basic('#FA0050')); aro.rotation.x = Math.PI / 2;
+    const marco = new THREE.Mesh(new THREE.CylinderGeometry(R + .25, R + .25, .3, 72), basic('#ffffff')); marco.rotation.x = Math.PI / 2; marco.position.z = .04;
+    // el recorte cuadrado de la cara, sin deformar
+    const [rx, ry, ra, rb] = rostro; tex.repeat.set(ra, rb); tex.offset.set(rx, 1 - ry - rb);
+    const foto = new THREE.Mesh(new THREE.CircleGeometry(R, 72), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })); foto.position.z = .25;
+    disco.add(aro, marco, foto);
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(R * .42, R * .5, .4, 48), basic('#FA0050')); base.position.y = .2;
+    cartel.add(disco, base);
+    cartel.position.set(-2.6, LOSA, 2.6); cartel.rotation.y = Math.PI / 4;
     g.add(cartel);
   }
   g.position.copy(centro);

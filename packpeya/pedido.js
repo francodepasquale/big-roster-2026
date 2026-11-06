@@ -1,6 +1,6 @@
 // La app: el panel con el que se elige, se arma y se sigue el pedido. Vistas: lista, perfil, pedido, seguimiento y llegó.
 // No sabe nada de 3D: avisa con `on` y app.js mueve la ciudad.
-import { CONTACTO } from './perfiles.js';
+import { CONTACTO, rostroDe } from './perfiles.js';
 import { sonar } from './sonido.js';
 
 const ICON = {
@@ -15,6 +15,11 @@ const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12.6l4 4L
 const FLECHA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const VOLVER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 const foto = p => `assets/fotos/${p.foto}.webp`;
+// La cara de un creador, recortada igual en toda la interfaz
+const cara = (p, clase = '') => {
+  const [x, y, a, b] = rostroDe(p), pos = (v, t) => (t < 1 ? v / (1 - t) * 100 : 50);
+  return `<i class="cara ${clase}" role="img" aria-label="${p.nombre}" style="background-image:url(${foto(p)});background-size:${100 / a}% ${100 / b}%;background-position:${pos(x, a)}% ${pos(y, b)}%"></i>`;
+};
 const redes = p => ['ig', 'tt', 'yt'].filter(r => p[r]).map(r => `<span>${ICON[r]}${p[r]}</span>`).join('');
 const contador = (i, n) => `<div class="stepper" data-i="${i}"><button type="button" data-d="-1" aria-label="Sacar">−</button><b>${n}</b><button type="button" data-d="1" aria-label="Sumar">+</button></div>`;
 const plural = n => `${n} ${n === 1 ? 'video' : 'videos'}`;
@@ -28,10 +33,10 @@ export function crearPedido(el, perfiles, on) {
   function correo() {
     const lista = perfiles.flatMap((p, i) => (videos[i] ? [`- ${p.nombre}: ${plural(videos[i])}`] : []));
     const cuerpo = `Hola, BIG.\n\nQuiero avanzar con este pedido para PedidosYa:\n\n${lista.join('\n')}\n\nTotal: ${plural(total())}`;
-    return `mailto:${CONTACTO}?subject=${encodeURIComponent('PedidosYa × BIG: Ya llegó')}&body=${encodeURIComponent(cuerpo)}`;
+    return `mailto:${CONTACTO}?subject=${encodeURIComponent('PedidosYa × BIG: ¡Llegamos!')}&body=${encodeURIComponent(cuerpo)}`;
   }
   const fila = (p, i) => `<li class="row${videos[i] ? '' : ' is-off'}" data-i="${i}">
-    <img src="${foto(p)}" alt="" width="52" height="52">
+    ${cara(p)}
     <div class="row__t"><b>${p.nombre}</b><span class="row__r">${redes(p)}</span></div>
     ${videos[i] ? contador(i, videos[i]) : `<button class="add" type="button" data-add="${i}" aria-label="Sumar a ${p.nombre}">+</button>`}
   </li>`;
@@ -54,10 +59,10 @@ export function crearPedido(el, perfiles, on) {
           <button class="back" type="button" data-ir="lista" aria-label="Volver">${VOLVER}</button>
           <span class="anillo"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/><circle class="anillo__v" cx="18" cy="18" r="15.5" pathLength="100"/></svg><b>1</b></span>
           <div class="t__id"><h2>${p.nombre}</h2><p><span class="chip"></span><a class="t__usuario" href="${p.links.ig}" target="_blank" rel="noopener">@${p.usuario}</a></p></div>
-          <img class="t__foto" src="${foto(p)}" alt="" width="44" height="44">
+          ${cara(p, 't__foto')}
         </header>
         <p class="t__bio">${p.bio}</p>
-        <ul class="t__redes">${['ig', 'tt', 'yt'].filter(r => p[r]).map(r => `<li><a href="${p.links[r]}" target="_blank" rel="noopener" aria-label="${RED[r]}">${ICON[r]}<b>${p[r]}</b></a></li>`).join('')}<li class="t__eng"><b>${p.eng}</b><span>engagement</span></li></ul>
+        <ul class="t__redes">${['ig', 'tt', 'yt'].filter(r => p[r]).map(r => `<li><a href="${p.links[r]}" target="_blank" rel="noopener" aria-label="${RED[r]}">${ICON[r]}<b>${p[r]}</b></a></li>`).join('')}</ul>
         <ol class="pasos">${MOMENTOS.map((m, k) => `<li class="paso"><button type="button" data-m="${k}"><i class="check">${CHECK}</i><span>${m}</span></button><div class="paso__t"><p>${p.momentos[k]}</p></div></li>`).join('')}</ol>
         <div class="perfil__media"></div>
       </div>
@@ -82,9 +87,10 @@ export function crearPedido(el, perfiles, on) {
     },
     llego() {
       el.innerHTML = `<div class="tarjeta">
-        <h2 class="fin"><span>Ya llegó.</span><span>¿Hablamos?</span></h2>
-        <div class="caras">${perfiles.map((p, i) => (videos[i] ? `<img src="${foto(p)}" alt="${p.nombre}" width="42" height="42">` : '')).join('')}</div>
+        <h2 class="fin"><span>¡Llegamos!</span><span>¿Hablamos?</span></h2>
+        <div class="caras" style="--n:${elegidos().size}">${perfiles.map((p, i) => (videos[i] ? `${cara(p)}` : '')).join('')}</div>
         <a class="cta" href="${correo()}">Escribir a BIG</a>
+        <p class="correo">${CONTACTO}</p>
       </div>
       <footer class="pie"><span class="pie__n">${plural(total())}</span><button class="ir" type="button" data-otra>Otro pedido ${FLECHA}</button></footer>`;
     },
@@ -115,7 +121,7 @@ export function crearPedido(el, perfiles, on) {
     const antes = el.dataset.vista;
     if (antes === 'perfil' && v !== 'perfil') on.perfil(null);
     el.dataset.vista = v; vistas[v]();
-    if (antes !== v) on.vista?.(v);
+    if (antes && antes !== v) on.vista?.(v); // al cargar no suena nada
     on.accion?.();
   }
   function abrir(i) { actual = i; ir('perfil'); on.perfil(i); }

@@ -2,7 +2,7 @@
 // Quien mira mueve el mapa y la moto va adonde la llama.
 import * as THREE from 'three';
 import { RoomEnvironment } from './assets/vendor/RoomEnvironment.js';
-import { PERFILES } from './perfiles.js';
+import { PERFILES, rostroDe } from './perfiles.js';
 import { CUADRA, FONDO, ISLA, NOCHE, SOMBRA, aMundo, crearCiudad, crearRuta, crearCasa, bloqueDe } from './ciudad.js';
 import { crearMochila, crearRepartidor } from './objetos.js';
 import { crearVisor } from './visor.js';
@@ -23,12 +23,14 @@ const ESQUINAS = [[ISLA.x0, ISLA.z0], [ISLA.x0, ISLA.z1], [ISLA.x1, ISLA.z0], [I
 const aPantalla = p => [(p.x - p.z) / Math.SQRT2, -(p.x + p.z) / Math.sqrt(6)]; // un punto del piso, en unidades de pantalla
 const VERTICAL = V(0, 1, 0);
 const CERCA_MAX = 36; // el zoom más cercano, en alto visible
-const PIN = { movil: .066, escritorio: .076 }; // alto del pin, en fracción del cuadro
-const RECORRIDO = [[-6, -5], [-2, -5], [-2, -2], [3, -2], [3, 2], [-3, 2], [-3, 5], [2, 5]];
+const CAMBIO = 64; // de este zoom para adentro, los pines dan lugar a los carteles
+const PIN = { movil: .046, escritorio: .076 }; // alto del pin, en fracción del cuadro
+// Un zigzag parejo: con 16 creadores, cada dos cuadras, los pines no se pisan. La casa del pedido queda al final
+const RECORRIDO = [[-6, -5], [2, -5], [2, -2], [-5, -2], [-5, 1], [3, 1], [3, 4], [-4, 4]];
 
 export function crearEscena(canvas, { reduced = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, stencil: true, powerPreference: 'high-performance' });
-  const DPR = Math.min(devicePixelRatio, innerWidth <= 900 ? 1.5 : 2);
+  const DPR = Math.min(devicePixelRatio, 2), DPR_MIN = Math.min(DPR, innerWidth <= 900 ? 1 : 1.5); // HD; solo un celular lento baja de 1,5
   renderer.setPixelRatio(DPR);
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.setClearColor(FONDO, 1);
@@ -56,7 +58,7 @@ export function crearEscena(canvas, { reduced = false } = {}) {
     const N = Math.abs(T.x) > Math.abs(T.z) ? V(0, 0, -1) : V(-1, 0, 0);
     return { punto, u, bloque: punto.clone().addScaledVector(N, CUADRA / 2) };
   });
-  const hogarLugar = aMundo([2.5, -2]), hogarBloque = aMundo([2.5, -2.5]), localBloque = aMundo([-6.5, -5.5]), uHogar = ruta.uDe(hogarLugar);
+  const hogarLugar = aMundo([-3.5, 4]), hogarBloque = aMundo([-3.5, 3.5]), localBloque = aMundo([-6.5, -5.5]), uHogar = ruta.uDe(hogarLugar);
   const reservadas = new Set([...paradas.map(q => bloqueDe(q.bloque)), bloqueDe(hogarBloque), bloqueDe(localBloque)]);
   const ciudad = crearCiudad(reservadas, ruta.pts.filter((_, i) => i % 12 === 0));
   const hogar = crearCasa(hogarBloque), local = crearCasa(localBloque);
@@ -68,14 +70,15 @@ export function crearEscena(canvas, { reduced = false } = {}) {
     m.rotation.x = -Math.PI / 2; m.renderOrder = 4; scene.add(m); return m;
   });
   function gota(dibujar) {
-    const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
-    g.shadowColor = 'rgba(40,30,40,.28)'; g.shadowBlur = 14; g.shadowOffsetY = 5; g.fillStyle = '#fff';
+    const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+    g.imageSmoothingQuality = 'high'; g.scale(2, 2);
+    g.shadowColor = 'rgba(40,30,40,.28)'; g.shadowBlur = 28; g.shadowOffsetY = 10; g.fillStyle = '#fff';
     g.beginPath(); g.arc(128, 104, 92, Math.PI * .8, Math.PI * .2); g.lineTo(128, 240); g.closePath(); g.fill();
     g.shadowColor = 'transparent';
     g.save(); g.beginPath(); g.arc(128, 104, 78, 0, 7); g.clip(); dibujar(g); g.restore();
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
   }
-  const cara = img => gota(g => { const k = 176 / img.width; g.drawImage(img, 40, 20, img.width * k, img.height * k); });
+  const cara = (img, [x, y, a, b]) => gota(g => g.drawImage(img, x * img.width, y * img.height, a * img.width, b * img.height, 50, 26, 156, 156));
   const icono = casita => gota(g => {
     g.fillStyle = '#FA0050'; g.fillRect(40, 20, 176, 170); g.fillStyle = '#fff'; g.beginPath();
     if (casita) { g.moveTo(128, 56); g.lineTo(184, 106); g.lineTo(166, 106); g.lineTo(166, 152); g.lineTo(90, 152); g.lineTo(90, 106); g.lineTo(72, 106); g.closePath(); }
@@ -95,9 +98,9 @@ export function crearEscena(canvas, { reduced = false } = {}) {
   ]).then(([iso, word, , , ...fotos]) => {
     fotos.forEach((img, i) => {
       const tex = new THREE.Texture(img); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8; tex.needsUpdate = true;
-      const casa = crearCasa(paradas[i].bloque, tex);
+      const casa = crearCasa(paradas[i].bloque, tex, rostroDe(PERFILES[i]));
       scene.add(casa.group); carteles.push(casa.cartel);
-      pines.push(pin(cara(img), casa.techo));
+      pines.push(pin(cara(img, rostroDe(PERFILES[i])), casa.techo));
     });
     pinHogar = pin(icono(true), hogar.techo); pinLocal = pin(icono(false), local.techo);
     moto = crearRepartidor(crearMochila(iso, word));
@@ -125,9 +128,9 @@ export function crearEscena(canvas, { reduced = false } = {}) {
     winT += dt; winN++;
     if (winT < 2) return;
     const fps = winN / winT; winT = winN = 0;
-    if (fps < 42) { lentas++; rapidas = 0; } else if (fps > 57) { rapidas++; lentas = 0; } else lentas = rapidas = 0;
-    if (lentas >= 2 && dpr > .75) { dpr -= .25; lentas = 0; renderer.setPixelRatio(dpr); layout(); }
-    else if (rapidas >= 5 && dpr < DPR) { dpr += .25; rapidas = 0; renderer.setPixelRatio(dpr); layout(); }
+    if (fps < 28) { lentas++; rapidas = 0; } else if (fps > 45) { rapidas++; lentas = 0; } else lentas = rapidas = 0;
+    if (lentas >= 3 && dpr > DPR_MIN) { dpr -= .25; lentas = 0; renderer.setPixelRatio(dpr); layout(); }
+    else if (rapidas >= 2 && dpr < DPR) { dpr += .25; rapidas = 0; renderer.setPixelRatio(dpr); layout(); }
   }
 
   // ── Planos: qué punto del piso se mira, a qué tamaño (alto visible), y dónde cae en pantalla (ox, oy: fracción del cuadro)
@@ -241,23 +244,24 @@ export function crearEscena(canvas, { reduced = false } = {}) {
 
     // la moto crece cuando la cámara se aleja: siempre se la ve, y una marca redonda la ubica en el mapa
     const entregada = 1 - smooth((Math.max(app.perfilK * (1 - app.seguirK), app.puerta) - .35) / .5); // entregó: se va y deja lugar a la mochila
-    moto.group.scale.setScalar(Math.max(1.9, cam.s / (movil() ? 50 : 38)) * Math.max(.001, entregada * app.motoK)); // en la apertura aparece cuando la isla ya salió
+    moto.group.scale.setScalar(Math.max(1.9, cam.s / (movil() ? 62 : 38)) * Math.max(.001, entregada * app.motoK)); // en la apertura aparece cuando la isla ya salió
     moto.group.visible = entregada > .01;
     const lejosK = smooth((cam.s - 62) / 40);
     marca.position.copy(q).setY(.1); marca.scale.setScalar(cam.s * (movil() ? .02 : .027) * Math.max(.001, app.motoK));
     disco.material.opacity = lejosK * .92; aro.material.opacity = lejosK;
     marca.visible = lejosK > .01;
 
-    // cerca se ve el cartel con la foto de quien está en cuadro; lejos, el pin con la cara. Nunca los dos
-    const cerca = 1 - smooth((cam.s - 48) / 16), explorando = libre.on && !app.perfilK && !app.puerta;
-    carteles.forEach((x, i) => {
-      const k = rebote(explorando ? cerca : 0);
+    // cerca se ve el cartel con la foto; lejos, el pin con la cara. Nunca los dos, y ninguno se queda a mitad de camino
+    const deCerca = cam.s <= CAMBIO, explorando = libre.on && !app.perfilK && !app.puerta;
+    carteles.forEach(x => {
+      x.userData.k = damp(x.userData.k ?? 0, explorando && deCerca ? 1 : 0, 10, dt);
+      const k = rebote(x.userData.k);
       x.visible = k > .01; x.scale.set(1, Math.max(.001, k), 1);
     });
-    const lejano = smooth((cam.s - 66) / 16) * (1 - app.perfilK) * smooth((app.intro - .5) * 2) * (1 - app.seguirK * .35);
+    const presentes = (1 - app.perfilK) * smooth((app.intro - .5) * 2);
     const tam = cam.s * pinAlto() * Math.min(1, libre.z ** -.5); // lejos de todo, los pines ceden lugar
     pines.forEach((x, i) => {
-      const on = lejano > clamp(i * .08) ? 1 : 0; // aparecen de a uno
+      const on = !deCerca && presentes > i / pines.length * .9 ? 1 : 0; // aparecen de a uno
       if (on && !x.visto) { x.visto = true; app.alPin?.(i); }
       x.k = damp(x.k, on, 11, dt);
       x.hover = damp(x.hover, app.foco === i ? 1.16 : 1, 12, dt);
@@ -320,8 +324,8 @@ export function crearEscena(canvas, { reduced = false } = {}) {
     elegir(set) { app.elegidos = set; },
     // el perfil bajo el puntero: su pin de lejos, su casa y su cartel de cerca
     pinEn(x, y) {
-      const v = V(), alto = pinAlto() * innerHeight, cerca = cam.s < 64, px = innerHeight / cam.s;
-      let mejor = -1, d = cerca ? 11 * px : alto * .5;
+      const v = V(), alto = pinAlto() * innerHeight, cerca = cam.s <= CAMBIO, px = innerHeight / cam.s;
+      let mejor = -1, d = cerca ? 11 * px : Math.max(alto * .5, 22);
       pines.forEach((pp, i) => {
         v.copy(cerca ? paradas[i].bloque : pp.pos).project(camera);
         const e = Math.hypot((v.x + 1) / 2 * innerWidth - x, (1 - v.y) / 2 * innerHeight - (cerca ? 5 * px : alto * .6) - y);
