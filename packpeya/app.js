@@ -54,6 +54,7 @@ botonSonido.setAttribute('aria-pressed', sonidoPrendido());
 botonSonido.addEventListener('click', () => {
   if (botonSonido.classList.contains('is-bloqueado')) return sonar('prendido'); // este toque es el que lo destraba: no lo apaga
   botonSonido.setAttribute('aria-pressed', alternarSonido());
+  clip.muted = !sonidoPrendido();
 });
 panel.addEventListener('click', () => panel.classList.remove('is-min'), true);
 
@@ -72,6 +73,20 @@ const tocarTimbre = () => { if (scene) gsap.fromTo(scene.app, { timbre: .001 }, 
 const clip = Object.assign(document.createElement('video'), { muted: true, loop: true, playsInline: true, preload: 'auto' });
 clip.setAttribute('muted', ''); clip.setAttribute('playsinline', '');
 let perfilOn = null, paso = 0, videoListo = false;
+// El clip suena junto con el deck: sigue al botón de sonido y baja un momento para dejar oír la moto y el timbre
+const VOLUMEN_CLIP = .8, voz = { v: VOLUMEN_CLIP };
+const aplicarVoz = () => { clip.volume = voz.v; };
+function reproducir() {
+  if (reduced) return;
+  clip.muted = !sonidoPrendido();
+  clip.play().catch(() => { clip.muted = true; clip.play().catch(() => {}); }); // si el navegador no deja, arranca mudo y suena con el próximo toque
+}
+function ceder(segundos) {
+  gsap.killTweensOf(voz);
+  gsap.to(voz, { v: .22, duration: .18, onUpdate: aplicarVoz });
+  gsap.to(voz, { v: VOLUMEN_CLIP, duration: .6, delay: segundos, onUpdate: aplicarVoz });
+}
+for (const ev of ['pointerdown', 'keydown']) addEventListener(ev, () => { if (perfilOn !== null && sonidoPrendido()) clip.muted = false; }, { capture: true, passive: true });
 // la pantalla del celular se enciende recién cuando el video de este perfil tiene imagen propia (nunca se ve el cuadro del anterior)
 const encender = () => { if (perfilOn !== null) gsap.delayedCall(.08, () => { if (perfilOn !== null) scene?.visor?.pantallaOn(true); }); };
 clip.addEventListener('playing', encender); clip.addEventListener('loadeddata', encender);
@@ -126,12 +141,13 @@ function abrirPerfil(i) {
   const pf = PERFILES[i];
   clip.pause(); clip.removeAttribute('src'); clip.srcObject = null; clip.load(); // suelta el video del perfil anterior
   scene?.visor?.pantallaOn(false);
+  gsap.killTweensOf(voz); voz.v = VOLUMEN_CLIP; aplicarVoz();
   fotoEnMovimiento(pf); // mientras carga el video, el celular muestra la foto: nunca una pantalla negra
   bajarClip(`assets/video/${pf.foto}.mp4`).then(url => {
     if (perfilOn !== i) return;
     if (!url) return; // sin clip queda la foto
     fotoEnMovimiento(null); clip.srcObject = null; clip.src = url;
-    if (!reduced) clip.play().catch(() => {});
+    reproducir();
   });
   caida.y = 1.2;
   $('.perfil__media', panel)?.append(clip);
@@ -155,7 +171,7 @@ function ponerPaso(k) {
   // cada momento suena distinto: el aviso de la app, y al final el cierre de la mochila y el papel de la bolsa
   if (k < antes) sonar('pip');
   else if (k === 1 && antes !== 1) sonar('confirmado');
-  else if (k === 3 && antes !== 3) { sonar('cierre', true); gsap.delayedCall(.24 * d, () => sonar('bolsa')); }
+  else if (k === 3 && antes !== 3) { sonar('cierre', true); gsap.delayedCall(.24 * d, () => sonar('bolsa')); ceder(.9); }
   if (!a || perfilOn === null) return;
   const u = scene.uDe(perfilOn);
   // Pide: la cámara sale a seguir a la moto hasta su casa
@@ -163,6 +179,7 @@ function ponerPaso(k) {
     const viaje = ir(u, () => { tocarTimbre(); sonar('bocina'); });
     gsap.to(a, { seguirK: 1, duration: .7 * d, ease: 'power2.inOut', overwrite: 'auto' });
     gsap.fromTo(aviso, { '--go': 0 }, { '--go': 1, duration: viaje, ease: 'none', overwrite: true });
+    ceder(viaje + .5);
     return;
   }
   gsap.to(a, { seguirK: 0, duration: .7 * d, ease: 'power2.inOut', overwrite: 'auto' });
@@ -171,6 +188,7 @@ function ponerPaso(k) {
     gsap.killTweensOf(a, 'u'); a.u = u;
     tocarTimbre(); sonar('timbre');
     gsap.delayedCall(.47 * d, () => sonar('golpe'));
+    ceder(1.5);
     gsap.to(caida, { y: posePerfil().y, duration: .85 * d, delay: .15 * d, ease: 'bounce.out', overwrite: true, onComplete: () => scene.visor?.kick() });
   } else if (k < 2 && antes >= 2) gsap.to(caida, { y: 1.2, duration: .4 * d, ease: 'power2.in', overwrite: true });
 }
@@ -300,7 +318,11 @@ function abrir() {
   const tl = crearApertura(scene, { titulo: $('.titulo'), alLlegar, alTerminar: fin });
   window.__deck.apertura = tl;
 }
-document.addEventListener('visibilitychange', () => scene?.pause(document.hidden));
+document.addEventListener('visibilitychange', () => {
+  scene?.pause(document.hidden);
+  if (perfilOn === null || !clip.src) return;
+  if (document.hidden) clip.pause(); else reproducir(); // con la pestaña oculta no suena nada
+});
 
 // Para revisar el deck con Chrome automatizado
 window.__deck = { scene, pedido, sonido: { sonar, medir, registro, recetas: Object.keys(RECETAS) } };
