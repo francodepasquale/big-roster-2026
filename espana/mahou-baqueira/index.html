@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1C0F0A">
+  <meta name="description" content="Una propuesta de BIG Agency para Mahou: el après-ski del viaje a Baqueira Beret, diciembre de 2026.">
+  <title>Mahou × BIG — Après-ski en Baqueira Beret</title>
+  <style>
+    .loader{display:none}html.is-loading{overflow:hidden}
+    .is-loading .loader{display:flex;position:fixed;inset:0;z-index:100;background:#1C0F0A;color:#F7F8FA;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+    .is-loading main,.is-loading .island{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.deckFallback = setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      document.dispatchEvent(new Event('deck:ready'));
+    }, 15000);
+  </script>
+  <link rel="icon" href="assets/img/big.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/SplitText.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-tone="nieve">
+  <div class="loader" id="loader" aria-label="Cargando la presentación">
+    <div class="loader__inner">
+      <div class="loader__count" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">0</span><span class="loader__pct">%</span></div>
+      <p class="loader__line">Mahou × BIG · Baqueira Beret</p>
+    </div>
+  </div>
+
+  <a class="skip" href="#viaje">Saltar al contenido</a>
+
+  <!-- Paisaje de la portada: montaña de día y el pueblo de Baqueira de noche (detrás de la botella 3D) -->
+  <div class="backdrop" aria-hidden="true">
+    <img class="backdrop__day" src="assets/img/portada-montanas.webp" alt="" width="3200" height="875">
+    <img class="backdrop__night" src="assets/img/apres-pueblo-noche.webp" alt="" width="2310" height="2160">
+    <div class="grain"></div>
+    <div class="backdrop__fog"></div>
+  </div>
+
+  <div class="stage" aria-hidden="true"><canvas id="stage"></canvas></div>
+
+  <main>
+    <!-- PORTADA · el gesto: con el scroll la botella se destapa y el día en pistas se vuelve après-ski -->
+    <section id="portada" class="cover" data-chapter="Portada">
+      <div class="cover__sticky">
+        <div class="lockup">
+          <img src="assets/img/mahou-logo.webp" alt="Mahou" width="1722" height="786">
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+          <img class="lockup__partner" src="assets/img/baqueira-beret.webp" alt="Baqueira Beret" width="1662" height="187">
+        </div>
+        <div class="cover__intro">
+          <h1 class="cover__title" data-split>Après-ski en Baqueira Beret</h1>
+        </div>
+        <div class="cover__slot bottle-slot" data-bottle="hero" data-open="scroll">
+          <img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088">
+        </div>
+        <p class="cover__after" aria-label="Se cierran las pistas. Empieza el après-ski.">
+          <span class="l" aria-hidden="true">Se cierran las pistas.</span>
+          <span class="l" aria-hidden="true">Empieza el <span class="nw">après-ski.</span></span>
+        </p>
+        <p class="cover__cue" aria-hidden="true">Desliza</p>
+      </div>
+    </section>
+
+    <!-- EL VIAJE -->
+    <section id="viaje" class="viaje" data-chapter="El viaje" data-tone="noche">
+      <img class="viaje__edge" src="assets/img/nube.svg" alt="" aria-hidden="true">
+      <div class="viaje__sticky">
+        <figure class="viaje__photo">
+          <img src="assets/img/viaje-telesilla.webp" alt="Telesilla entre pinos nevados en Baqueira Beret" width="2031" height="2160">
+          <div class="grain"></div>
+        </figure>
+        <!-- Nubes que se abren con el scroll: se entra al viaje atravesándolas -->
+        <div class="viaje__fog" aria-hidden="true">
+          <img class="cloud c1" src="assets/img/nube.svg" alt="">
+          <img class="cloud c2" src="assets/img/nube.svg" alt="">
+          <img class="cloud c3" src="assets/img/nube.svg" alt="">
+          <img class="cloud c4" src="assets/img/nube.svg" alt="">
+          <img class="cloud c5" src="assets/img/nube.svg" alt="">
+          <img class="cloud c6" src="assets/img/nube.svg" alt="">
+        </div>
+        <h2 class="viaje__title"><span class="t1">Seis creadores</span> <span class="t2">en Baqueira Beret</span></h2>
+        <div class="viaje__band">
+          <p>Este diciembre, BIG Agency vuelve a la nieve con <b>seis creadores de contenido</b>, en colaboración con <b>Baqueira Beret</b>.</p>
+          <p>Queremos invitar a <b>Mahou</b> a sumarse al viaje y estar presente en el <b>après-ski</b>, después de la jornada en pistas.</p>
+        </div>
+        <div class="viaje__wipe" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- EDICIÓN ANTERIOR · los reels suben hasta la altura de sus visualizaciones -->
+    <section id="anterior" class="anterior" data-chapter="Edición anterior" data-tone="rojo" data-fizz="1">
+      <div class="anterior__head">
+        <h2 class="anterior__big"><span class="anterior__total">+3,3 M</span></h2>
+        <p class="anterior__lead" data-reveal>Visualizaciones orgánicas con solo 2 creadores</p>
+        <p class="anterior__meta" data-reveal>Gonza y Juli · Navidad 2025 · Colaboración anterior en Baqueira Beret</p>
+      </div>
+      <div class="reels">
+        <a class="reel" style="--v:1" href="https://www.instagram.com/p/DS2aR5ajWuO/" target="_blank" rel="noopener" aria-label="Ver en Instagram el reel de @jugarciaok: 1,44 M visualizaciones">
+          <div class="reel__top"><strong data-count>1,44 M</strong><span>Reel de @jugarciaok</span></div>
+          <div class="reel__img"><img src="assets/img/reel-jugarciaok-144.webp" alt="Fotograma del reel de @jugarciaok en Baqueira Beret" width="592" height="1232"></div>
+        </a>
+        <a class="reel" style="--v:.715" href="https://www.instagram.com/reels/DSyEJZ9DYot/" target="_blank" rel="noopener" aria-label="Ver en Instagram el reel de @gonzamaass: 1,03 M visualizaciones">
+          <div class="reel__top"><strong data-count>1,03 M</strong><span>Reel de @gonzamaass</span></div>
+          <div class="reel__img"><img src="assets/img/reel-gonzamaass-103.webp" alt="Fotograma del reel de @gonzamaass en Baqueira Beret" width="592" height="1232"></div>
+        </a>
+        <a class="reel" style="--v:.59" href="https://www.instagram.com/reels/DSxVn_KjIQM/" target="_blank" rel="noopener" aria-label="Ver en Instagram el reel de @gonzamaass: 850 K visualizaciones">
+          <div class="reel__top"><strong data-count>850 K</strong><span>Reel de @gonzamaass</span></div>
+          <div class="reel__img"><img src="assets/img/reel-gonzamaass-850.webp" alt="Fotograma del segundo reel de @gonzamaass en Baqueira Beret" width="592" height="1232"></div>
+        </a>
+      </div>
+      <p class="source" data-reveal>Fuente: BIG Agency, edición Navidad 2025. Fecha de captura de los datos: a confirmar.</p>
+    </section>
+
+    <!-- LOS SEIS CREADORES · cada uno con su botella, que se destapa al llegar -->
+    <section id="creadores" class="crew" data-chapter="Los seis creadores" data-tone="nieve" data-fizz=".25">
+      <h2 class="h2" data-split>Los seis creadores</h2>
+      <div class="crew__grid">
+        <article class="member">
+          <div class="member__slot bottle-slot" data-bottle="row"><img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088"></div>
+          <div class="member__body" data-reveal>
+            <div class="member__photo"><img src="assets/img/jorge-ramon.webp" alt="Jorge Ramón" width="1136" height="380" loading="lazy"></div>
+            <h3>Jorge Ramón</h3>
+            <a class="member__handle" href="https://www.instagram.com/jorgeramonweb/" target="_blank" rel="noopener">@jorgeramonweb</a>
+            <ul class="member__nets"><li><b data-count>451K</b><span>Instagram</span></li><li><b data-count>358,8K</b><span>TikTok</span></li></ul>
+          </div>
+        </article>
+        <article class="member">
+          <div class="member__slot bottle-slot" data-bottle="row"><img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088"></div>
+          <div class="member__body" data-reveal>
+            <div class="member__photo"><img src="assets/img/sofi-sea.webp" alt="Sofi Sea" width="1136" height="380" loading="lazy"></div>
+            <h3>Sofi Sea</h3>
+            <a class="member__handle" href="https://www.instagram.com/sofiisea/" target="_blank" rel="noopener">@sofiisea</a>
+            <ul class="member__nets"><li><b data-count>289K</b><span>Instagram</span></li><li><b data-count>413K</b><span>TikTok</span></li></ul>
+          </div>
+        </article>
+        <article class="member">
+          <div class="member__slot bottle-slot" data-bottle="row"><img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088"></div>
+          <div class="member__body" data-reveal>
+            <div class="member__photo"><img src="assets/img/ivan.webp" alt="Iván" width="1136" height="380" loading="lazy"></div>
+            <h3>Iván</h3>
+            <a class="member__handle" href="https://www.instagram.com/ivssss_/" target="_blank" rel="noopener">@ivssss_</a>
+            <ul class="member__nets"><li><b data-count>112K</b><span>Instagram</span></li><li><b data-count>58,3K</b><span>TikTok</span></li></ul>
+          </div>
+        </article>
+        <article class="member">
+          <div class="member__slot bottle-slot" data-bottle="row"><img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088"></div>
+          <div class="member__body" data-reveal>
+            <div class="member__photo"><img src="assets/img/maria-garcia-pescador.webp" alt="María García Pescador" width="1136" height="380" loading="lazy"></div>
+            <h3>María García Pescador</h3>
+            <a class="member__handle" href="https://www.instagram.com/marianinigp/" target="_blank" rel="noopener">@marianinigp</a>
+            <ul class="member__nets"><li><b data-count>102K</b><span>Instagram</span></li><li><b data-count>15,5K</b><span>TikTok</span></li></ul>
+          </div>
+        </article>
+        <article class="member">
+          <div class="member__slot bottle-slot" data-bottle="row"><img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088"></div>
+          <div class="member__body" data-reveal>
+            <div class="member__photo"><img src="assets/img/juli-garcia.webp" alt="Juli García" width="1136" height="380" loading="lazy"></div>
+            <h3>Juli García</h3>
+            <a class="member__handle" href="https://www.instagram.com/jugarciaok/" target="_blank" rel="noopener">@jugarciaok</a>
+            <ul class="member__nets"><li><b data-count>82,2K</b><span>Instagram</span></li><li><b data-count>111,3K</b><span>TikTok</span></li></ul>
+          </div>
+        </article>
+        <article class="member">
+          <div class="member__slot bottle-slot" data-bottle="row"><img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088"></div>
+          <div class="member__body" data-reveal>
+            <div class="member__photo"><img src="assets/img/gonza-maass.webp" alt="Gonza Maass" width="1136" height="380" loading="lazy"></div>
+            <h3>Gonza Maass</h3>
+            <a class="member__handle" href="https://www.instagram.com/gonzamaass/" target="_blank" rel="noopener">@gonzamaass</a>
+            <ul class="member__nets"><li><b data-count>23K</b><span>Instagram</span></li><li><b data-count>26,8K</b><span>TikTok</span></li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DESPUÉS DE LAS PISTAS · la propuesta y lo que queda por definir -->
+    <section id="apres" class="apres" data-chapter="Después de las pistas" data-tone="noche" data-fizz=".7">
+      <div class="apres__slot bottle-slot" data-bottle="hero" data-open="1">
+        <img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088">
+      </div>
+      <div class="apres__text">
+        <h2 class="h2" data-split>Mahou, en el après-ski</h2>
+        <p class="lead apres__lead" data-reveal>Proponemos que Mahou se sume al viaje en el après-ski, con los seis creadores, después de la jornada en pistas.</p>
+        <ul class="apres__list">
+          <li data-reveal><h3>Ya está confirmado</h3><p>El viaje de diciembre, los seis creadores y la colaboración con Baqueira Beret.</p></li>
+          <li data-reveal><h3>Lo que proponemos</h3><p>Que Mahou esté presente en el après-ski, al terminar la jornada en pistas.</p></li>
+          <li data-reveal><h3>Lo definimos con Mahou</h3><p>Formatos de contenido, fechas y alcance.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CIERRE -->
+    <section id="cierre" class="cierre" data-chapter="Cierre" data-tone="nieve" data-fizz=".45">
+      <div class="cierre__text">
+        <div class="lockup lockup--end">
+          <img src="assets/img/mahou-logo.webp" alt="Mahou" width="1722" height="786" loading="lazy">
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+          <img class="lockup__partner" src="assets/img/baqueira-beret.webp" alt="Baqueira Beret" width="1662" height="187" loading="lazy">
+        </div>
+        <h2 class="cierre__title" data-split>¿Se suma Mahou al après-ski?</h2>
+        <p class="cierre__contact" data-reveal><span>Contacto</span> Gonzalo Maass · BIG Agency</p>
+        <div class="cierre__sign">
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+          <span>BIG Agency · España</span>
+        </div>
+      </div>
+      <div class="cierre__slot bottle-slot" data-bottle="hero" data-open="1">
+        <img class="bottle-fallback" src="assets/img/mahou-botella.webp" alt="" width="480" height="1088" loading="lazy">
+      </div>
+    </section>
+  </main>
+
+  <nav class="island" aria-label="Índice de la presentación">
+    <button class="island__toggle" aria-expanded="false" aria-controls="island-list"><span class="island__current">Portada</span></button>
+    <ol class="island__list" id="island-list"></ol>
+  </nav>
+</body>
+</html>
