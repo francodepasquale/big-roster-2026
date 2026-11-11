@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#EFE7DC">
+  <meta name="description" content="Una propuesta de BIG Agency para Rituals: el viaje a Baqueira Beret con seis creadores, diciembre de 2026, con su mediakit.">
+  <title>Rituals × BIG — Diciembre en Baqueira Beret</title>
+  <style>
+    .loader{display:none}html.is-loading{overflow:hidden}
+    .is-loading .loader{display:flex;position:fixed;inset:0;z-index:100;background:#EFE7DC;color:#1D1C1A;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+    .is-loading main,.is-loading .island{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.deckFallback = setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      document.dispatchEvent(new Event('deck:ready'));
+    }, 15000);
+  </script>
+  <link rel="icon" href="assets/img/big.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/SplitText.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-tone="arena">
+  <div class="loader" id="loader" aria-label="Cargando la presentación">
+    <div class="loader__inner">
+      <div class="loader__count" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">0</span><span class="loader__pct">%</span></div>
+      <p class="loader__line">Rituals × BIG · Baqueira Beret</p>
+    </div>
+  </div>
+
+  <a class="skip" href="#viaje">Saltar al contenido</a>
+
+  <div class="stage" aria-hidden="true"><canvas id="stage"></canvas></div>
+
+  <main>
+    <!-- PORTADA · el gesto: con el scroll la caja de regalo se abre y la tarde se vuelve granate -->
+    <section id="portada" class="cover" data-chapter="Portada">
+      <div class="cover__sticky">
+        <div class="lockup">
+          <img class="lockup__brand" src="assets/img/rituals-logo-oscuro.webp" alt="Rituals" width="720" height="686">
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+          <img class="lockup__partner" src="assets/img/baqueira-beret.webp" alt="Baqueira Beret" width="1662" height="187">
+        </div>
+        <div class="cover__intro">
+          <h1 class="cover__title" data-split>Diciembre en Baqueira Beret</h1>
+        </div>
+        <div class="cover__slot box-slot" data-box="hero" data-open="scroll">
+          <img class="box-fallback" src="assets/img/caja-regalo.webp" alt="" width="900" height="760">
+        </div>
+        <p class="cover__after" aria-label="Seis creadores. Un viaje a la nieve.">
+          <span class="l" aria-hidden="true">Seis creadores.</span>
+          <span class="l" aria-hidden="true">Un viaje a la&nbsp;nieve.</span>
+        </p>
+        <!-- El tren de la nieve: cruza la portada sobre el manto blanco y acelera con el scroll -->
+        <div class="snowline" aria-hidden="true">
+          <div class="train" data-train="carga"></div>
+          <div class="snowline__bank"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EL VIAJE -->
+    <section id="viaje" class="viaje" data-chapter="El viaje" data-tone="tinta">
+      <img class="viaje__edge" src="assets/img/nube.svg" alt="" aria-hidden="true">
+      <div class="viaje__sticky">
+        <figure class="viaje__photo">
+          <img src="assets/img/viaje-telesilla.webp" alt="Telesilla entre pinos nevados en Baqueira Beret" width="2031" height="2160">
+          <div class="grain"></div>
+        </figure>
+        <div class="viaje__fog" aria-hidden="true">
+          <img class="cloud c1" src="assets/img/nube.svg" alt="">
+          <img class="cloud c2" src="assets/img/nube.svg" alt="">
+          <img class="cloud c3" src="assets/img/nube.svg" alt="">
+          <img class="cloud c4" src="assets/img/nube.svg" alt="">
+          <img class="cloud c5" src="assets/img/nube.svg" alt="">
+          <img class="cloud c6" src="assets/img/nube.svg" alt="">
+        </div>
+        <h2 class="viaje__title"><span class="t1">Seis creadores</span> <span class="t2">en Baqueira Beret</span></h2>
+        <div class="viaje__band">
+          <p>Este diciembre, BIG Agency vuelve a la nieve con <b>seis creadores de contenido</b>, en colaboración con <b>Baqueira Beret</b>.</p>
+          <p>Queremos invitar a <b>Rituals</b> a sumarse al viaje: el cuidado y el descanso <b>después de la jornada en pistas</b>.</p>
+        </div>
+        <div class="viaje__wipe" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- EDICIÓN ANTERIOR · los reels crecen al ritmo de sus visualizaciones -->
+    <section id="anterior" class="anterior" data-chapter="Edición anterior" data-tone="granate">
+      <div class="anterior__head">
+        <h2 class="anterior__big"><span class="anterior__total">+3,3 M</span></h2>
+        <p class="anterior__lead" data-reveal>Visualizaciones orgánicas con solo 2 creadores</p>
+        <p class="anterior__meta" data-reveal>Gonza y Juli · Navidad 2025 · Colaboración anterior en Baqueira Beret</p>
+      </div>
+      <div class="reels">
+        <a class="reel" style="--v:1" href="https://www.instagram.com/p/DS2aR5ajWuO/" target="_blank" rel="noopener" aria-label="Ver en Instagram el reel de @jugarciaok: 1,44 M visualizaciones">
+          <div class="reel__top"><strong data-count>1,44 M</strong><span>Reel de @jugarciaok</span></div>
+          <div class="reel__img"><img src="assets/img/reel-jugarciaok-144.webp" alt="Fotograma del reel de @jugarciaok en Baqueira Beret" width="592" height="1232"><span class="reel__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        </a>
+        <a class="reel" style="--v:.715" href="https://www.instagram.com/reels/DSyEJZ9DYot/" target="_blank" rel="noopener" aria-label="Ver en Instagram el reel de @gonzamaass: 1,03 M visualizaciones">
+          <div class="reel__top"><strong data-count>1,03 M</strong><span>Reel de @gonzamaass</span></div>
+          <div class="reel__img"><img src="assets/img/reel-gonzamaass-103.webp" alt="Fotograma del reel de @gonzamaass en Baqueira Beret" width="592" height="1232"><span class="reel__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        </a>
+        <a class="reel" style="--v:.59" href="https://www.instagram.com/reels/DSxVn_KjIQM/" target="_blank" rel="noopener" aria-label="Ver en Instagram el reel de @gonzamaass: 850 K visualizaciones">
+          <div class="reel__top"><strong data-count>850 K</strong><span>Reel de @gonzamaass</span></div>
+          <div class="reel__img"><img src="assets/img/reel-gonzamaass-850.webp" alt="Fotograma del segundo reel de @gonzamaass en Baqueira Beret" width="592" height="1232"><span class="reel__go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        </a>
+      </div>
+      <p class="reels__hint" data-reveal><span aria-hidden="true">↗</span> Toca cada reel para verlo en Instagram</p>
+      <p class="source" data-reveal>Fuente: BIG Agency, edición Navidad 2025. Fecha de captura de los datos: a confirmar.</p>
+    </section>
+
+    <!-- MEDIAKIT · el tren trae a los seis creadores; cada vagón lleva a su ficha -->
+    <section id="mediakit" class="kit" data-chapter="Mediakit" data-tone="tinta">
+      <div class="kit__sticky">
+      <div class="kit__head">
+        <img class="brandmark" src="assets/img/rituals-logo-claro.webp" alt="" width="720" height="686" loading="lazy">
+        <h2 class="kit__title" data-split>Mediakit</h2>
+        <ul class="kit__sum">
+          <li data-reveal><b data-count>+1 M</b><span>seguidores en Instagram entre los seis creadores</span></li>
+          <li data-reveal><b data-count>+70 %</b><span>de su audiencia de Instagram está en España</span></li>
+        </ul>
+        <a class="kit__more" href="#creadores" data-reveal>Ver el detalle de cada creador <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="kit__train" aria-hidden="true">
+        <div class="train" data-train="largo"></div>
+        <div class="kit__rail"></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- FICHAS · una por creador. Los datos están en el HTML: los contadores y las barras parten de ellos -->
+    <section id="creadores" class="crew" data-chapter="Los seis creadores" data-tone="arena">
+      <article class="card" id="c-jorge" data-wagon="Jorge Ramón">
+        <div class="card__id" data-reveal>
+          <div class="card__photo"><img src="assets/img/jorge-ramon.webp" alt="Jorge Ramón" width="1136" height="380" loading="lazy"><div class="grain"></div><div class="flakes"></div></div>
+          <h3>Jorge Ramón</h3>
+          <a class="card__handle" href="https://www.instagram.com/jorgeramonweb/" target="_blank" rel="noopener">@jorgeramonweb</a>
+          <ul class="card__nets"><li><b data-count>451 K</b><span>Instagram</span></li><li><b data-count>358,8 K</b><span>TikTok</span></li></ul>
+        </div>
+        <div class="card__stats">
+          <div class="stat" data-reveal><b data-count>73,7 %</b><span>de su audiencia de Instagram está en España</span><i class="bar" style="--p:73.7"></i></div>
+          <div class="stat" data-reveal><b data-count>76,9 %</b><span>tiene entre 18 y 34 años</span><i class="bar bar--age" style="--p:76.9"></i></div>
+          <div class="stat stat--gender" data-reveal><div class="split" style="--a:59.1"><i></i><i></i></div><p><span><b data-count>59,1 %</b> hombres</span><span><b data-count>40,9 %</b> mujeres</span></p></div>
+        </div>
+      </article>
+
+      <article class="card" id="c-sofi" data-wagon="Sofi Sea">
+        <div class="card__id" data-reveal>
+          <div class="card__photo"><img src="assets/img/sofi-sea.webp" alt="Sofi Sea" width="1136" height="380" loading="lazy"><div class="grain"></div><div class="flakes"></div></div>
+          <h3>Sofi Sea</h3>
+          <a class="card__handle" href="https://www.instagram.com/sofiisea/" target="_blank" rel="noopener">@sofiisea</a>
+          <ul class="card__nets"><li><b data-count>289 K</b><span>Instagram</span></li><li><b data-count>413 K</b><span>TikTok</span></li></ul>
+        </div>
+        <div class="card__stats">
+          <div class="stat" data-reveal><b data-count>71 %</b><span>de su audiencia de Instagram está en España, y el 65 % en TikTok</span><i class="bar" style="--p:71"></i></div>
+          <div class="stat" data-reveal><b data-count>36,5 %</b><span>tiene entre 25 y 34 años, y el 26,3 % entre 35 y 44</span><i class="bar bar--age" style="--p:36.5"></i></div>
+          <div class="stat stat--gender" data-reveal><div class="split" style="--a:72.8"><i></i><i></i></div><p><span><b data-count>72,8 %</b> hombres</span><span><b data-count>27,2 %</b> mujeres</span></p></div>
+        </div>
+      </article>
+
+      <article class="card" id="c-ivan" data-wagon="Iván">
+        <div class="card__id" data-reveal>
+          <div class="card__photo"><img src="assets/img/ivan.webp" alt="Iván" width="1136" height="380" loading="lazy"><div class="grain"></div><div class="flakes"></div></div>
+          <h3>Iván</h3>
+          <a class="card__handle" href="https://www.instagram.com/ivssss_/" target="_blank" rel="noopener">@ivssss_</a>
+          <ul class="card__nets"><li><b data-count>112 K</b><span>Instagram</span></li><li><b data-count>58,3 K</b><span>TikTok</span></li></ul>
+        </div>
+        <div class="card__stats">
+          <div class="stat" data-reveal><b data-count>75 %</b><span>de su audiencia de Instagram está en España</span><i class="bar" style="--p:75"></i></div>
+          <div class="stat" data-reveal><b class="stat__word">18–34</b><span>años: son sus tramos de edad principales</span></div>
+          <div class="stat stat--gender" data-reveal><div class="split" style="--a:60.1"><i></i><i></i></div><p><span><b data-count>60,1 %</b> hombres</span><span><b data-count>39,9 %</b> mujeres</span></p></div>
+        </div>
+      </article>
+
+      <article class="card" id="c-maria" data-wagon="María García Pescador">
+        <div class="card__id" data-reveal>
+          <div class="card__photo"><img src="assets/img/maria-garcia-pescador.webp" alt="María García Pescador" width="1136" height="380" loading="lazy"><div class="grain"></div><div class="flakes"></div></div>
+          <h3>María García Pescador</h3>
+          <a class="card__handle" href="https://www.instagram.com/marianinigp/" target="_blank" rel="noopener">@marianinigp</a>
+          <ul class="card__nets"><li><b data-count>101,5 K</b><span>Instagram</span></li><li><b data-count>15,5 K</b><span>TikTok</span></li></ul>
+        </div>
+        <div class="card__stats">
+          <div class="stat" data-reveal><b data-count>87 %</b><span>de su audiencia de Instagram está en España</span><i class="bar" style="--p:87"></i></div>
+          <div class="stat" data-reveal><b data-count>66 %</b><span>tiene entre 25 y 44 años</span><i class="bar bar--age" style="--p:66"></i></div>
+          <div class="stat stat--gender" data-reveal><div class="split" style="--a:82.5"><i></i><i></i></div><p><span><b data-count>82,5 %</b> hombres</span><span><b data-count>17,5 %</b> mujeres</span></p></div>
+        </div>
+      </article>
+
+      <article class="card" id="c-julieta" data-wagon="Julieta García">
+        <div class="card__id" data-reveal>
+          <div class="card__photo"><img src="assets/img/juli-garcia.webp" alt="Julieta García" width="1136" height="380" loading="lazy"><div class="grain"></div><div class="flakes"></div></div>
+          <h3>Julieta García</h3>
+          <a class="card__handle" href="https://www.instagram.com/jugarciaok/" target="_blank" rel="noopener">@jugarciaok</a>
+          <ul class="card__nets"><li><b data-count>70,3 K</b><span>Instagram</span></li><li><b data-count>111,3 K</b><span>TikTok</span></li></ul>
+        </div>
+        <div class="card__stats">
+          <div class="stat" data-reveal><b data-count>26 %</b><span>de su audiencia de Instagram está en España</span><i class="bar" style="--p:26"></i></div>
+          <div class="stat" data-reveal><b data-count>66,4 %</b><span>tiene entre 25 y 44 años</span><i class="bar bar--age" style="--p:66.4"></i></div>
+          <div class="stat stat--gender" data-reveal><div class="split" style="--a:56.7"><i></i><i></i></div><p><span><b data-count>56,7 %</b> hombres</span><span><b data-count>43,3 %</b> mujeres</span></p></div>
+        </div>
+      </article>
+
+      <article class="card" id="c-gonzalo" data-wagon="Gonzalo Maass">
+        <div class="card__id" data-reveal>
+          <div class="card__photo"><img src="assets/img/gonza-maass.webp" alt="Gonzalo Maass" width="1136" height="380" loading="lazy"><div class="grain"></div><div class="flakes"></div></div>
+          <h3>Gonzalo Maass</h3>
+          <a class="card__handle" href="https://www.instagram.com/gonzamaass/" target="_blank" rel="noopener">@gonzamaass</a>
+          <ul class="card__nets"><li><b data-count>23 K</b><span>Instagram</span></li><li><b data-count>26,8 K</b><span>TikTok</span></li></ul>
+        </div>
+        <div class="card__stats">
+          <div class="stat" data-reveal><b data-count>22,4 %</b><span>de su audiencia de Instagram está en España</span><i class="bar" style="--p:22.4"></i></div>
+          <div class="stat" data-reveal><b data-count>70,2 %</b><span>tiene entre 25 y 44 años</span><i class="bar bar--age" style="--p:70.2"></i></div>
+          <div class="stat stat--gender" data-reveal><div class="split" style="--a:42.3"><i></i><i></i></div><p><span><b data-count>42,3 %</b> hombres</span><span><b data-count>57,7 %</b> mujeres</span></p></div>
+        </div>
+      </article>
+
+      <p class="source" data-reveal>Fuente: estadísticas de audiencia de Instagram (y TikTok en el caso de Sofi Sea) facilitadas por los creadores a BIG Agency, noviembre de 2026. Seguidores de TikTok, y de Instagram de Jorge Ramón y Sofi Sea: dossier de BIG Agency. El +70 % del mediakit es la media de los seis ponderada por seguidores de Instagram (70,1 %). Fecha de captura: a confirmar.</p>
+    </section>
+
+    <!-- DESPUÉS DE LAS PISTAS · la propuesta y lo que queda por definir -->
+    <section id="propuesta" class="ritual" data-chapter="La propuesta" data-tone="rosa">
+      <figure class="ritual__photo">
+        <img src="assets/img/sakura-mist.webp" alt="The Ritual of Sakura, bruma para cabello y cuerpo de Rituals, sobre una encimera de piedra" width="2200" height="1650" loading="lazy">
+        <div class="grain"></div>
+        <div class="ritual__block"><h2 class="ritual__title" data-split>Después de las pistas, Rituals</h2></div>
+      </figure>
+      <div class="ritual__body">
+        <img class="brandmark brandmark--body" src="assets/img/rituals-logo-oscuro.webp" alt="" width="720" height="686" loading="lazy">
+        <div class="ritual__slot box-slot" data-box="hero" data-open="1">
+          <img class="box-fallback" src="assets/img/caja-regalo.webp" alt="" width="900" height="760" loading="lazy">
+        </div>
+        <div class="ritual__text">
+          <p class="lead" data-reveal>Proponemos que Rituals viaje con los seis creadores y esté presente en el momento de cuidado y descanso, al terminar cada jornada en la nieve.</p>
+          <ul class="ritual__list">
+            <li data-reveal><h3>Ya está confirmado</h3><p>El viaje de diciembre, los seis creadores y la colaboración con Baqueira Beret.</p></li>
+            <li data-reveal><h3>Lo que proponemos</h3><p>Que Rituals forme parte del viaje en el después de pistas.</p></li>
+            <li data-reveal><h3>Lo definimos con Rituals</h3><p>Productos, formatos de contenido, fechas y alcance.</p></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CIERRE -->
+    <section id="cierre" class="cierre" data-chapter="Cierre" data-tone="arena">
+      <div class="cierre__text">
+        <div class="lockup lockup--end">
+          <img class="lockup__brand" src="assets/img/rituals-logo-oscuro.webp" alt="Rituals" width="720" height="686" loading="lazy">
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+          <img class="lockup__partner" src="assets/img/baqueira-beret.webp" alt="Baqueira Beret" width="1662" height="187" loading="lazy">
+        </div>
+        <h2 class="cierre__title" data-split>¿Se suma Rituals al viaje?</h2>
+        <p class="cierre__contact" data-reveal><span>Contacto</span> Gonzalo Maass · BIG Agency</p>
+        <div class="cierre__sign">
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+          <span>BIG Agency · España</span>
+        </div>
+      </div>
+      <div class="cierre__slot box-slot" data-box="hero" data-open="0">
+        <img class="box-fallback" src="assets/img/caja-regalo.webp" alt="" width="900" height="760" loading="lazy">
+      </div>
+      <div class="snowline snowline--end" aria-hidden="true">
+        <div class="train" data-train="carga"></div>
+        <div class="snowline__bank"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="island" aria-label="Índice de la presentación">
+    <button class="island__toggle" aria-expanded="false" aria-controls="island-list"><span class="island__current">Portada</span></button>
+    <ol class="island__list" id="island-list"></ol>
+  </nav>
+</body>
+</html>
