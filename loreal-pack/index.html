@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#040404">
+  <title>Primera fila — L'Oréal Groupe × BIG</title>
+  <meta name="description" content="El desfile de BIG para L'Oréal Groupe: nadie camina por la pasarela. Salen la luz, el producto y el video de cada creador.">
+  <link rel="icon" href="assets/img/big-blanco.svg?v=2" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/bodoni-moda-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-tight-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css?v=10">
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="perfiles.js?v=7" defer></script>
+  <script type="module" src="app.js?v=17"></script>
+</head>
+<body class="is-cargando sin-hud">
+  <canvas class="sala" aria-hidden="true"></canvas>
+
+  <!-- El cargador cuenta la carga real como los avisos del backstage -->
+  <div class="cargador" role="status" aria-live="polite">
+    <p class="cargador__etapa serif">Cinco minutos</p>
+    <div class="cargador__barra"><i></i></div>
+    <p class="cargador__n" aria-hidden="true">0</p>
+    <button type="button" class="pill pill--chico" data-activar-sonido><span class="pill__chip"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 8h3l4-3v10l-4-3H4zM14 7.5a3.5 3.5 0 0 1 0 5"/></svg></span>Activar sonido</button>
+  </div>
+
+  <header class="barra">
+    <a class="barra__marca" href="#inicio" aria-label="L'Oréal Groupe × BIG, al inicio">
+      <span>L'ORÉAL GROUPE</span><i aria-hidden="true">×</i>
+      <svg viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+    </a>
+    <!-- La hoja de ruta: los capítulos, cuál se está viendo y cuánto falta. La arma app.js -->
+    <nav class="ruta vidrio-pill" aria-label="Hoja de ruta"></nav>
+    <button class="sonido vidrio-pill" type="button" aria-pressed="true" aria-label="Sonido">
+      <span class="ondas" aria-hidden="true"><i></i><i></i><i></i></span><span class="sonido__t">Sonido</span>
+    </button>
+  </header>
+
+  <main>
+    <!-- Cada escena: data-capitulo es su nombre en la hoja de ruta; data-paradas, dónde se detiene (de 0 a 1); --largo,
+         cuánto scroll dura (alturas de pantalla × 100). Las tomas, los estados y el ritmo de cada viaje están en app.js -->
+    <section class="escena" id="inicio" data-capitulo="Invitación" data-paradas="0" style="--largo:180">
+      <div class="fijo"><h1 class="sr-only">Porque lo valen. L'Oréal Groupe × BIG. Primera fila: un desfile de creadores.</h1></div>
+    </section>
+
+    <!-- El desfile es la portada: se prende la sala, sube el primer producto de PORTADA (perfiles.js) y el desfile corre
+         solo: la cámara se aleja siguiendo a los demás hasta la vuelta final -->
+    <section class="escena" id="show" data-capitulo="El desfile" data-paradas="0,.22,.34,.46,.58,1" style="--largo:330" data-fase="desfile">
+      <div class="fijo fijo--desfile">
+        <div class="final">
+          <h2 class="serif titulo-final">Porque lo valen.</h2>
+          <div class="cifras"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="escena escena--pack" id="pack" data-capitulo="El pack" data-paradas="0" style="--largo:100">
+      <div class="fijo fijo--pack"></div>
+    </section>
+
+    <!-- ¿Hablamos?: un bloque plano, no 3D. Sube como un telón sobre la sala (--cierre, de 0 a 1, lo pone app.js) -->
+    <section class="escena" id="contacto" data-capitulo="¿Hablamos?" data-paradas="0" style="--largo:100"></section>
+  </main>
+
+  <div class="telon" aria-hidden="true">
+    <div class="telon__in">
+      <p class="telon__marca">L'ORÉAL GROUPE × BIG</p>
+      <h2 class="serif telon__titulo">¿Hablamos?</h2>
+      <p class="telon__texto">Diecisiete creadores, catorce marcas del grupo y una pasarela. Inversión, usos y fechas los definimos juntos.</p>
+      <a class="pill" data-correo href="mailto:contacto@bigagency.com.ar" style="--chip:#111"><span class="pill__chip"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14L14 6M7.5 6H14v6.5"/></svg></span>Escribir a BIG</a>
+      <p class="telon__correo">contacto@bigagency.com.ar</p>
+      <p class="telon__legal">Propuesta creativa de BIG para L'Oréal Groupe Argentina. Las duplas, las historias y las marcas por creador son una propuesta. Seguidores al momento de armar la propuesta. Productos: imágenes de cada marca.</p>
+    </div>
+  </div>
+
+  <!-- La píldora «siguiente»: aparece cuando el deck espera un gesto (abrir el sobre, entrar, seguir al pack) -->
+  <button type="button" class="siguiente" tabindex="-1" aria-hidden="true"><span class="siguiente__t">Abrir la invitación</span><span class="siguiente__flecha" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 4.5v11M5.5 11l4.5 4.5 4.5-4.5"/></svg></span></button>
+
+  <div class="videos-ocultos" hidden></div>
+  <noscript><p class="sin-js">Activá JavaScript para ver el desfile.</p></noscript>
+</body>
+</html>
