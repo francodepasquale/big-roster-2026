@@ -12,7 +12,7 @@
 // capítulo duran ~1,5 s. Cualquier gesto (rueda, toque, tecla, la píldora «siguiente») dispara el viaje a la parada
 // siguiente en esa dirección, y el usuario puede tomar el control en cualquier momento.
 import { crearSala } from './sala.js';
-import { cargarImagen, prepararProducto } from './producto.js';
+import { cargarImagen, prepararModelo } from './producto.js';
 import { total } from './tarjetas.js';
 import { crearPack } from './pack.js';
 import * as S from './sonido.js';
@@ -73,7 +73,7 @@ async function cargar() {
     ...P.map((p, i) => async () => {
       const im = await cargarImagen(`assets/productos/${p.producto}.webp`);
       await new Promise(r => requestAnimationFrame(r));
-      preparados[i] = prepararProducto(im, { maxTextura: MOVIL ? 640 : 1024, anisotropia: MOVIL ? 4 : 8 });
+      preparados[i] = prepararModelo(p.producto, im, { maxTextura: MOVIL ? 640 : 1024, anisotropia: MOVIL ? 4 : 8 });
     }),
   ];
   let hechas = 0, mostrado = 0, etapaVista = -1;
