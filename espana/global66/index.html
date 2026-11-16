@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0D3AD3">
+  <meta name="description" content="Una propuesta de BIG Agency para Global66: cuatro creadores con audiencias en Argentina, España, México, Estados Unidos y más países, con su mediakit.">
+  <title>Global66 × BIG — Cuatro creadores para Global66</title>
+  <style>
+    .loader{display:none}html.is-loading{overflow:hidden}
+    .is-loading .loader{display:flex;position:fixed;inset:0;z-index:100;background:#0D3AD3;color:#fff;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+    .is-loading main,.is-loading .island,.is-loading .brand{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.deckFallback = setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      document.dispatchEvent(new Event('deck:ready'));
+    }, 15000);
+  </script>
+  <link rel="icon" href="assets/img/big.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/bricolage-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/SplitText.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-tone="cielo">
+  <div class="loader" id="loader" aria-label="Cargando la presentación">
+    <div class="loader__inner">
+      <img class="loader__mark" src="assets/img/global66-simbolo.webp" alt="" width="720" height="720">
+      <div class="loader__count" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">0</span><span class="loader__pct">%</span></div>
+      <p class="loader__line">Global66 × BIG</p>
+    </div>
+  </div>
+
+  <a class="skip" href="#chile">Saltar al contenido</a>
+  <a class="brand" href="#portada" aria-label="Volver a la portada"><img src="assets/img/global66-simbolo.webp" alt="Global66" width="720" height="720"></a>
+
+  <div class="stage" aria-hidden="true"><canvas id="stage"></canvas></div>
+
+  <main>
+    <!-- PORTADA · la moneda de Global66 gira con el scroll entre nubes -->
+    <section id="portada" class="cover" data-chapter="Portada" data-tone="cielo">
+      <div class="cover__sticky">
+        <div class="clouds clouds--cover" aria-hidden="true">
+          <img class="cl cl1" src="assets/img/nube.svg" alt=""><img class="cl cl2" src="assets/img/nube.svg" alt=""><img class="cl cl3" src="assets/img/nube.svg" alt=""><img class="cl cl4" src="assets/img/nube.svg" alt="">
+        </div>
+        <div class="lockup">
+          <img class="lockup__brand" src="assets/img/global66-simbolo.webp" alt="" width="720" height="720"><span class="lockup__name">Global66</span>
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+        </div>
+        <div class="cover__intro">
+          <h1 class="cover__title" data-split>Cuatro creadores para Global66</h1>
+          <p class="cover__sub">Una propuesta de BIG Agency</p>
+        </div>
+        <div class="cover__slot coin-slot" data-obj="coin" data-spin="cover">
+          <img class="obj-fallback" src="assets/img/moneda.webp" alt="" width="777" height="827">
+        </div>
+        <p class="cover__hint" aria-hidden="true">Desliza</p>
+      </div>
+    </section>
+
+    <!-- AUDIENCIAS · el globo gira y salen líneas (desde Santiago) hacia donde están las audiencias -->
+    <section id="chile" class="chile" data-chapter="Audiencias" data-tone="noche">
+      <div class="chile__sticky">
+        <div class="chile__slot globe-slot" data-obj="globe">
+          <img class="obj-fallback" src="assets/img/globo.webp" alt="" width="896" height="896">
+        </div>
+        <div class="chile__copy">
+          <h2 class="chile__h">Las audiencias de estos cuatro perfiles están en</h2>
+          <ul class="chile__list">
+            <li>Argentina</li><li>España</li><li>México</li><li>Estados Unidos</li><li>Colombia</li><li>Rumania</li><li>Venezuela</li><li>Italia</li><li>Uruguay</li><li>Brasil</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRENSA · transición: páginas de prensa (del reel de Global66) que entran y salen con zoom -->
+    <section id="prensa" class="prensa" data-tone="papel" aria-label="Global66 en la prensa">
+      <div class="prensa__sticky">
+        <div class="pages">
+          <img class="page page--0" src="assets/img/prensa-tercera.webp" alt="La Tercera: «Global 66: la agilidad y transparencia a la hora de enviar dinero al extranjero»" width="480" height="854">
+          <img class="page page--1" src="assets/img/prensa-lr.webp" alt="La República: «Global66 recibe aprobación de Finra para operar en el mercado de valores de EE.UU.»" width="480" height="854">
+          <img class="page page--2" src="assets/img/prensa-libero.webp" alt="El Líbero: «Tomás Bercovich y el éxito de Global 66: Estamos creciendo más de 100% al año»" width="480" height="854">
+          <img class="page page--3" src="assets/img/prensa-exante.webp" alt="Ex-Ante: «Global66: la fintech que nació facilitando envíos de dinero entre países y ahora abre la puerta a Wall Street»" width="480" height="854">
+          <img class="page page--4" src="assets/img/prensa-df-supera.webp" alt="Diario Financiero: «Global66 supera los US$ 100 millones en ingresos anualizados»" width="480" height="854">
+        </div>
+        <p class="prensa__note">Global66 en la prensa · capturas del reel de @global_66</p>
+      </div>
+    </section>
+
+    <!-- MEDIAKIT · lo que suman los cuatro -->
+    <section id="mediakit" class="kit" data-chapter="Mediakit" data-tone="azul">
+      <div class="kit__inner">
+        <h2 class="kit__title" data-split>Mediakit</h2>
+        <div class="kit__sum">
+          <p><b data-count>≈3,79 M</b><span>seguidores acumulados entre Instagram y TikTok</span></p>
+          <p><b data-count>+5,8 M</b><span>reproducciones en Instagram entre los cuatro, en los últimos 30 días</span></p>
+        </div>
+        <div class="kit__slot coin-slot" data-obj="coin" data-spin="kit"></div>
+        <a class="kit__more" href="#fran">Ver cada perfil <span aria-hidden="true">↓</span></a>
+        <p class="note kit__note">Fuente: paneles de cada creador. Los seguidores se suman entre perfiles y plataformas: no son personas únicas ni alcance de campaña.</p>
+      </div>
+    </section>
+
+    <!-- LOS CUATRO PERFILES -->
+    <section id="fran" class="pf pf--fran" data-chapter="Fran «Panchi» Reynoso" data-tone="cielo">
+      <div class="pf__slide">
+        <div class="pf__side">
+          <h2 class="pf__name" data-split>Fran «Panchi» Reynoso</h2>
+          <figure class="pf__photo"><img src="assets/img/fran-reynoso.webp" alt="Fran «Panchi» Reynoso" width="568" height="710" loading="lazy"><div class="pf__slot coin-slot" data-obj="coin" data-spin="pf"></div></figure>
+          <div class="pf__lead">
+            <p class="big"><b data-count>222 mil</b><span>seguidores en Instagram</span></p>
+            <p class="big"><b data-count>1,3 M</b><span>seguidores en TikTok</span></p>
+          </div>
+        </div>
+        <div class="pf__aud">
+          <div class="aud">
+            <h3 class="aud__title">Audiencia</h3>
+            <div class="aud__col">
+              <p class="aud__h">Países principales</p>
+          <ul class="bars" style="--k:1.594" aria-label="Países principales">
+            <li class="is-top" style="--p:55.2"><span>Argentina</span><i></i><b>55,2 %</b></li>
+            <li style="--p:6.1"><span>México</span><i></i><b>6,1 %</b></li>
+            <li style="--p:5.3"><span>Chile</span><i></i><b>5,3 %</b></li>
+            <li style="--p:5.0"><span>España</span><i></i><b>5,0 %</b></li>
+            <li style="--p:4.5"><span>Estados Unidos</span><i></i><b>4,5 %</b></li>
+          </ul>
+              <p class="aud__h aud__h--2">Género</p>
+          <ul class="bars" style="--k:1.472" aria-label="Género">
+            <li style="--p:59.8"><span>Mujeres</span><i></i><b>59,8 %</b></li>
+            <li style="--p:40.2"><span>Hombres</span><i></i><b>40,2 %</b></li>
+          </ul>
+            </div>
+            <div class="aud__col">
+              <p class="aud__h">Edades</p>
+          <ul class="bars" style="--k:2.536" aria-label="Edades">
+            <li style="--p:1.9"><span>13–17</span><i></i><b>1,9 %</b></li>
+            <li style="--p:15.4"><span>18–24</span><i></i><b>15,4 %</b></li>
+            <li class="is-top" style="--p:34.7"><span>25–34</span><i></i><b>34,7 %</b></li>
+            <li style="--p:23.0"><span>35–44</span><i></i><b>23,0 %</b></li>
+            <li style="--p:14.7"><span>45–54</span><i></i><b>14,7 %</b></li>
+            <li style="--p:7.3"><span>55–64</span><i></i><b>7,3 %</b></li>
+            <li style="--p:3.0"><span>65+</span><i></i><b>3,0 %</b></li>
+          </ul>
+            </div>
+          </div>
+          <p class="note">Fuente: paneles de Instagram y TikTok de Fran Reynoso.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mica" class="pf pf--mica" data-chapter="Mica Tozzi" data-tone="blanco">
+      <div class="pf__slide">
+        <div class="pf__side">
+          <h2 class="pf__name" data-split>Mica Tozzi</h2>
+          <figure class="pf__photo"><img src="assets/img/mica-tozzi.webp" alt="Mica Tozzi" width="900" height="1124" loading="lazy"><div class="pf__slot coin-slot" data-obj="coin" data-spin="pf"></div></figure>
+          <div class="pf__lead">
+            <p class="big"><b data-count>136 mil</b><span>seguidores en Instagram</span></p>
+            <p class="big"><b data-count>133,4 mil</b><span>seguidores en TikTok</span></p>
+          </div>
+        </div>
+        <div class="pf__aud">
+          <div class="aud">
+            <h3 class="aud__title">Audiencia</h3>
+            <div class="aud__col">
+              <p class="aud__h">Países principales</p>
+          <ul class="bars" style="--k:2.023" aria-label="Países principales">
+            <li class="is-top" style="--p:43.5"><span>Argentina</span><i></i><b>43,5 %</b></li>
+            <li style="--p:6.7"><span>México</span><i></i><b>6,7 %</b></li>
+            <li style="--p:6.6"><span>España</span><i></i><b>6,6 %</b></li>
+            <li style="--p:5.6"><span>Estados Unidos</span><i></i><b>5,6 %</b></li>
+            <li style="--p:4.9"><span>Colombia</span><i></i><b>4,9 %</b></li>
+          </ul>
+              <p class="aud__h aud__h--2">Género</p>
+          <ul class="bars" style="--k:1.073" aria-label="Género">
+            <li style="--p:82.0"><span>Mujeres</span><i></i><b>82,0 %</b></li>
+            <li style="--p:18.0"><span>Hombres</span><i></i><b>18,0 %</b></li>
+          </ul>
+            </div>
+            <div class="aud__col">
+              <p class="aud__h">Edades · rangos disponibles</p>
+          <ul class="bars" style="--k:2.085" aria-label="Edades">
+            <li style="--p:4.1"><span>13–17</span><i></i><b>4,1 %</b></li>
+            <li style="--p:19.1"><span>18–24</span><i></i><b>19,1 %</b></li>
+            <li class="is-top" style="--p:42.2"><span>25–34</span><i></i><b>42,2 %</b></li>
+            <li style="--p:19.9"><span>35–44</span><i></i><b>19,9 %</b></li>
+          </ul>
+            </div>
+          </div>
+          <p class="note">Fuente: paneles de Instagram y TikTok de Mica Tozzi.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cami" class="pf pf--cami" data-chapter="Cami Yáñez" data-tone="cielo">
+      <div class="pf__slide">
+        <div class="pf__side">
+          <h2 class="pf__name" data-split>Cami Yáñez</h2>
+          <figure class="pf__photo"><img src="assets/img/cami-yanez.webp" alt="Cami Yáñez" width="768" height="960" loading="lazy"><div class="pf__slot coin-slot" data-obj="coin" data-spin="pf"></div></figure>
+          <div class="pf__lead">
+            <p class="big"><b data-count>73,2 mil</b><span>seguidores en Instagram</span></p>
+            <p class="big"><b data-count>176,6 mil</b><span>seguidores en TikTok</span></p>
+          </div>
+        </div>
+        <div class="pf__aud">
+          <div class="aud">
+            <h3 class="aud__title">Audiencia</h3>
+            <div class="aud__col">
+              <p class="aud__h">Países principales</p>
+          <ul class="bars" style="--k:2.245" aria-label="Países principales">
+            <li class="is-top" style="--p:39.2"><span>Argentina</span><i></i><b>39,2 %</b></li>
+            <li style="--p:16.4"><span>México</span><i></i><b>16,4 %</b></li>
+            <li style="--p:7.9"><span>España</span><i></i><b>7,9 %</b></li>
+            <li style="--p:5.9"><span>Chile</span><i></i><b>5,9 %</b></li>
+            <li style="--p:4.6"><span>Estados Unidos</span><i></i><b>4,6 %</b></li>
+          </ul>
+              <p class="aud__h aud__h--2">Género</p>
+          <ul class="bars" style="--k:0.931" aria-label="Género">
+            <li style="--p:94.5"><span>Mujeres</span><i></i><b>94,5 %</b></li>
+            <li style="--p:5.5"><span>Hombres</span><i></i><b>5,5 %</b></li>
+          </ul>
+            </div>
+            <div class="aud__col">
+              <p class="aud__h">Edades</p>
+          <ul class="bars" style="--k:1.826" aria-label="Edades">
+            <li style="--p:1.4"><span>13–17</span><i></i><b>1,4 %</b></li>
+            <li style="--p:12.9"><span>18–24</span><i></i><b>12,9 %</b></li>
+            <li class="is-top" style="--p:48.2"><span>25–34</span><i></i><b>48,2 %</b></li>
+            <li style="--p:25.8"><span>35–44</span><i></i><b>25,8 %</b></li>
+            <li style="--p:8.8"><span>45–54</span><i></i><b>8,8 %</b></li>
+            <li style="--p:2.1"><span>55–64</span><i></i><b>2,1 %</b></li>
+            <li style="--p:0.8"><span>65+</span><i></i><b>0,8 %</b></li>
+          </ul>
+            </div>
+          </div>
+          <p class="note">Fuente: paneles de Instagram y TikTok de Cami Yáñez.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gianluca" class="pf pf--gian" data-chapter="Gianluca Pugliese" data-tone="blanco">
+      <div class="pf__slide">
+        <div class="pf__side">
+          <h2 class="pf__name" data-split>Gianluca Pugliese</h2>
+          <figure class="pf__photo"><img src="assets/img/gianluca.webp" alt="Gianluca Pugliese" width="900" height="1124" loading="lazy"><div class="pf__slot coin-slot" data-obj="coin" data-spin="pf"></div></figure>
+          <div class="pf__lead">
+            <p class="big"><b data-count>345 mil</b><span>seguidores en Instagram</span></p>
+            <p class="big"><b data-count>1,4 M</b><span>seguidores en TikTok</span></p>
+          </div>
+        </div>
+        <div class="pf__aud">
+          <div class="aud">
+            <h3 class="aud__title">Audiencia</h3>
+            <div class="aud__col">
+              <p class="aud__h">Países principales</p>
+          <ul class="bars" style="--k:2.424" aria-label="Países principales">
+            <li class="is-top" style="--p:36.3"><span>Argentina</span><i></i><b>36,3 %</b></li>
+            <li style="--p:9.6"><span>Estados Unidos</span><i></i><b>9,6 %</b></li>
+            <li style="--p:9.1"><span>México</span><i></i><b>9,1 %</b></li>
+            <li style="--p:7.3"><span>España</span><i></i><b>7,3 %</b></li>
+            <li style="--p:4.6"><span>Venezuela</span><i></i><b>4,6 %</b></li>
+          </ul>
+              <p class="aud__h aud__h--2">Género</p>
+          <ul class="bars" style="--k:1.274" aria-label="Género">
+            <li style="--p:69.1"><span>Mujeres</span><i></i><b>69,1 %</b></li>
+            <li style="--p:30.9"><span>Hombres</span><i></i><b>30,9 %</b></li>
+          </ul>
+            </div>
+            <div class="aud__col">
+              <p class="aud__h">Edades</p>
+          <ul class="bars" style="--k:2.767" aria-label="Edades">
+            <li style="--p:2.0"><span>13–17</span><i></i><b>2,0 %</b></li>
+            <li style="--p:11.9"><span>18–24</span><i></i><b>11,9 %</b></li>
+            <li class="is-top" style="--p:31.8"><span>25–34</span><i></i><b>31,8 %</b></li>
+            <li style="--p:25.9"><span>35–44</span><i></i><b>25,9 %</b></li>
+            <li style="--p:16.5"><span>45–54</span><i></i><b>16,5 %</b></li>
+            <li style="--p:8.3"><span>55–64</span><i></i><b>8,3 %</b></li>
+            <li style="--p:3.6"><span>65+</span><i></i><b>3,6 %</b></li>
+          </ul>
+            </div>
+          </div>
+          <p class="note">Fuente: paneles de Instagram y TikTok de Gianluca Pugliese.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUBES · se atraviesan para llegar a la propuesta (Global66 usa nubes en su web) -->
+    <section id="propuesta" class="nubes" data-chapter="La propuesta" data-tone="azul">
+      <div class="nubes__sticky">
+        <div class="clouds clouds--fly" aria-hidden="true">
+          <img class="cf f1" src="assets/img/nube.svg" alt=""><img class="cf f2" src="assets/img/nube.svg" alt=""><img class="cf f3" src="assets/img/nube.svg" alt=""><img class="cf f4" src="assets/img/nube.svg" alt=""><img class="cf f5" src="assets/img/nube.svg" alt=""><img class="cf f6" src="assets/img/nube.svg" alt="">
+        </div>
+        <h2 class="nubes__title"><span class="l">Para mí,</span><span class="l">ser global es…</span></h2>
+      </div>
+    </section>
+
+    <section class="prop" data-tone="cielo" aria-label="Qué proponemos">
+      <div class="prop__inner">
+        <p class="prop__lead" data-reveal>Global66 ya cuenta su historia con creadores que hablan en primera persona. Proponemos sumar a Fran, Mica, Cami y Gianluca: cada uno, con su tono y su comunidad, cuenta qué significa para él o ella ser global.</p>
+        <div class="prop__list">
+          <div data-reveal>
+            <h3>Lo que ya está</h3>
+            <p>Cuatro perfiles con más de 5,8 M de reproducciones al mes en Instagram y audiencias en Argentina, España, México y Estados Unidos.</p>
+          </div>
+          <div data-reveal>
+            <h3>Lo que proponemos</h3>
+            <p>Piezas en Instagram y TikTok, en el formato de cada creador: reels, historias y tutoriales, con Global66 dentro de lo que ya cuentan.</p>
+          </div>
+          <div data-reveal>
+            <h3>Lo definimos con Global66</h3>
+            <p>Qué perfiles, cuántas piezas, mercados, calendario y presupuesto. A confirmar.</p>
+          </div>
+        </div>
+        <div class="prop__slot coin-slot" data-obj="coin" data-spin="prop"></div>
+      </div>
+    </section>
+
+    <!-- CIERRE · el sobre con el sello de Global66 se abre y sale la carta -->
+    <section id="cierre" class="cierre" data-chapter="Cierre" data-tone="noche">
+      <div class="cierre__sticky">
+        <div class="env" aria-hidden="false">
+          <div class="env__back"></div>
+          <div class="env__letter">
+            <h2 class="letter__q">¿Sumamos algún perfil nuevo?</h2>
+            <p class="letter__contact"><span>Contacto</span>Gonzalo Maass · BIG Agency</p>
+            <div class="letter__sign">
+              <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+              <span>BIG Agency · España</span>
+            </div>
+          </div>
+          <div class="env__front"></div>
+          <div class="env__flap"><div class="env__flap-in"></div></div>
+          <div class="env__seal"><span class="seal__half seal__half--l"></span><span class="seal__half seal__half--r"></span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="island" aria-label="Índice de la presentación">
+    <button class="island__toggle" aria-expanded="false" aria-controls="island-list"><span class="island__current">Portada</span></button>
+    <ol class="island__list" id="island-list"></ol>
+  </nav>
+</body>
+</html>
