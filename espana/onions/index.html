@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#3A1F5C">
+  <meta name="description" content="Una propuesta de BIG Agency para ONIONS Profesional: cuatro creadoras para el champú de cebolla, capa por capa.">
+  <title>ONIONS × BIG — Capa por capa</title>
+  <style>
+    .loader{display:none}html.is-loading{overflow:hidden}
+    .is-loading .loader{display:flex;position:fixed;inset:0;z-index:100;background:#3A1F5C;color:#fff;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+    .is-loading main,.is-loading .island,.is-loading .brand{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.deckFallback = setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      document.dispatchEvent(new Event('deck:ready'));
+    }, 15000);
+  </script>
+  <link rel="icon" href="assets/img/big.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fredoka-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/SplitText.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-tone="lila">
+  <div class="loader" id="loader" aria-label="Cargando la presentación">
+    <div class="loader__inner">
+      <img class="loader__mark" src="assets/img/onions-mascota.webp" alt="" width="300" height="300">
+      <div class="loader__count" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">0</span><span class="loader__pct">%</span></div>
+      <p class="loader__line">ONIONS × BIG</p>
+    </div>
+  </div>
+
+  <a class="skip" href="#pelado">Saltar al contenido</a>
+  <a class="brand" href="#portada" aria-label="Volver a la portada"><img src="assets/img/onions-mascota.webp" alt="ONIONS" width="300" height="300"></a>
+
+  <div class="stage" aria-hidden="true"><canvas id="stage"></canvas></div>
+
+  <main>
+    <!-- PORTADA · la cebolla de ONIONS saluda y gira con el scroll -->
+    <section id="portada" class="cover" data-chapter="Portada" data-tone="lila">
+      <div class="cover__sticky">
+        <div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="lockup">
+          <img class="lockup__brand" src="assets/img/onions-mascota.webp" alt="" width="300" height="300"><span class="lockup__name">ONIONS</span>
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+        </div>
+        <div class="cover__intro">
+          <h1 class="cover__title" data-split>Capa por capa</h1>
+          <p class="cover__sub">Cuatro creadoras de BIG para ONIONS Profesional</p>
+        </div>
+        <div class="cover__slot" data-obj="onion" data-spin="cover">
+          <img class="obj-fallback" src="assets/img/cebolla.webp" alt="" width="595" height="791">
+        </div>
+        <p class="cover__hint" aria-hidden="true">Desliza</p>
+      </div>
+    </section>
+
+    <!-- PELADO · la cebolla pierde sus capas y queda el champú -->
+    <section id="pelado" class="peel" data-tone="rosa" aria-label="Capa por capa, hasta el champú">
+      <div class="peel__sticky">
+        <div class="peel__slot" data-obj="onion" data-spin="peel" data-gate="still"></div>
+        <div class="peel__slot" data-obj="bottle" data-gate="peel">
+          <img class="obj-fallback" src="assets/img/botella.webp" alt="" width="345" height="845">
+        </div>
+        <h2 class="peel__h"><span class="l l1">Se pela una capa,</span><span class="l l2">después otra…</span><span class="l l3">y queda lo que cuida el pelo.</span></h2>
+      </div>
+    </section>
+
+    <!-- TRANSICIÓN · anillos de cebolla cortada que se abren y llevan a los perfiles -->
+    <section id="creadoras" class="rings" data-chapter="Las creadoras" data-tone="rosa">
+      <div class="rings__sticky">
+        <div class="rings__set" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h2 class="rings__h">Cuatro creadoras</h2>
+      </div>
+    </section>
+
+    <section id="betlem" class="pf" data-chapter="Betlem" data-tone="lila">
+      <div class="pf__slide">
+        <figure class="pf__photo"><img src="assets/img/betlem.webp" alt="Betlem" width="730" height="762" loading="lazy"><div class="pf__slot" data-obj="onion" data-spin="pf"></div></figure>
+        <div class="pf__info">
+          <h2 class="pf__name" data-split>Betlem</h2>
+          <p class="pf__where">Madrid · Instagram @betlem_pradas · TikTok @betlempradas</p>
+          <p class="pf__about">Pelo rizado y rutinas capilares. Con su programa Hair Bloom enseña a su comunidad a cuidar el pelo.</p>
+          <div class="pf__nets">
+            <div class="net"><p class="net__h">Instagram</p><p class="net__big"><b data-count>4,7 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>35,3 mil</b><span>reproducciones de media</span></p></div>
+            <div class="net"><p class="net__h">TikTok</p><p class="net__big"><b data-count>192,5 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>40 mil</b><span>reproducciones de media</span></p></div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Fuente: roster BIG Agency España 2026.</p>
+    </section>
+
+    <section id="lorena" class="pf" data-chapter="Lorena" data-tone="crema">
+      <div class="pf__slide">
+        <figure class="pf__photo"><img src="assets/img/lorena.webp" alt="Lorena" width="455" height="475" loading="lazy"><div class="pf__slot" data-obj="onion" data-spin="pf"></div></figure>
+        <div class="pf__info">
+          <h2 class="pf__name" data-split>Lorena</h2>
+          <p class="pf__where">Madrid · Instagram @imlorema · TikTok @imlorema__</p>
+          <p class="pf__about">Selfcare, belleza y vida en Madrid. Hace que el autocuidado parezca un estilo de vida y no una obligación.</p>
+          <div class="pf__nets">
+            <div class="net"><p class="net__h">Instagram</p><p class="net__big"><b data-count>119 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>70 mil</b><span>reproducciones de media</span></p></div>
+            <div class="net"><p class="net__h">TikTok</p><p class="net__big"><b data-count>116,2 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>30 mil</b><span>reproducciones de media</span></p></div>
+            <div class="net"><p class="net__h">YouTube</p><p class="net__big"><b data-count>9,75 mil</b><span>suscriptores</span></p><p class="net__sm"><b data-count>1,5 mil</b><span>reproducciones de media</span></p></div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Fuente: roster BIG Agency España 2026.</p>
+    </section>
+
+    <section id="clara" class="pf" data-chapter="Clara" data-tone="lila">
+      <div class="pf__slide">
+        <figure class="pf__photo"><img src="assets/img/clara.webp" alt="Clara" width="686" height="717" loading="lazy"><div class="pf__slot" data-obj="onion" data-spin="pf"></div></figure>
+        <div class="pf__info">
+          <h2 class="pf__name" data-split>Clara</h2>
+          <p class="pf__where">Madrid · Instagram @clarisssrv · TikTok @clarissrv</p>
+          <p class="pf__about">Gimnasio, running y «un poquito de todo». Ya trabaja con Women's Best, ESN y Runna.</p>
+          <div class="pf__nets">
+            <div class="net"><p class="net__h">Instagram</p><p class="net__big"><b data-count>94,2 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>513 mil</b><span>reproducciones de media</span></p></div>
+            <div class="net"><p class="net__h">TikTok</p><p class="net__big"><b data-count>193,6 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>35 mil</b><span>reproducciones de media</span></p></div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Fuente: roster BIG Agency España 2026.</p>
+    </section>
+
+    <section id="paula" class="pf" data-chapter="Paula Reguer" data-tone="crema">
+      <div class="pf__slide">
+        <figure class="pf__photo"><img src="assets/img/paula.webp" alt="Paula Reguer" width="720" height="752" loading="lazy"><div class="pf__slot" data-obj="onion" data-spin="pf"></div></figure>
+        <div class="pf__info">
+          <h2 class="pf__name" data-split>Paula Reguer</h2>
+          <p class="pf__where">Murcia · Instagram @paulareguer · TikTok @paulareguerr</p>
+          <p class="pf__about">Estudiante de Enfermería. Comparte su día a día en la carrera, cultura general y consejos para la PAU.</p>
+          <div class="pf__nets">
+            <div class="net"><p class="net__h">Instagram</p><p class="net__big"><b data-count>17,9 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>40 mil</b><span>reproducciones de media</span></p></div>
+            <div class="net"><p class="net__h">TikTok</p><p class="net__big"><b data-count>247,1 mil</b><span>seguidores</span></p><p class="net__sm"><b data-count>55 mil</b><span>reproducciones de media</span></p></div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Fuente: roster BIG Agency España 2026 y datos enviados por el equipo.</p>
+    </section>
+
+    <!-- PROPUESTA -->
+    <section id="propuesta" class="prop" data-chapter="La propuesta" data-tone="uva">
+      <div class="prop__inner">
+        <h2 class="prop__h" data-split>Una capa para cada una</h2>
+        <div class="prop__slot" data-obj="bottle"></div>
+        <ol class="prop__list">
+          <li data-reveal><h3>Betlem</h3><p>El champú de cebolla dentro de su rutina de rizos de Hair Bloom.</p></li>
+          <li data-reveal><h3>Lorena</h3><p>Su ritual de ducha y autocuidado, con ONIONS como un paso más.</p></li>
+          <li data-reveal><h3>Clara</h3><p>Pelo cuidado después del gimnasio y de correr, cuando se lava a diario.</p></li>
+          <li data-reveal><h3>Paula</h3><p>Cuidarse el pelo con poco tiempo, entre prácticas y exámenes.</p></li>
+        </ol>
+        <p class="prop__def" data-reveal>Lo definimos con ONIONS: mercado, piezas, calendario y presupuesto. A confirmar.</p>
+      </div>
+    </section>
+
+    <!-- CIERRE · la cebolla se vuelve a armar -->
+    <section id="cierre" class="cierre" data-chapter="Cierre" data-tone="lila">
+      <div class="cierre__sticky">
+        <div class="cierre__slot" data-obj="onion" data-spin="cierre"></div>
+        <div class="cierre__copy">
+          <h2 class="cierre__q">¿Pelamos la primera capa?</h2>
+          <p class="cierre__contact"><span>Contacto</span>Gonzalo Maass · BIG Agency</p>
+          <div class="cierre__sign">
+            <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+            <span>BIG Agency · España</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="island" aria-label="Índice de la presentación">
+    <button class="island__toggle" aria-expanded="false" aria-controls="island-list"><span class="island__current">Portada</span></button>
+    <ol class="island__list" id="island-list"></ol>
+  </nav>
+</body>
+</html>
