@@ -5,7 +5,8 @@
 // AvPág/RePág, la isla de abajo y los links #id (por ejemplo …/#numeros).
 //
 // Todo lo que es dato sale de datos.js: las tablas de cada reel, los totales, el gráfico, las lecturas y los textos con
-// números se arman acá. Lo que está en null se muestra como «A confirmar» y lo que depende de eso se recalcula solo.
+// números se arman acá. Lo que está en null no se muestra y lo que depende de eso se recalcula solo. Los reels sin
+// captura de estadísticas se estiman (`estimar`, más abajo) y sus números van con ≈.
 //
 // Actores que persisten entre escenas:
 //   el 365 en 3D (escena3d.js): va al [data-ancla-365] de cada escena; si la escena no tiene, se esconde arriba
@@ -38,11 +39,18 @@ function partes(v, f = 'n') {
   return [nf.format(Math.round(v)), ''];
 }
 const PENDIENTE = '<span class="pendiente">A confirmar</span>';
-const valor = (v, f) => { const p = partes(v, f); return p ? `${p[0]}<span class="unidad">${p[1]}</span>` : PENDIENTE; };
-const texto = (v, f) => { const p = partes(v, f); return p ? p.join('') : 'A confirmar'; };
+// aprox: el número es estimado y va con ≈ adelante
+// (el ≈ va dibujado: las tipografías del deck no lo traen)
+const APROX = '<span class="aprox"><svg viewBox="0 0 24 20" aria-hidden="true"><path d="M3 8c3-3.2 6-3.2 9 0s6 3.2 9 0M3 15c3-3.2 6-3.2 9 0s6 3.2 9 0" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg><span class="solo-lector">aproximadamente </span></span>';
+const valor = (v, f, aprox) => { const p = partes(v, f); return p ? `${aprox ? APROX : ''}${p[0]}<span class="unidad">${p[1]}</span>` : PENDIENTE; };
+const texto = (v, f, aprox) => { const p = partes(v, f); return p ? (aprox ? '≈ ' : '') + p.join('') : 'A confirmar'; };
 // una cifra que cuenta al entrar su escena (si hay dato)
-const cifra = (v, f = 'n', clase = '', attrs = '') => (v == null ? `<b class="cifra ${clase} is-pendiente">${PENDIENTE}</b>`
-  : `<b class="cifra ${clase}" data-cifra="${v}" data-formato="${f}" ${attrs}>${valor(v, f)}</b>`);
+const cifra = (v, f = 'n', clase = '', attrs = '', aprox = false) => (v == null ? `<b class="cifra ${clase} is-pendiente">${PENDIENTE}</b>`
+  : `<b class="cifra ${clase}${aprox ? ' is-estimado' : ''}" data-cifra="${v}" data-formato="${f}"${aprox ? ' data-aprox="1"' : ''} ${attrs}>${valor(v, f, aprox)}</b>`);
+const PALABRA = ['ningún', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho'];
+const palabra = n => PALABRA[n] ?? String(n);
+const fecha = s => { const [d, m, a] = s.split('/').map(Number); return new Date(a, m - 1, d); };
+const dias = (desde, hasta) => Math.round((fecha(hasta) - fecha(desde)) / 864e5);
 
 /* ── las cuentas de la campaña ── */
 const METRICAS = [
@@ -58,7 +66,52 @@ const METRICAS = [
 ];
 const INTERACCIONES = ['meGusta', 'comentarios', 'compartidos', 'reposteos', 'guardados'];
 const NOMBRE = Object.fromEntries([['reproducciones', 'Visualizaciones'], ...METRICAS.map(m => [m.k, m.nombre])]);
+
+/* ── los reels sin captura: lo público de Instagram y el resto estimado ── */
+// La base son los reels con captura. Para cada métrica se toma la relación promedio que tuvieron esos reels (entre su
+// captura y lo público, o entre dos métricas de la captura) y se aplica a lo público del reel sin captura. Lo público
+// se leyó el mismo día que las capturas, así que el estimado ya tiene en cuenta los días que lleva publicado cada uno.
+// Me gusta y comentarios no se estiman: van los públicos.
+const BASE = C.reels.filter(r => r.metricas && r.publicos);
+const media = (f) => { const vs = BASE.map(f).filter(v => v != null && Number.isFinite(v)); return vs.length ? vs.reduce((a, b) => a + b, 0) / vs.length : null; };
+const div = (a, b) => (a != null && b ? a / b : null);
+const FACTOR = {
+  reproducciones: media(r => div(r.metricas.reproducciones, r.publicos.reproducciones)), // visualizaciones por visualización pública
+  alcance: media(r => div(r.metricas.alcance, r.metricas.reproducciones)),               // espectadores por visualización
+  compartidos: media(r => div(r.metricas.compartidos, r.publicos.meGusta)),              // por me gusta público
+  reposteos: media(r => div(r.metricas.reposteos, r.publicos.meGusta)),
+  guardados: media(r => div(r.metricas.guardados, r.publicos.meGusta)),
+  noSeguidores: media(r => r.metricas.noSeguidores),                                     // el promedio
+  tiempoTotal: media(r => div(r.metricas.tiempoTotal, r.metricas.reproducciones)),       // segundos por visualización
+  nuevosSeguidores: media(r => div(r.metricas.nuevosSeguidores, r.metricas.reproducciones)),
+};
+const por = (v, k, redondeo = 1) => (v == null || FACTOR[k] == null ? null : Math.round(v * FACTOR[k] / redondeo) * redondeo);
+function estimar(r) {
+  const p = r.publicos, rep = por(p.reproducciones, 'reproducciones', 1000);
+  const m = {
+    reproducciones: rep,
+    alcance: por(rep, 'alcance', 1000),
+    meGusta: p.meGusta ?? null,
+    comentarios: p.comentarios ?? null,
+    compartidos: por(p.meGusta, 'compartidos'),
+    reposteos: por(p.meGusta, 'reposteos'),
+    guardados: por(p.meGusta, 'guardados'),
+    noSeguidores: por(1, 'noSeguidores', .1),
+    tiempoTotal: por(rep, 'tiempoTotal'),
+    nuevosSeguidores: por(rep, 'nuevosSeguidores'),
+  };
+  r.metricas = m;
+  r.estimados = new Set(Object.keys(m).filter(k => m[k] != null && k !== 'meGusta' && k !== 'comentarios'));
+}
+for (const r of C.reels) { if (!r.metricas && r.publicos && BASE.length) estimar(r); else r.estimados ??= new Set(); }
+if (C.reels.some(r => !r.metricas)) C.reels = C.reels.filter(r => r.metricas); // sin captura ni datos públicos: no entra
+
 const R = C.reels, M = r => r.metricas;
+const est = (r, k) => r.estimados.has(k);
+const ESTIMADOS = R.filter(r => r.estimados.size);
+// la tasa es estimada si lo es alguna de sus partes; un total, si lo es el dato de algún reel
+const estTasa = r => est(r, 'reproducciones') || INTERACCIONES.some(k => est(r, k));
+const estTot = k => R.some(r => est(r, k));
 // suma de la campaña: solo si todos los reels tienen el dato
 const total = k => (R.every(r => M(r)[k] != null) ? R.reduce((s, r) => s + M(r)[k], 0) : null);
 // interacciones con lo que haya, y cuáles entran
@@ -97,12 +150,16 @@ const IG = {
 function armarReels() {
   const tabla = r => {
     const m = M(r), t = tasa(m), ii = interacciones(m);
-    const filas = METRICAS.filter(x => m[x.k] != null).map(x => `<div class="fila"><dt>${x.nombre}</dt><dd>${cifra(m[x.k], x.f)}</dd></div>`).join('');
-    return `<div class="tabla__hero">${cifra(m.reproducciones, 'n', 'cifra--xl')}<span>visualizaciones</span></div>
+    const filas = METRICAS.filter(x => m[x.k] != null).map(x => `<div class="fila"><dt>${x.nombre}</dt><dd>${cifra(m[x.k], x.f, '', '', est(r, x.k))}</dd></div>`).join('');
+    return `<div class="tabla__hero">${cifra(m.reproducciones, 'n', 'cifra--xl', '', est(r, 'reproducciones'))}<span>visualizaciones${est(r, 'reproducciones') ? ' estimadas' : ''}</span></div>
       <dl class="tabla__filas">${filas}
-        <div class="fila fila--tasa"><dt>Tasa de interacción<small>${t == null ? '' : ii.faltan.length ? `${lista(ii.hay.map(minus))} sobre visualizaciones` : 'sobre visualizaciones'}</small></dt><dd>${cifra(t, '%')}</dd></div>
+        <div class="fila fila--tasa"><dt>Tasa de interacción<small>${t == null ? '' : ii.faltan.length ? `${lista(ii.hay.map(minus))} sobre visualizaciones` : 'sobre visualizaciones'}</small></dt><dd>${cifra(t, '%', '', '', estTasa(r))}</dd></div>
       </dl>`;
   };
+  const fuente = r => (r.estimados.size ? C.FUENTES.estimados : C.FUENTES.publicas);
+  const boton = (r, i) => (r.estimados.size
+    ? `<button class="pill pill--tinta" type="button" data-captura="${i}" aria-haspopup="dialog">Cómo se estimó ${CHIP_LUPA}</button>`
+    : `<button class="pill pill--tinta" type="button" data-captura="${i}" aria-haspopup="dialog">Ver captura ${CHIP_LUPA}</button>`);
   const html = R.map((r, i) => `
     <section class="escena escena--reel" id="reel-${esc(r.id)}" data-capitulo="Los reels" data-reel="${i}" aria-label="Reel ${esc(r.titulo)}">
       <div class="escena__cuerpo"><div class="rejilla rejilla--reel">
@@ -111,15 +168,15 @@ function armarReels() {
           <div class="panel reel__copy" data-r>
             <p class="cita">«${esc(r.copy)}»</p>
             <p>${esc(r.mensaje)}</p>
-            <p class="nota">Publicado el ${esc(r.publicado)} · ${Math.round(r.duracion)} segundos</p>
+            <p class="nota">Publicado el ${esc(r.publicado)}, ${dias(r.publicado, C.corte)} días antes de la medición · ${Math.round(r.duracion)} segundos</p>
           </div>
           <div class="reel__botones" data-r>
             <a class="pill" href="${esc(r.url)}" target="_blank" rel="noopener">Ver en Instagram ${CHIP}</a>
-            <button class="pill pill--tinta" type="button" data-captura="${i}" aria-haspopup="dialog">Ver captura ${CHIP_LUPA}</button>
+            ${boton(r, i)}
           </div>
         </div>
         <div class="ancla-telefono" data-ancla-telefono><span class="ancla ancla--reel" data-ancla-365></span></div>
-        <div class="panel tabla" data-r>${tabla(r)}<p class="fuente">${esc(C.FUENTES.publicas)}</p></div>
+        <div class="panel tabla" data-r>${tabla(r)}<p class="fuente">${esc(fuente(r))}</p></div>
       </div></div>
     </section>`).join('');
   $('#portada').insertAdjacentHTML('afterend', html);
@@ -146,78 +203,91 @@ function armarTelefono() {
 
 
 function armarNumeros() {
-  $('[data-slot="total-reproducciones"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xxl', 'data-hero="1"');
-  $('[data-slot="portada-total"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xl');
+  $('[data-slot="total-reproducciones"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xxl', 'data-hero="1"', estTot('reproducciones'));
+  $('[data-slot="portada-total"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xl', '', estTot('reproducciones'));
+  $$('[data-n-reels]').forEach(el => { const w = palabra(R.length); el.textContent = el.hasAttribute('data-mayuscula') ? w[0].toUpperCase() + w.slice(1) : w; });
+  const noSeg = R.map(r => M(r).noSeguidores).filter(v => v != null);
   const cards = [
-    // (los espectadores no se suman: quien vio los dos reels contaría dos veces; están en la tabla de cada reel)
-    ...INTERACCIONES.map(k => ({ nombre: NOMBRE[k], v: TOT[k] })),
-    { nombre: 'Interacciones', v: TOT_INT.suma, nota: TOT_INT.suma != null && TOT_INT.faltan.length ? lista(TOT_INT.hay.map(minus)) : '' },
-    { nombre: 'Tasa de interacción', v: TOT_TASA, f: '%', nota: 'sobre visualizaciones' },
-    { nombre: 'Interacciones de no seguidores', v: TOT_NO_SEG, f: '%1', nota: R.every(r => M(r).noSeguidores != null) ? R.map(r => texto(M(r).noSeguidores, '%1')).join(' y ') + ' por reel' : '' },
-    { nombre: 'Tiempo de reproducción', v: TOT.tiempoTotal, f: 'dh' },
-    { nombre: 'Nuevos seguidores', v: TOT.nuevosSeguidores },
-    { nombre: 'Costo por mil visualizaciones', v: CPM, f: '$', nota: CPM == null ? 'con la inversión' : '' },
+    // (los espectadores no se suman: quien vio dos reels contaría dos veces; están en la tabla de cada reel)
+    ...INTERACCIONES.map(k => ({ nombre: NOMBRE[k], v: TOT[k], aprox: estTot(k) })),
+    { nombre: 'Interacciones', v: TOT_INT.suma, aprox: INTERACCIONES.some(estTot), nota: TOT_INT.suma != null && TOT_INT.faltan.length ? lista(TOT_INT.hay.map(minus)) : '' },
+    { nombre: 'Tasa de interacción', v: TOT_TASA, f: '%', aprox: R.some(estTasa), nota: 'sobre visualizaciones' },
+    { nombre: 'Interacciones de no seguidores', v: TOT_NO_SEG, f: '%1', aprox: estTot('noSeguidores'),
+      nota: noSeg.length !== R.length ? '' : R.length === 2 ? noSeg.map(v => texto(v, '%1')).join(' y ') + ' por reel' : `de ${texto(Math.min(...noSeg), '%1')} a ${texto(Math.max(...noSeg), '%1')} por reel` },
+    { nombre: 'Tiempo de reproducción', v: TOT.tiempoTotal, f: 'dh', aprox: estTot('tiempoTotal') },
+    { nombre: 'Nuevos seguidores', v: TOT.nuevosSeguidores, aprox: estTot('nuevosSeguidores') },
+    { nombre: 'Costo por mil visualizaciones', v: CPM, f: '$', aprox: estTot('reproducciones'), nota: CPM == null ? 'con la inversión' : '' },
   ];
   // lo que no tiene dato no se muestra (Tomás, 17/11/2026: nada de «A confirmar» en el deck)
   $('[data-slot="totales"]').innerHTML = cards.filter(c => c.v != null).map(c => `
-    <div class="total panel panel--sm">${cifra(c.v, c.f)}<span>${c.nombre}${c.nota ? `<small>${esc(c.nota)}</small>` : ''}</span></div>`).join('');
+    <div class="total panel panel--sm">${cifra(c.v, c.f, '', '', c.aprox)}<span>${c.nombre}${c.nota ? `<small>${esc(c.nota)}</small>` : ''}</span></div>`).join('');
 
-  // reel por reel: una fila por métrica con dato en los dos reels; cada fila con su propia escala (no hay un eje común)
+  // reel por reel: una fila por métrica con dato en todos los reels; cada fila con su propia escala (no hay un eje común).
+  // Las barras estimadas van rayadas (además del ≈ en el número)
   const filas = ['reproducciones', 'meGusta', 'comentarios', 'compartidos'].filter(k => R.every(r => M(r)[k] != null));
-  $('[data-slot="leyenda"]').innerHTML = R.map((r, i) => `<span class="leyenda__item"><i class="serie serie--${i}"></i>${esc(r.titulo)}</span>`).join('');
+  $('[data-slot="grafico"]').closest('.grafico').classList.toggle('grafico--cuatro', R.length > 2);
+  $('[data-slot="leyenda"]').innerHTML = R.map((r, i) => `<span class="leyenda__item"><i class="serie serie--${i}"></i>${esc(r.titulo)}</span>`).join('')
+    + (ESTIMADOS.length ? '<span class="leyenda__item"><i class="serie serie--estimada"></i>Estimado</span>' : '');
   $('[data-slot="grafico"]').innerHTML = filas.map(k => {
     const max = Math.max(...R.map(r => M(r)[k]));
-    return `<div class="grafico__fila"><span class="grafico__nombre">${NOMBRE[k]}</span>${R.map((r, i) => {
-      const v = M(r)[k];
-      return `<div class="grafico__barra" data-tip="${esc(r.titulo)} · ${nf.format(v)} ${minus(k)}"><i class="serie serie--${i}" style="--w:${(v / max * 100).toFixed(2)}%"></i><b>${texto(v)}</b></div>`;
+    return `<div class="grafico__fila"><span class="grafico__nombre" style="grid-row: span ${R.length}">${NOMBRE[k]}</span>${R.map((r, i) => {
+      const v = M(r)[k], e = est(r, k);
+      return `<div class="grafico__barra" data-tip="${esc(r.titulo)} · ${e ? '≈ ' : ''}${nf.format(v)} ${minus(k)}${e ? ' (estimado)' : ''}"><i class="serie serie--${i}${e ? ' is-estimada' : ''}" style="--w:${(v / max * 100).toFixed(2)}%"></i><b>${valor(v, 'n', e)}</b></div>`;
     }).join('')}</div>`;
   }).join('');
 
-  // la lectura sale de los datos
-  const [a, b] = R, pa = M(a).reproducciones, pb = M(b).reproducciones;
-  const mas = pb >= pa ? b : a, menos = mas === a ? b : a, ratio = Math.max(pa, pb) / Math.min(pa, pb);
-  const cm = M(mas).comentarios, cn = M(menos).comentarios;
-  let lec = `«${mas.titulo}» tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${menos.titulo}»`;
-  if (cm != null && cn != null && cm > cn) lec += ` y ${veces(cm / cn, 'comentarios', 'los')}`;
-  const ta = tasa(M(a)), tb = tasa(M(b));
-  if (ta != null && tb != null) {
-    const conv = ta >= tb ? a : b;
-    if (conv !== mas) lec += `. «${conv.titulo}» conversó más por cada visualización: ${texto(Math.max(ta, tb), '%')} contra ${texto(Math.min(ta, tb), '%')}`;
-  }
+  // la lectura sale de los datos: el más visto contra el segundo, y el que más conversó (solo entre reels con captura)
+  const orden = [...R].sort((x, y) => M(y).reproducciones - M(x).reproducciones);
+  const [mas, seg] = orden, ratio = M(mas).reproducciones / M(seg).reproducciones;
+  const cm = M(mas).comentarios, cs = M(seg).comentarios;
+  let lec = `«${mas.titulo}» fue el más visto, con ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}», el segundo`;
+  if (cm != null && cs != null && cm > cs) lec += `, y ${veces(cm / cs, 'comentarios', 'los')}`;
+  const medidos = R.filter(r => !estTasa(r) && tasa(M(r)) != null);
+  const conv = medidos.length > 1 ? medidos.reduce((x, y) => (tasa(M(y)) > tasa(M(x)) ? y : x)) : null;
+  if (conv && conv !== mas && !estTasa(mas)) lec += `. «${conv.titulo}» conversó más por cada visualización: ${texto(tasa(M(conv)), '%')} contra ${texto(tasa(M(mas)), '%')}`;
   $('[data-slot="lectura"]').textContent = lec + '.';
-  $('[data-slot="fuentes"]').textContent = `${C.FUENTES.publicas} ${C.FUENTES.pendientes}`;
-  return { mas, menos, ratio, ta, tb };
+  $('[data-slot="fuentes"]').textContent = `${C.FUENTES.publicas} ${C.FUENTES.pendientes}${ESTIMADOS.length ? ` ${C.FUENTES.estimados}` : ''}`;
+  return { mas, seg, ratio, conv };
 }
 
 function armarPublico() {
-  // tres gráficos: sexo, edad y país, con los dos reels. Cada uno con su escala (el máximo del gráfico)
-  const grupos = [['sexo', 'Sexo'], ['edad', 'Edad'], ['pais', 'País']].filter(([k]) => R.every(r => r.publico?.[k]));
-  const leyenda = R.map((r, i) => `<span class="leyenda__item"><i class="serie serie--${i}"></i>${esc(r.titulo)}</span>`).join('');
+  // tres gráficos: sexo, edad y país, con los reels que tienen captura (el público no se ve sin entrar a la cuenta, y
+  // repetir el promedio en barras no dice nada: para los otros lo dice el texto). Cada uno con su escala (el máximo del
+  // gráfico). El color de cada reel es el mismo que en «En números»
+  const RP = R.filter(r => r.publico);
+  if (!RP.length) return;
+  const grupos = [['sexo', 'Sexo'], ['edad', 'Edad'], ['pais', 'País']].filter(([k]) => RP.every(r => r.publico?.[k]));
+  const serie = r => R.indexOf(r);
+  const leyenda = RP.map(r => `<span class="leyenda__item"><i class="serie serie--${serie(r)}"></i>${esc(r.titulo)}</span>`).join('');
   $('[data-slot="publico"]').innerHTML = grupos.map(([k, nombre], g) => {
-    const filas = R[0].publico[k].map(([etq]) => etq);
-    const max = Math.max(...R.flatMap(r => r.publico[k].map(([, v]) => v)));
+    const filas = RP[0].publico[k].map(([etq]) => etq);
+    const max = Math.max(...RP.flatMap(r => r.publico[k].map(([, v]) => v)));
     return `<div class="panel grafico grafico--publico" data-r style="--r:${g + 1}">
       <h3 class="grafico__titulo">${nombre}</h3><div class="leyenda">${leyenda}</div>
-      <div class="grafico__filas">${filas.map(etq => `<div class="grafico__fila"><span class="grafico__nombre">${esc(etq)}</span>${R.map((r, i) => {
+      <div class="grafico__filas">${filas.map(etq => `<div class="grafico__fila"><span class="grafico__nombre" style="grid-row: span ${RP.length}">${esc(etq)}</span>${RP.map(r => {
         const v = r.publico[k].find(([e]) => e === etq)?.[1] ?? 0;
-        return `<div class="grafico__barra" data-tip="${esc(r.titulo)} · ${esc(etq)}: ${texto(v, '%1')}"><i class="serie serie--${i}" style="--w:${(v / max * 100).toFixed(2)}%"></i><b>${texto(v, '%1')}</b></div>`;
+        return `<div class="grafico__barra" data-tip="${esc(r.titulo)} · ${esc(etq)}: ${texto(v, '%1')}"><i class="serie serie--${serie(r)}" style="--w:${(v / max * 100).toFixed(2)}%"></i><b>${texto(v, '%1')}</b></div>`;
       }).join('')}</div>`).join('')}</div></div>`;
   }).join('');
   $('[data-slot="publico-fuente"]').textContent = `${C.FUENTES.publicas} Público: las cuentas que vieron cada reel.`;
-  // la lectura: lo que más pesa en cada gráfico, con el rango de los dos reels
-  const top = k => { const etq = R[0].publico[k].reduce((a, b) => (b[1] > a[1] ? b : a))[0]; const vs = R.map(r => r.publico[k].find(([e]) => e === etq)[1]).sort((a, b) => a - b); return [etq, vs]; };
+  // la lectura: lo que más pesa en cada gráfico, con el rango de los reels medidos
+  const top = k => { const etq = RP[0].publico[k].reduce((a, b) => (b[1] > a[1] ? b : a))[0]; const vs = RP.map(r => r.publico[k].find(([e]) => e === etq)[1]).sort((a, b) => a - b); return [etq, vs]; };
   const rango = vs => (vs[0] === vs.at(-1) ? texto(vs[0], '%1') : `entre ${dec(vs[0], 1)} y ${texto(vs.at(-1), '%1')}`);
   if (grupos.length === 3) {
     const [sx, sxv] = top('sexo'), [ed, edv] = top('edad'), [pa, pav] = top('pais');
-    const e2 = R.map(r => r.publico.edad.filter(([e]) => e === '25-34' || e === '35-44').reduce((s, [, v]) => s + v, 0)).sort((a, b) => a - b);
-    $('[data-slot="publico-texto"]').textContent = `El público de los dos reels es casi el mismo: ${sx.toLowerCase()} (${rango(sxv)}), de ${ed.replace('-', ' a ')} años (${rango(edv)}; de 25 a 44, ${rango(e2)}) y de ${pa} (${rango(pav)}).`;
+    const e2 = RP.map(r => r.publico.edad.filter(([e]) => e === '25-34' || e === '35-44').reduce((s, [, v]) => s + v, 0)).sort((a, b) => a - b);
+    const sin = R.filter(r => !r.publico);
+    const quienes = sin.length ? `de los ${palabra(RP.length)} reels con estadísticas` : `de los ${palabra(RP.length)} reels`;
+    let t = `El público ${quienes} es casi el mismo: ${sx.toLowerCase()} (${rango(sxv)}), de ${ed.replace('-', ' a ')} años (${rango(edv)}; de 25 a 44, ${rango(e2)}) y de ${pa} (${rango(pav)}).`;
+    if (sin.length) t += ` Para ${lista(sin.map(r => `«${r.titulo}»`))} se estima el mismo.`;
+    $('[data-slot="publico-texto"]').textContent = t;
   }
 }
 
 function armarConversacion() {
   const cv = C.conversacion;
   $('[data-slot="conversacion-texto"]').textContent = TOT.comentarios != null
-    ? `${nf.format(TOT.comentarios)} comentarios entre los dos reels. Estos dos muestran cómo la marca entró en la charla.`
+    ? `${nf.format(TOT.comentarios)} comentarios entre los ${palabra(R.length)} reels. Estos dos muestran cómo la marca entró en la charla.`
     : 'Estos dos comentarios muestran cómo la marca entró en la charla.';
   const datos = [
     { nombre: 'Comentarios', v: TOT.comentarios },
@@ -236,18 +306,22 @@ function armarConversacion() {
 }
 
 function armarAprendizajes(lec) {
-  const { mas, menos, ratio, ta, tb } = lec;
-  const pm = M(mas).reproducciones, pn = M(menos).reproducciones;
+  const { mas, seg, ratio, conv } = lec;
+  const pm = M(mas).reproducciones, ps = M(seg).reproducciones;
+  const sm = M(mas).nuevosSeguidores, ss = M(seg).nuevosSeguidores;
+  const seguidores = sm != null && ss != null && !est(mas, 'nuevosSeguidores') && !est(seg, 'nuevosSeguidores') ? `, y sumó ${nf.format(sm)} seguidores nuevos, contra ${nf.format(ss)}` : '';
   const tarjetas = [
-    { titulo: 'El beneficio concreto rinde más', dato: `${valor(pm)} <span class="contra">contra</span> ${valor(pn)}`,
-      texto: `«${mas.titulo}», con un descuento y los días para usarlo, tuvo ${veces(ratio, 'visualizaciones', 'las')} que el reel de beneficios generales${M(mas).nuevosSeguidores != null && M(menos).nuevosSeguidores != null ? ` y sumó ${nf.format(M(mas).nuevosSeguidores)} seguidores nuevos, contra ${nf.format(M(menos).nuevosSeguidores)}` : ''}.` },
+    // el texto del final habla de «+1000 de aura en la caja» (el súper): si cambia el más visto, cambiarlo
+    { titulo: `«${mas.titulo}», el más visto`, dato: `${valor(pm, 'n', est(mas, 'reproducciones'))} <span class="contra">contra</span> ${valor(ps, 'n', est(seg, 'reproducciones'))}`,
+      texto: `Tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}», el segundo${seguidores}. El descuento en el súper, con días fijos para usarlo, fue el beneficio que más llegó.` },
     { titulo: 'La marca entra en la charla', dato: '«ALGUIEN CON 365 por acá?»', cita: true,
       texto: 'En los comentarios, 365 aparece como la respuesta a un plan: ir al cine, hacer las compras. Lo dice la comunidad, no el aviso.' },
   ];
-  if (ta != null && tb != null) {
-    const [hi, lo] = ta >= tb ? [R[0], R[1]] : [R[1], R[0]];
-    tarjetas.push({ titulo: `«${hi.titulo}» conversó más`, dato: `${valor(Math.max(ta, tb), '%')} <span class="contra">contra</span> ${valor(Math.min(ta, tb), '%')}`,
-      texto: `Con menos visualizaciones, sumó más me gusta y comentarios por cada una que «${lo.titulo}». Un formato abre la puerta y el otro hace hablar.` });
+  // el que más conversó, entre los reels con captura (la tasa de los estimados es estimada)
+  if (conv && conv !== mas && !estTasa(mas)) {
+    const tc = tasa(M(conv)), tm = tasa(M(mas));
+    tarjetas.push({ titulo: `«${conv.titulo}» conversó más`, dato: `${valor(tc, '%')} <span class="contra">contra</span> ${valor(tm, '%')}`,
+      texto: `Con menos visualizaciones, sumó más me gusta y comentarios por cada una que «${mas.titulo}». Un formato abre la puerta y el otro hace hablar.` });
   }
   $('[data-slot="aprendizajes"]').innerHTML = tarjetas.map((t, i) => `
     <article class="tarjeta panel" data-r style="--r:${i + 1}">
@@ -362,7 +436,7 @@ async function iniciar() {
     // las cifras cuentan
     $$('[data-cifra]', e).forEach((el, n) => {
       if (contadas.has(el)) return; contadas.add(el);
-      el.innerHTML = valor(0, el.dataset.formato);
+      el.innerHTML = valor(0, el.dataset.formato, el.dataset.aprox);
       despues(420 + n * 60, () => contar(el, el.dataset.hero ? () => { S.sonar('caja'); insignia.girar(1); } : null));
     });
     // capturas: cada una entra con su aviso
@@ -371,13 +445,13 @@ async function iniciar() {
 
   /* ── cifras que cuentan ── */
   function contar(el, alTerminar) {
-    const fin = +el.dataset.cifra, f = el.dataset.formato;
-    if (REDUCIDO) { el.innerHTML = valor(fin, f); alTerminar?.(); return; }
+    const fin = +el.dataset.cifra, f = el.dataset.formato, aprox = el.dataset.aprox;
+    if (REDUCIDO) { el.innerHTML = valor(fin, f, aprox); alTerminar?.(); return; }
     const grande = !!alTerminar, dur = grande ? 1800 : 1100, t0 = performance.now();
     let tic = -1;
     const cuadro = ahora => {
       const k = clamp((ahora - t0) / dur), e = k === 1 ? 1 : 1 - 2 ** (-10 * k);
-      el.innerHTML = valor(fin * e, f);
+      el.innerHTML = valor(fin * e, f, aprox);
       if (grande) { const n = Math.floor(e * 12); if (n !== tic) { tic = n; S.sonar('tic', n); } }
       if (k < 1) requestAnimationFrame(cuadro); else alTerminar?.();
     };
@@ -539,8 +613,40 @@ async function iniciar() {
 
   /* ── la captura de las estadísticas de cada reel: la fuente de sus números ── */
   const visor = $('.visor'), visorCuerpo = $('.visor__cuerpo', visor);
+  // un reel sin captura: lo público y cómo se estimó el resto (con los números del cálculo)
+  function comoSeEstimo(r) {
+    const m = M(r), p = r.publicos, base = BASE.map(b => `«${esc(b.titulo)}»`);
+    const fila = (nombre, v, f = 'n', nota = '', aprox = false) => `<div class="fila"><dt>${nombre}${nota ? `<small>${nota}</small>` : ''}</dt><dd><b class="cifra${aprox ? ' is-estimado' : ''}">${valor(v, f, aprox)}</b></dd></div>`;
+    const rv = BASE.map(b => b.metricas.reproducciones / b.publicos.reproducciones);
+    const cada100 = k => `${dec(FACTOR[k] * 100, 1)} por cada 100 me gusta`;
+    const filas = [
+      ['reproducciones', 'Visualizaciones', `las públicas × ${dec(FACTOR.reproducciones, 1)} (en los reels con captura, de ${dec(Math.min(...rv), 1)} a ${dec(Math.max(...rv), 1)})`],
+      ['alcance', 'Espectadores', `${dec(FACTOR.alcance * 100, 0)} % de las visualizaciones`],
+      ['compartidos', 'Compartidos', cada100('compartidos')],
+      ['reposteos', 'Reposteos', cada100('reposteos')],
+      ['guardados', 'Guardados', cada100('guardados')],
+      ['noSeguidores', 'Interacciones de no seguidores', 'el promedio de los reels con captura', '%1'],
+      ['tiempoTotal', 'Tiempo de reproducción', `${dec(FACTOR.tiempoTotal, 1)} segundos por visualización`, 'dh'],
+      ['nuevosSeguidores', 'Nuevos seguidores', `${dec(FACTOR.nuevosSeguidores * 1e5, 1)} cada 100 mil visualizaciones`],
+    ].filter(([k]) => est(r, k));
+    const diasBase = BASE.map(b => String(dias(b.publicado, C.corte)));
+    return `<div class="visor__estimado">
+      <p>Este reel no tiene captura de estadísticas. Esto es lo que muestra Instagram sin entrar a la cuenta, al ${esc(C.corte)}:</p>
+      <dl class="tabla__filas">${fila('Visualizaciones públicas', p.reproducciones)}${fila('Me gusta', p.meGusta)}${fila('Comentarios', p.comentarios)}</dl>
+      <p>Me gusta y comentarios van tal cual. El resto sale de cómo les fue a ${lista(base)}, medidos el mismo día:</p>
+      <dl class="tabla__filas">${filas.map(([k, nombre, nota, f]) => fila(nombre, m[k], f, nota, true)).join('')}</dl>
+      <p>Como todo se midió el mismo día, el estimado ya tiene en cuenta que este reel lleva menos tiempo publicado: ${dias(r.publicado, C.corte)} días, contra ${lista(diasBase)}.</p>
+    </div>`;
+  }
   function abrirCaptura(i) {
     const r = R[i];
+    if (r.estimados.size) {
+      visorCuerpo.innerHTML = comoSeEstimo(r);
+      visorCuerpo.scrollTo?.(0, 0); $('.visor__panel', visor).scrollTo?.(0, 0);
+      $('.visor__titulo', visor).textContent = `Cómo se estimó «${r.titulo}»`;
+      $('.visor__nota', visor).textContent = '';
+      S.sonar('pip'); visor.showModal(); return;
+    }
     const caps = r.capturas || [];
     visorCuerpo.innerHTML = caps.length
       ? caps.map((src, n) => `<img src="${esc(src)}" alt="Captura ${n + 1} de ${caps.length} de las estadísticas de Instagram del reel ${esc(r.titulo)}" loading="lazy">`).join('')

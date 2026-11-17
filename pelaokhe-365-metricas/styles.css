@@ -133,7 +133,7 @@ body[data-escena="aprendizajes"] { --fx: -22vw; --fy: -28vh; --fr: 3deg;  --fs: 
 .portada__barra { width: clamp(220px, 25vw, 420px); height: auto; }
 .portada__fila { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; width: 100%; max-width: 720px; }
 .portada__cifra { display: grid; align-content: center; gap: 8px; }
-.portada__cifra p { max-width: 15ch; font-size: clamp(13px, .95vw, 15px); line-height: 1.3; }
+.portada__cifra p { max-width: 21ch; font-size: clamp(13px, .95vw, 15px); line-height: 1.3; }
 .portada__bajada { display: grid; align-content: center; gap: 8px; }
 .portada__bajada b { font-family: 'Archivo', sans-serif; font-weight: 820; font-size: clamp(19px, 1.6vw, 27px); line-height: 1.1; }
 .portada__visual { position: relative; }
@@ -201,11 +201,39 @@ body[data-escena="aprendizajes"] { --fx: -22vw; --fy: -28vh; --fr: 3deg;  --fs: 
 .leyenda { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 14px; font-size: 13px; }
 .leyenda__item { display: inline-flex; align-items: center; gap: 8px; }
 .leyenda .serie { width: 12px; height: 12px; border-radius: 3px; }
-.serie--0 { background: var(--tinta); }
-.serie--1 { background: var(--rojo); }
+/* un color por reel, en el orden de datos.js (validado con daltonismo: los cuatro se distinguen de a pares; el naranja
+   tiene poco contraste con el blanco, así que cada barra lleva su número). Lo estimado va rayado */
+.serie--0 { background-color: var(--tinta); }
+.serie--1 { background-color: var(--rojo); }
+.serie--2 { background-color: #6E7A8F; }
+.serie--3 { background-color: #E8833A; }
+.serie.is-estimada, .serie--estimada { background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, .62) 0 2px, transparent 2px 6px); }
+.serie--estimada { background-color: #8A8F99; }
+/* ≈: estimado */
+.aprox { display: inline-block; width: .62em; height: .52em; margin-right: .14em; vertical-align: .08em; }
+.aprox svg { display: block; width: 100%; height: 100%; }
+.cifra .aprox { font-size: 1em; }
+.cifra.is-estimado .aprox { color: currentColor; }
+.solo-lector { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .grafico__fila { display: grid; grid-template-columns: minmax(7.2em, auto) minmax(0, 1fr); align-items: center; column-gap: 12px; row-gap: 2px; margin-bottom: clamp(5px, .9vh, 10px); }
 .grafico__nombre { grid-row: span 2; font-size: 13px; font-weight: 600; }
-.grafico__barra { display: flex; align-items: center; gap: 10px; min-height: 20px; }
+.grafico__barra { grid-column: 2; display: flex; align-items: center; gap: 10px; min-height: 20px; }
+/* con más de dos reels: las métricas en dos columnas, el nombre arriba de sus barras, para que la escena entre */
+.grafico--cuatro .leyenda { gap: 4px 14px; margin: 6px 0 12px; font-size: 12.5px; }
+.grafico--cuatro .grafico__filas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.6vh, 16px) clamp(20px, 2.4vw, 36px); }
+.grafico--cuatro .grafico__fila { grid-template-columns: minmax(0, 1fr); row-gap: 1px; margin: 0; }
+.grafico--cuatro .grafico__nombre { grid-row: auto !important; grid-column: 1; margin-bottom: 3px; }
+.grafico--cuatro .grafico__barra { grid-column: 1; min-height: 16px; }
+.grafico--cuatro .grafico__barra i { height: 9px; }
+.grafico--cuatro .grafico__barra b { font-size: 12.5px; }
+.grafico--cuatro .grafico__lectura { margin-top: 12px; font-size: clamp(13px, .9vw, 14px); }
+@media (max-height: 780px) and (min-width: 761px) {
+  .grafico--cuatro .grafico__filas { row-gap: 8px; }
+  .grafico--cuatro .grafico__barra { min-height: 13px; }
+  .grafico--cuatro .grafico__barra i { height: 8px; }
+  .grafico--cuatro .grafico__lectura { margin-top: 8px; font-size: 12.5px; line-height: 1.4; }
+  .total { padding-block: 8px; }
+}
 .grafico__barra i { display: block; height: 14px; width: 0; border-radius: 0 4px 4px 0; transition: width 1.2s var(--entra) .45s; }
 .escena.is-activa .grafico__barra i { width: calc(var(--w) * .78); }
 .grafico__barra b { font-size: 13px; font-weight: 600; white-space: nowrap; }
@@ -213,7 +241,7 @@ body[data-escena="aprendizajes"] { --fx: -22vw; --fy: -28vh; --fr: 3deg;  --fs: 
 .totales { grid-area: totales; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
 .total { display: grid; align-content: start; gap: 6px; padding-block: clamp(10px, .9vw, 14px); }
 .total .cifra { font-size: clamp(22px, 1.9vw, 32px); }
-.total span { font-size: clamp(13px, .92vw, 14.5px); font-weight: 500; line-height: 1.3; }
+.total > span { font-size: clamp(13px, .92vw, 14.5px); font-weight: 500; line-height: 1.3; }
 .total small { display: block; font-size: 12px; font-weight: 400; }
 
 /* ── el público ── */
@@ -302,6 +330,11 @@ button.pill { border: 0; cursor: pointer; font-family: inherit; }
 .visor__cuerpo img { width: 100%; height: auto; border-radius: 16px; background: #0C0F14; }
 .visor__falta { padding: 48px 20px; border-radius: 16px; background: var(--fondo); font-family: 'Archivo', sans-serif; font-weight: 700; text-align: center; }
 .visor__nota { padding: 0 6px 4px; font-size: 13px; }
+.visor__estimado { display: grid; gap: 10px; padding: 4px 6px 6px; font-size: 14px; line-height: 1.45; }
+.visor__estimado .tabla__filas { padding: 2px 14px; border-radius: 16px; background: var(--fondo); }
+.visor__estimado .fila { padding: 7px 0; }
+.visor__estimado .fila dt { font-size: 14px; }
+.visor__estimado .fila .cifra { font-size: 19px; }
 .visor__nota:empty { display: none; }
 
 .tip { position: fixed; z-index: 5; left: 0; top: 0; padding: 8px 12px; border-radius: 10px; background: var(--tinta); color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
@@ -390,7 +423,7 @@ body:not(.is-cargando) .cargador { opacity: 0; visibility: hidden; }
   .ancla--numeros { top: 30%; height: 40%; }
   .totales { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .total .cifra { font-size: 20px; }
-  .total span { font-size: 12.5px; }
+  .total > span { font-size: 12.5px; }
 
   .captura img { width: 100%; }
   .captura figcaption, .captura:nth-child(even) figcaption { margin: -18px 14px 0; }

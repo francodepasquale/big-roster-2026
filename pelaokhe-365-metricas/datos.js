@@ -4,8 +4,13 @@
 // assets/capturas/ y en ../materiales/estadisticas/). El botón «Ver captura» de cada reel las muestra: son la fuente.
 //
 // Cómo cambiar un dato: el número sin puntos ni comas de miles (12500, no 12.500). Porcentajes de 0 a 100
-// (42,5 % → 42.5). Tiempos en segundos. Lo que quede en `null` se muestra como «A confirmar».
+// (42,5 % → 42.5). Tiempos en segundos. Lo que quede en `null` no se muestra.
 // Los totales, la tasa de interacción, el costo por mil, los gráficos y las lecturas se recalculan solos.
+//
+// Reels sin captura de estadísticas («Spoiler alert» y «Mentalidad de surtidor»): van con `metricas: null` y sus
+// `publicos` (lo que muestra Instagram sin entrar a la cuenta). El deck los estima con la relación entre lo público
+// y las estadísticas de los reels con captura (ver `estimar` en app.js) y los marca con ≈. Me gusta y comentarios no se
+// estiman: son los públicos. Cuando llegue la captura, cargá `metricas` como en los otros y sumá `capturas`.
 //
 // Si cambiás la fecha de corte o la fuente, cambiala en FUENTES: se muestra debajo de cada tabla.
 
@@ -24,9 +29,12 @@ window.CAMPANA = {
   // inversión total de la campaña, en pesos, para calcular el costo por mil visualizaciones
   inversion: null,
 
+  corte: '17/11/2026', // el día en que se midió todo (capturas y datos públicos)
+
   FUENTES: {
     publicas: 'Fuente: estadísticas de Instagram de @pelao.khe al 17/11/2026 (incluyen datos de anuncios).',
     pendientes: 'Las capturas están en «Ver captura», en cada reel.',
+    estimados: 'Con ≈, estimado con lo público de Instagram al 17/11/2026 y los reels con captura. Me gusta y comentarios son los públicos.',
   },
 
   reels: [
@@ -40,6 +48,7 @@ window.CAMPANA = {
       fechaCaptura: '17/11/2026',
       publicado: '16/10/2026', // sale del código del reel en Instagram
       duracion: 32.5,
+      publicos: { reproducciones: 98174, meGusta: 6256, comentarios: 573 }, // embed pública de Instagram, 17/11/2026
       copy: 'Tu plata rinde más cuando sabés cómo usarla.',
       mensaje: 'Miles de beneficios en nafta, supermercados, gastronomía, cines y turismo.',
       metricas: {
@@ -70,6 +79,7 @@ window.CAMPANA = {
       fechaCaptura: '17/11/2026',
       publicado: '22/10/2026',
       duracion: 38.8,
+      publicos: { reproducciones: 144737, meGusta: 7231, comentarios: 1029 },
       copy: 'Heladera llena y bolsillo tranquilo.',
       mensaje: '15 % OFF en Jumbo los lunes y jueves. En la caja, «¡Tengo 365!».',
       metricas: {
@@ -89,6 +99,34 @@ window.CAMPANA = {
         edad: [['13-17', 1.5], ['18-24', 10.4], ['25-34', 47.2], ['35-44', 28.4], ['45-54', 7.3], ['55-64', 2.4], ['65+', 2.8]],
         pais: [['Argentina', 84.3], ['Uruguay', 2.6], ['Chile', 2.6], ['España', 2.3], ['México', 2.1]],
       },
+    },
+    {
+      id: 'cine',
+      titulo: 'Spoiler alert',
+      url: 'https://www.instagram.com/reel/DfIKjZihOQL/',
+      video: 'assets/reels/spoiler-alert.mp4',
+      portada: 'assets/reels/spoiler-alert.webp',
+      capturas: [], // no hay captura de estadísticas: «Ver captura» pasa a ser «Cómo se estimó»
+      publicado: '30/10/2026',
+      duracion: 32.9,
+      publicos: { reproducciones: 54362, meGusta: 1913, comentarios: 210 }, // embed pública de Instagram, 17/11/2026
+      copy: 'Esta peli termina con 2 entradas en tu mano al precio de una.',
+      mensaje: '2x1 en Cinemark todos los días.',
+      metricas: null, // estimadas en app.js con `publicos`
+    },
+    {
+      id: 'surtidor',
+      titulo: 'Mentalidad de surtidor',
+      url: 'https://www.instagram.com/reel/DfXn__MhsRP/',
+      video: 'assets/reels/mentalidad-de-surtidor.mp4',
+      portada: 'assets/reels/mentalidad-de-surtidor.webp',
+      capturas: [],
+      publicado: '05/11/2026',
+      duracion: 31,
+      publicos: { reproducciones: 71660, meGusta: 2936, comentarios: 114 },
+      copy: 'Llená el tanque y cuidá el bolsillo.',
+      mensaje: '10 % OFF en Shell V-Power de lunes a viernes, con 365 y Shell Box.',
+      metricas: null,
     },
   ],
 
