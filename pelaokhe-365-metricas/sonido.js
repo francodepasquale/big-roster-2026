@@ -1,5 +1,5 @@
 // El sonido del deck: todo sintetizado con Web Audio, sin archivos. La interfaz usa los sonidos de Bencho (bencho.js);
-// lo propio de la campaña (la caja registradora, el giro del 365, el obturador del backstage) se arma acá.
+// lo propio de la campaña (la caja registradora, el giro del 365) se arma acá.
 // Cada acción lleva siempre el mismo sonido.
 //
 // Efecto       Cuándo                                              Sale de
@@ -10,7 +10,6 @@
 // caja         una cifra grande termina de contar                  Bencho paid + campana de caja registradora
 // noti         entra una captura de comentarios                    Bencho plop
 // giro         el 365 da una vuelta                                propio: un soplido
-// obturador    cambia la foto del backstage                        propio: réflex
 // prendido, apagado  el botón de sonido                            Bencho boot y hush
 // enviar       escribir a BIG                                      Bencho hail
 //
@@ -118,17 +117,9 @@ export const RECETAS = {
     noise(t + .3, { f: 2600 * j, to: 900 * j, q: .9, a: .05, d: .4, g: .03 });
     return .75;
   },
-  // un obturador de réflex: espejo que sube, cortina, espejo que baja
-  obturador: (t, j) => {
-    noise(t, { f: 5200 * j, type: 'highpass', q: .7, a: .001, d: .008, g: .16 });
-    noise(t + .004, { f: 1800 * j, q: 2.5, a: .001, d: .02, g: .09 });
-    noise(t + .042, { f: 4200 * j, type: 'highpass', q: .7, a: .001, d: .007, g: .11 });
-    noise(t + .046, { f: 1400 * j, q: 2, a: .001, d: .016, g: .06 });
-    return .12;
-  },
 };
-const VOL = { pip: 1.48, paso: 1.9, reel: 1.76, tic: 1.1, noti: 1.6, prendido: 1.6, apagado: 3.6, enviar: 1.8, caja: .9, giro: 2.2, obturador: 1.9 };
-const VARIA = { obturador: .08, noti: .06 };
+const VOL = { pip: 1.48, paso: 1.9, reel: 1.76, tic: 1.1, noti: 1.6, prendido: 1.6, apagado: 3.6, enviar: 1.8, caja: .9, giro: 2.2 };
+const VARIA = { noti: .06 };
 
 /* ── el motor ── */
 function montar(c) {

@@ -57,11 +57,9 @@ button { font: inherit; }
 .escenas { position: fixed; inset: 0; z-index: 1; }
 
 body[data-escena="portada"]      { --fx: 30vw;  --fy: 14vh;  --fr: 0deg;  --fs: 1; }
-body[data-escena="campana"]      { --fx: -30vw; --fy: -8vh;  --fr: -8deg; --fs: .92; }
 body[data-escena^="reel-"]       { --fx: 2vw;   --fy: 34vh;  --fr: 4deg;  --fs: .82; }
 body[data-escena="numeros"]      { --fx: -26vw; --fy: 26vh;  --fr: -4deg; --fs: 1; }
 body[data-escena="conversacion"] { --fx: 32vw;  --fy: -12vh; --fr: 6deg;  --fs: .95; }
-body[data-escena="backstage"]    { --fx: 22vw;  --fy: 16vh;  --fr: -6deg; --fs: .88; }
 body[data-escena="aprendizajes"] { --fx: -22vw; --fy: -28vh; --fr: 3deg;  --fs: 1; }
 
 /* ── escenas ── */
@@ -142,13 +140,6 @@ body[data-escena="aprendizajes"] { --fx: -22vw; --fy: -28vh; --fr: 3deg;  --fs: 
 .foto--portada { width: 100%; aspect-ratio: .82; }
 .foto--portada img { object-position: 50% 30%; }
 .ancla--portada { right: -5%; bottom: -8%; height: 34%; }
-
-/* ── la campaña ── */
-.rejilla--campana { display: grid; grid-template-columns: minmax(0, 1.15fr) min(34vw, calc(66vh * .81)); gap: clamp(28px, 4.4vw, 80px); align-items: center; }
-.campana__texto { display: grid; gap: clamp(14px, 2vh, 22px); }
-.campana__visual { position: relative; }
-.foto--campana { width: 100%; aspect-ratio: .81; }
-.ancla--campana { right: -5%; top: -9%; height: 27%; }
 
 /* ── los reels ── */
 .rejilla--reel { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.05fr); gap: clamp(24px, 3.6vw, 68px); align-items: center; }
@@ -237,21 +228,6 @@ body[data-escena="aprendizajes"] { --fx: -22vw; --fy: -28vh; --fr: 3deg;  --fs: 
 .captura figcaption b { display: block; margin-bottom: 4px; font-family: 'Archivo', sans-serif; font-weight: 820; font-size: clamp(16px, 1.15vw, 18px); }
 .escena .captura[data-r] { transform: translateY(26px) scale(.96); }
 .escena.is-activa .captura[data-r] { transform: none; }
-
-/* ── detrás de cámara ── */
-.rejilla--backstage { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 4.4vw, 80px); align-items: center; }
-.backstage__texto { display: grid; gap: clamp(14px, 2vh, 22px); }
-.backstage__frase { font-family: 'Archivo', sans-serif; font-weight: 760; font-size: clamp(20px, 1.8vw, 30px); line-height: 1.2; transition: opacity .25s ease; }
-.backstage__frase.is-cambia { opacity: 0; }
-.pila { position: relative; justify-self: center; height: min(64vh, 620px); aspect-ratio: .81; cursor: pointer; }
-.pila__foto {
-  position: absolute; inset: 0; overflow: hidden; border-radius: clamp(24px, 2.4vw, 40px); background: #D9D9D9; box-shadow: var(--sombra);
-  z-index: calc(20 - var(--i)); opacity: clamp(0, calc(3 - var(--i)), 1);
-  transform: translate(calc(var(--i) * 22px), calc(var(--i) * -16px)) rotate(calc(var(--i) * 3.5deg)) scale(calc(1 - var(--i) * .045));
-  transition: transform .8s var(--entra), opacity .5s ease;
-}
-.pila__foto img { width: 100%; height: 100%; object-fit: cover; }
-.pila__foto.is-sale { z-index: 30; opacity: 0; transform: translate(-72%, 8%) rotate(-16deg) scale(.96); transition: transform .45s cubic-bezier(.5, 0, .75, 0), opacity .45s ease; }
 
 /* ── lo que nos deja ── */
 .rejilla--aprendizajes { display: grid; gap: clamp(18px, 2.6vh, 30px); }
@@ -372,7 +348,7 @@ body:not(.is-cargando) .cargador { opacity: 0; visibility: hidden; }
   .dato span { font-size: 12.5px; }
   .cifra--texto { white-space: normal; overflow-wrap: anywhere; font-size: 15px; }
 
-  .rejilla--portada, .rejilla--campana, .rejilla--reel, .rejilla--numeros, .rejilla--conversacion, .rejilla--backstage { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: 14px; }
+  .rejilla--portada, .rejilla--reel, .rejilla--numeros, .rejilla--conversacion { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: 14px; }
 
   .portada__texto { display: contents; }
   .portada__barra { order: 1; width: 230px; }
@@ -382,10 +358,6 @@ body:not(.is-cargando) .cargador { opacity: 0; visibility: hidden; }
   .portada__cifra p { font-size: 12.5px; }
   .portada__bajada { font-size: 13.5px; }
 
-  .campana__visual { order: -1; width: 100%; }
-  .foto--campana { aspect-ratio: 16 / 8; }
-  .foto--campana img { object-position: 50% 26%; }
-  .ancla--campana { right: 2%; top: -14%; height: 46%; }
 
   .rejilla--reel { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "tel texto" "tabla tabla"; align-items: start; }
   .ancla-telefono { grid-area: tel; height: min(35vh, 300px); }
@@ -418,11 +390,6 @@ body:not(.is-cargando) .cargador { opacity: 0; visibility: hidden; }
   .capturas { order: 3; }
   .conversacion__texto .datos { order: 4; }
 
-  .backstage__texto { display: contents; }
-  .backstage__texto .titulo { order: 1; }
-  .pila { order: 2; height: min(42vh, 380px); justify-self: start; margin: 26px 0 0 4px; }
-  .pila__foto { transform: translate(calc(var(--i) * 12px), calc(var(--i) * -9px)) rotate(calc(var(--i) * 3deg)) scale(calc(1 - var(--i) * .04)); }
-  .backstage__texto .panel { order: 3; }
 
   .tarjetas { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .ancla--aprendizajes { height: 84px; top: -10px; }
@@ -434,7 +401,7 @@ body:not(.is-cargando) .cargador { opacity: 0; visibility: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .escena, .escena [data-r], .fondo, .telefono, .telefono__cinta, .pila__foto, .grafico__barra i, .isla__texto {
+  .escena, .escena [data-r], .fondo, .telefono, .telefono__cinta, .grafico__barra i, .isla__texto {
     transition-duration: .01s !important; transition-delay: 0s !important;
   }
   .escena, .escena [data-r] { transform: none !important; }

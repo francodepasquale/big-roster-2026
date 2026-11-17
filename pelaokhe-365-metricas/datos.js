@@ -105,14 +105,5 @@ window.CAMPANA = {
     respuestasCreador: null, // respuestas del Pelao
   },
 
-  // Detrás de cámara: fotos y textos de la publicación de backstage del Figma (hito Pelao Khe × 365)
-  // (la del camarín, «Primero, construir al personaje», está en la escena de la campaña)
-  backstage: [
-    { foto: 'assets/fotos/en-set.webp', texto: 'Tasas, inversiones y rendimiento, pero contados desde su humor.' },
-    { foto: 'assets/fotos/primer-plano.webp', texto: 'La inversión con rendimiento instantáneo: la que hacés en vos mismo, hoy.' },
-    { foto: 'assets/fotos/rodaje.webp', texto: 'Un gran equipo para una idea simple: hacer rendir la plata, disfrutando.' },
-    { foto: 'assets/fotos/equipo.webp', texto: 'Gracias a todo el equipo que lo hizo posible.' },
-    { foto: 'assets/fotos/cierre.webp', texto: 'Muy contentos de haber sido parte de esta campaña junto a 365.' },
-  ],
 
 };

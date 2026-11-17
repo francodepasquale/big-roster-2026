@@ -116,7 +116,7 @@ function armarReels() {
         <div class="panel tabla" data-r>${tabla(r)}<p class="fuente">${esc(C.FUENTES.publicas)}</p></div>
       </div></div>
     </section>`).join('');
-  $('#campana').insertAdjacentHTML('afterend', html);
+  $('#portada').insertAdjacentHTML('afterend', html);
 }
 
 function armarTelefono() {
@@ -138,14 +138,6 @@ function armarTelefono() {
     </article>`).join('');
 }
 
-function armarCampana() {
-  const [a, b] = R;
-  $('[data-slot="campana-datos"]').innerHTML = `
-    <div class="dato panel panel--sm">${cifra(C.creador.seguidores, 'M2')}<span>seguidores de @${esc(C.creador.usuario)} en Instagram</span></div>
-    <div class="dato panel panel--sm"><b class="cifra" data-cifra="${R.length}" data-formato="n">${R.length}</b><span>reels de ${R.map(r => Math.round(r.duracion)).join(' y ')} segundos</span></div>
-    <div class="dato panel panel--sm"><b class="cifra cifra--fecha">${esc(a.publicado.slice(0, 5))}</b><span>y ${esc(b.publicado)}, las fechas de publicación</span></div>
-    <div class="dato panel panel--sm"><b class="cifra cifra--texto">${esc(C.hashtag)}</b><span>el cierre de los dos posteos, con «¡Es AHORRA o nunca!»</span></div>`;
-}
 
 function armarNumeros() {
   $('[data-slot="total-reproducciones"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xxl', 'data-hero="1"');
@@ -233,11 +225,6 @@ function armarAprendizajes(lec) {
   if (partesFalta.length) falta.textContent = partesFalta.join(' '); else falta.remove();
 }
 
-function armarBackstage() {
-  const pila = $('[data-slot="pila"]');
-  pila.innerHTML = C.backstage.map((b, i) => `<figure class="pila__foto" style="--i:${i}"><img src="${esc(b.foto)}" alt="${esc(b.texto)}" loading="eager"></figure>`).join('');
-  $('[data-slot="backstage-texto"]').textContent = C.backstage[0].texto;
-}
 
 
 /* ── el cargador: cuenta trabajo terminado, nada más ── */
@@ -256,9 +243,9 @@ async function cargar(alAvanzar) {
 
 /* ── todo ── */
 async function iniciar() {
-  armarReels(); armarTelefono(); armarCampana();
+  armarReels(); armarTelefono();
   const lec = armarNumeros();
-  armarConversacion(); armarAprendizajes(lec); armarBackstage();
+  armarConversacion(); armarAprendizajes(lec);
 
   const ESC = $$('.escena');
   ESC.forEach(e => { $$('[data-r]', e).forEach((el, i) => { if (!el.style.getPropertyValue('--r')) el.style.setProperty('--r', i); }); e.inert = true; e.setAttribute('aria-hidden', 'true'); });
@@ -343,8 +330,6 @@ async function iniciar() {
     });
     // capturas: cada una entra con su aviso
     if (e.id === 'conversacion') $$('.captura', e).forEach(c => despues(330 + (+c.style.getPropertyValue('--r') || 0) * 90, () => S.sonar('noti')));
-    pila.activa = e.id === 'backstage';
-    if (pila.activa) pila.reloj();
   }
 
   /* ── cifras que cuentan ── */
@@ -392,30 +377,6 @@ async function iniciar() {
   });
   // el primer gesto habilita el sonido del reel que se está viendo
   for (const ev of ['pointerdown', 'keydown']) addEventListener(ev, () => setTimeout(() => sonidoVideos(), 0), { once: true, capture: true });
-
-  /* ── el backstage: una pila de fotos que pasa sola ── */
-  const pilaEl = $('[data-slot="pila"]'), fotos = $$('.pila__foto', pilaEl), textoBack = $('[data-slot="backstage-texto"]');
-  const pila = {
-    arriba: 0, activa: false, t: null,
-    pasar() {
-      const n = fotos.length, sale = fotos[this.arriba];
-      sale.classList.add('is-sale');
-      S.sonar('obturador');
-      this.arriba = (this.arriba + 1) % n;
-      setTimeout(() => { sale.classList.remove('is-sale'); pintarPila(); }, REDUCIDO ? 0 : 420);
-      textoBack.classList.add('is-cambia');
-      setTimeout(() => { textoBack.textContent = C.backstage[this.arriba].texto; textoBack.classList.remove('is-cambia'); }, REDUCIDO ? 0 : 260);
-      pintarPila(true);
-    },
-    reloj() { clearTimeout(this.t); if (!this.activa || REDUCIDO) return; this.t = setTimeout(() => { if (this.activa) { this.pasar(); this.reloj(); } }, 3400); },
-  };
-  function pintarPila(saliendo = false) {
-    const n = fotos.length;
-    fotos.forEach((f, i) => { const pos = (i - pila.arriba + n) % n; if (saliendo && i === (pila.arriba - 1 + n) % n) return; f.style.setProperty('--i', pos); });
-  }
-  pintarPila();
-  pilaEl.addEventListener('click', () => { pila.pasar(); pila.reloj(); });
-  pilaEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); pila.pasar(); pila.reloj(); } });
 
   /* ── la isla ── */
   function pintarIsla() {
