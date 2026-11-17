@@ -29,18 +29,18 @@ window.CAMPANA = {
   // inversión total de la campaña, en pesos, para calcular el costo por mil visualizaciones
   inversion: null,
 
-  totalReproducciones: 3600000, // visualizaciones totales de la campaña, dato real (Tomás, 17/11/2026)
   corte: '17/11/2026', // el día en que se midió todo (capturas y datos públicos)
 
   FUENTES: {
     publicas: 'Fuente: estadísticas de Instagram de @pelao.khe al 17/11/2026 (incluyen datos de anuncios).',
     pendientes: 'Las capturas están en «Ver captura», en cada reel.',
-    estimados: 'Con ≈, estimado con lo público de Instagram al 17/11/2026 y los reels con captura. Me gusta y comentarios son los públicos.',
+    estimados: 'Con ≈, estimado con lo público de Instagram al 17/11/2026 y los reels con captura. Visualizaciones, me gusta y comentarios son reales.',
   },
 
   reels: [
     {
       id: 'facto',
+      beneficio: 'general', // beneficios generales; en los otros, el beneficio concreto (va en «Lo que nos deja»)
       titulo: 'El facto del día',
       url: 'https://www.instagram.com/reel/DekHbVThtM3/',
       video: 'assets/reels/facto-del-dia.mp4',
@@ -72,6 +72,7 @@ window.CAMPANA = {
     },
     {
       id: 'aura',
+      beneficio: 'Jumbo',
       titulo: '+1000 de aura en la caja',
       url: 'https://www.instagram.com/reel/DezkmnUB78D/',
       video: 'assets/reels/aura-en-la-caja.mp4',
@@ -103,6 +104,7 @@ window.CAMPANA = {
     },
     {
       id: 'cine',
+      beneficio: 'Cinemark',
       titulo: 'Spoiler alert',
       url: 'https://www.instagram.com/reel/DfIKjZihOQL/',
       video: 'assets/reels/spoiler-alert.mp4',
@@ -113,10 +115,12 @@ window.CAMPANA = {
       publicos: { reproducciones: 54362, meGusta: 1913, comentarios: 210 }, // embed pública de Instagram, 17/11/2026
       copy: 'Esta peli termina con 2 entradas en tu mano al precio de una.',
       mensaje: '2x1 en Cinemark todos los días.',
-      metricas: null, // estimadas en app.js con `publicos`
+      reales: { reproducciones: 971000 }, // visualizaciones de la cuenta (Tomás, 17/11/2026)
+      metricas: null, // el resto, estimado en app.js con `reales` y `publicos`
     },
     {
       id: 'surtidor',
+      beneficio: 'Shell',
       titulo: 'Mentalidad de surtidor',
       url: 'https://www.instagram.com/reel/DfXn__MhsRP/',
       video: 'assets/reels/mentalidad-de-surtidor.mp4',
@@ -127,6 +131,7 @@ window.CAMPANA = {
       publicos: { reproducciones: 71660, meGusta: 2936, comentarios: 114 },
       copy: 'Llená el tanque y cuidá el bolsillo.',
       mensaje: '10 % OFF en Shell V-Power de lunes a viernes, con 365 y Shell Box.',
+      reales: { reproducciones: 1000000 }, // visualizaciones de la cuenta (Tomás, 17/11/2026)
       metricas: null,
     },
   ],

@@ -86,7 +86,7 @@ const FACTOR = {
   nuevosSeguidores: media(r => div(r.metricas.nuevosSeguidores, r.metricas.reproducciones)),
 };
 const por = (v, k, redondeo = 1) => (v == null || FACTOR[k] == null ? null : Math.round(v * FACTOR[k] / redondeo) * redondeo);
-const SIN_CAPTURA = C.reels.filter(r => !r.metricas && r.publicos);
+const SIN_CAPTURA = C.reels.filter(r => !r.metricas && r.publicos && r.reales?.reproducciones == null);
 const REPARTO = C.totalReproducciones && SIN_CAPTURA.length ? {
   resto: C.totalReproducciones - BASE.reduce((s, r) => s + r.metricas.reproducciones, 0),
   publicas: SIN_CAPTURA.reduce((s, r) => s + r.publicos.reproducciones, 0),
@@ -95,7 +95,7 @@ function estimar(r) {
   const p = r.publicos;
   // si se sabe el total de la campaña, lo que falta para llegar se reparte entre los reels sin captura según sus
   // visualizaciones públicas; si no, las públicas × la relación de los reels con captura
-  const rep = REPARTO ? Math.round(REPARTO.resto * p.reproducciones / REPARTO.publicas / 1000) * 1000 : por(p.reproducciones, 'reproducciones', 1000);
+  const rep = r.reales?.reproducciones ?? (REPARTO ? Math.round(REPARTO.resto * p.reproducciones / REPARTO.publicas / 1000) * 1000 : por(p.reproducciones, 'reproducciones', 1000));
   const m = {
     reproducciones: rep,
     alcance: por(rep, 'alcance', 1000),
@@ -109,7 +109,7 @@ function estimar(r) {
     nuevosSeguidores: por(rep, 'nuevosSeguidores'),
   };
   r.metricas = m;
-  r.estimados = new Set(Object.keys(m).filter(k => m[k] != null && k !== 'meGusta' && k !== 'comentarios'));
+  r.estimados = new Set(Object.keys(m).filter(k => m[k] != null && k !== 'meGusta' && k !== 'comentarios' && r.reales?.[k] == null));
 }
 for (const r of C.reels) { if (!r.metricas && r.publicos && BASE.length) estimar(r); else r.estimados ??= new Set(); }
 if (C.reels.some(r => !r.metricas)) C.reels = C.reels.filter(r => r.metricas); // sin captura ni datos públicos: no entra
@@ -252,11 +252,21 @@ function armarNumeros() {
   const [mas, seg] = orden, ratio = M(mas).reproducciones / M(seg).reproducciones;
   const cm = M(mas).comentarios, cs = M(seg).comentarios;
   const deTodos = R.every(r => M(r).reproducciones <= M(mas).reproducciones);
-  let lec = `«${mas.titulo}» fue el más visto${deTodos ? '' : ' de los reels con captura'}, con ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}»`;
-  if (cm != null && cs != null && cm > cs) lec += ` y ${veces(cm / cs, 'comentarios', 'los')}`;
+  let lec, genAlFinal = null;
+  if (orden.length > 2) { // el ranking, con el de beneficios generales aparte
+    const gen = orden.find(r => r.beneficio === 'general');
+    const resto = orden.filter(r => r !== mas && r !== gen);
+    lec = `«${mas.titulo}» fue el más visto (${texto(M(mas).reproducciones)}), seguido por ${lista(resto.map(r => `«${r.titulo}» (${texto(M(r).reproducciones)})`))}`;
+    if (gen && gen !== mas) { lec += `. «${gen.titulo}», con beneficios generales, tuvo ${texto(M(gen).reproducciones)}`; genAlFinal = gen; }
+  } else {
+    lec = `«${mas.titulo}» fue el más visto${deTodos ? '' : ' de los reels con captura'}, con ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}»`;
+    if (cm != null && cs != null && cm > cs) lec += ` y ${veces(cm / cs, 'comentarios', 'los')}`;
+  }
   const medidos = R.filter(r => !estTasa(r) && tasa(M(r)) != null);
   const conv = medidos.length > 1 ? medidos.reduce((x, y) => (tasa(M(y)) > tasa(M(x)) ? y : x)) : null;
-  if (conv && conv !== mas && !estTasa(mas)) lec += `. «${conv.titulo}» conversó más por cada visualización: ${texto(tasa(M(conv)), '%')} contra ${texto(tasa(M(mas)), '%')}`;
+  if (conv && conv !== mas && !estTasa(mas)) lec += conv === genAlFinal
+    ? `, pero fue el que más conversó por cada visualización: ${texto(tasa(M(conv)), '%')}, contra ${texto(tasa(M(mas)), '%')} de «${mas.titulo}»`
+    : `. «${conv.titulo}» conversó más por cada visualización: ${texto(tasa(M(conv)), '%')} contra ${texto(tasa(M(mas)), '%')}`;
   $('[data-slot="lectura"]').textContent = lec + '.';
   $('[data-slot="fuentes"]').textContent = `${C.FUENTES.publicas} ${C.FUENTES.pendientes}${ESTIMADOS.length ? ` ${C.FUENTES.estimados}` : ''}`;
   return { mas, seg, ratio, conv };
@@ -320,12 +330,21 @@ function armarConversacion() {
 function armarAprendizajes(lec) {
   const { mas, seg, ratio, conv } = lec;
   const pm = M(mas).reproducciones, ps = M(seg).reproducciones;
-  const sm = M(mas).nuevosSeguidores, ss = M(seg).nuevosSeguidores;
-  const seguidores = sm != null && ss != null && !est(mas, 'nuevosSeguidores') && !est(seg, 'nuevosSeguidores') ? `, y sumó ${nf.format(sm)} seguidores nuevos, contra ${nf.format(ss)}` : '';
+  const sm = M(mas).nuevosSeguidores;
+  const seguidoresDe = (x, y) => (M(x).nuevosSeguidores != null && M(y).nuevosSeguidores != null && !est(x, 'nuevosSeguidores') && !est(y, 'nuevosSeguidores')
+    ? ` «${x.titulo}» sumó ${nf.format(M(x).nuevosSeguidores)} seguidores nuevos, contra ${nf.format(M(y).nuevosSeguidores)}.` : '');
+  // beneficio concreto contra general: los reels con `beneficio: 'general'` en datos.js contra el resto
+  const gen = R.find(r => r.beneficio === 'general'), conc = R.filter(r => r !== gen);
+  const primera = gen && conc.length && conc.every(r => !est(r, 'reproducciones'))
+    ? (() => {
+      const prom = conc.reduce((s2, r) => s2 + M(r).reproducciones, 0) / conc.length;
+      return { titulo: 'El beneficio concreto rinde más', dato: `${valor(prom)} <span class="contra">contra</span> ${valor(M(gen).reproducciones)}`,
+        texto: `${conc.length > 1 ? `Los ${palabra(conc.length)} reels con un descuento concreto (${lista(conc.map(r => r.beneficio))}) promediaron` : `«${conc[0].titulo}» tuvo`} ${texto(prom)} visualizaciones, ${veces(prom / M(gen).reproducciones, 'visualizaciones', 'las').replace(/^(el (doble|triple)) de visualizaciones$/, '$1')} que «${gen.titulo}», el de beneficios generales.${seguidoresDe(mas, gen)}` };
+    })()
+    : { titulo: `«${mas.titulo}», el más visto`, dato: `${valor(pm, 'n', est(mas, 'reproducciones'))} <span class="contra">contra</span> ${valor(ps, 'n', est(seg, 'reproducciones'))}`,
+      texto: `Tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}».${seguidoresDe(mas, seg)}` };
   const tarjetas = [
-    // el texto del final habla de «+1000 de aura en la caja» (el súper): si cambia el más visto, cambiarlo
-    { titulo: `«${mas.titulo}», el más visto`, // (entre los reels con captura) dato: `${valor(pm, 'n', est(mas, 'reproducciones'))} <span class="contra">contra</span> ${valor(ps, 'n', est(seg, 'reproducciones'))}`,
-      texto: `Tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}»${seguidores}. El descuento en el súper, con días fijos para usarlo, fue el beneficio que más llegó.` },
+    primera,
     { titulo: 'La marca entra en la charla', dato: '«ALGUIEN CON 365 por acá?»', cita: true,
       texto: 'En los comentarios, 365 aparece como la respuesta a un plan: ir al cine, hacer las compras. Lo dice la comunidad, no el aviso.' },
   ];
@@ -645,9 +664,9 @@ async function iniciar() {
     ].filter(([k]) => est(r, k));
     const diasBase = BASE.map(b => String(dias(b.publicado, C.corte)));
     return `<div class="visor__estimado">
-      <p>Este reel no tiene captura de estadísticas. Esto es lo que muestra Instagram sin entrar a la cuenta, al ${esc(C.corte)}:</p>
-      <dl class="tabla__filas">${fila('Visualizaciones públicas', p.reproducciones)}${fila('Me gusta', p.meGusta)}${fila('Comentarios', p.comentarios)}</dl>
-      <p>Me gusta y comentarios van tal cual. El resto sale de cómo les fue a ${lista(base)}, medidos el mismo día:</p>
+      <p>Este reel no tiene captura de estadísticas. Lo real, al ${esc(C.corte)}: ${r.reales?.reproducciones != null ? 'las visualizaciones (de la cuenta) y ' : ''}los me gusta y comentarios públicos de Instagram.</p>
+      <dl class="tabla__filas">${r.reales?.reproducciones != null ? fila('Visualizaciones', m.reproducciones) : fila('Visualizaciones públicas', p.reproducciones)}${fila('Me gusta', p.meGusta)}${fila('Comentarios', p.comentarios)}</dl>
+      <p>Esos van tal cual. El resto sale de cómo les fue a ${lista(base)}, medidos el mismo día:</p>
       <dl class="tabla__filas">${filas.map(([k, nombre, nota, f]) => fila(nombre, m[k], f, nota, true)).join('')}</dl>
       <p>Como todo se midió el mismo día, el estimado ya tiene en cuenta que este reel lleva menos tiempo publicado: ${dias(r.publicado, C.corte)} días, contra ${lista(diasBase)}.</p>
     </div>`;
