@@ -52,6 +52,9 @@ const METRICAS = [
   { k: 'compartidos', nombre: 'Compartidos' },
   { k: 'reposteos', nombre: 'Reposteos' },
   { k: 'guardados', nombre: 'Guardados' },
+  { k: 'noSeguidores', nombre: 'Interacciones de no seguidores', f: '%1' },
+  { k: 'tiempoTotal', nombre: 'Tiempo de reproducción', f: 'dh' },
+  { k: 'nuevosSeguidores', nombre: 'Nuevos seguidores' },
 ];
 const INTERACCIONES = ['meGusta', 'comentarios', 'compartidos', 'reposteos', 'guardados'];
 const NOMBRE = Object.fromEntries([['reproducciones', 'Visualizaciones'], ...METRICAS.map(m => [m.k, m.nombre])]);
@@ -97,6 +100,7 @@ function armarReels() {
     const filas = METRICAS.filter(x => m[x.k] != null).map(x => `<div class="fila"><dt>${x.nombre}</dt><dd>${cifra(m[x.k], x.f)}</dd></div>`).join('');
     return `<div class="tabla__hero">${cifra(m.reproducciones, 'n', 'cifra--xl')}<span>visualizaciones</span></div>
       <dl class="tabla__filas">${filas}
+        <div class="fila fila--tasa"><dt>Tasa de interacción<small>${t == null ? '' : ii.faltan.length ? `${lista(ii.hay.map(minus))} sobre visualizaciones` : 'sobre visualizaciones'}</small></dt><dd>${cifra(t, '%')}</dd></div>
       </dl>`;
   };
   const html = R.map((r, i) => `
@@ -148,6 +152,10 @@ function armarNumeros() {
     // (los espectadores no se suman: quien vio los dos reels contaría dos veces; están en la tabla de cada reel)
     ...INTERACCIONES.map(k => ({ nombre: NOMBRE[k], v: TOT[k] })),
     { nombre: 'Interacciones', v: TOT_INT.suma, nota: TOT_INT.suma != null && TOT_INT.faltan.length ? lista(TOT_INT.hay.map(minus)) : '' },
+    { nombre: 'Tasa de interacción', v: TOT_TASA, f: '%', nota: 'sobre visualizaciones' },
+    { nombre: 'Interacciones de no seguidores', v: TOT_NO_SEG, f: '%1', nota: R.every(r => M(r).noSeguidores != null) ? R.map(r => texto(M(r).noSeguidores, '%1')).join(' y ') + ' por reel' : '' },
+    { nombre: 'Tiempo de reproducción', v: TOT.tiempoTotal, f: 'dh' },
+    { nombre: 'Nuevos seguidores', v: TOT.nuevosSeguidores },
     { nombre: 'Costo por mil visualizaciones', v: CPM, f: '$', nota: CPM == null ? 'con la inversión' : '' },
   ];
   // lo que no tiene dato no se muestra (Tomás, 17/11/2026: nada de «A confirmar» en el deck)
@@ -172,6 +180,10 @@ function armarNumeros() {
   let lec = `«${mas.titulo}» tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${menos.titulo}»`;
   if (cm != null && cn != null && cm > cn) lec += ` y ${veces(cm / cn, 'comentarios', 'los')}`;
   const ta = tasa(M(a)), tb = tasa(M(b));
+  if (ta != null && tb != null) {
+    const conv = ta >= tb ? a : b;
+    if (conv !== mas) lec += `. «${conv.titulo}» conversó más por cada visualización: ${texto(Math.max(ta, tb), '%')} contra ${texto(Math.min(ta, tb), '%')}`;
+  }
   $('[data-slot="lectura"]').textContent = lec + '.';
   $('[data-slot="fuentes"]').textContent = `${C.FUENTES.publicas} ${C.FUENTES.pendientes}`;
   return { mas, menos, ratio, ta, tb };
@@ -228,17 +240,22 @@ function armarAprendizajes(lec) {
   const pm = M(mas).reproducciones, pn = M(menos).reproducciones;
   const tarjetas = [
     { titulo: 'El beneficio concreto rinde más', dato: `${valor(pm)} <span class="contra">contra</span> ${valor(pn)}`,
-      texto: `«${mas.titulo}», con un descuento y los días para usarlo, tuvo ${veces(ratio, 'visualizaciones', 'las')} que el reel de beneficios generales.` },
+      texto: `«${mas.titulo}», con un descuento y los días para usarlo, tuvo ${veces(ratio, 'visualizaciones', 'las')} que el reel de beneficios generales${M(mas).nuevosSeguidores != null && M(menos).nuevosSeguidores != null ? ` y sumó ${nf.format(M(mas).nuevosSeguidores)} seguidores nuevos, contra ${nf.format(M(menos).nuevosSeguidores)}` : ''}.` },
     { titulo: 'La marca entra en la charla', dato: '«ALGUIEN CON 365 por acá?»', cita: true,
       texto: 'En los comentarios, 365 aparece como la respuesta a un plan: ir al cine, hacer las compras. Lo dice la comunidad, no el aviso.' },
   ];
+  if (ta != null && tb != null) {
+    const [hi, lo] = ta >= tb ? [R[0], R[1]] : [R[1], R[0]];
+    tarjetas.push({ titulo: `«${hi.titulo}» conversó más`, dato: `${valor(Math.max(ta, tb), '%')} <span class="contra">contra</span> ${valor(Math.min(ta, tb), '%')}`,
+      texto: `Con menos visualizaciones, sumó más me gusta y comentarios por cada una que «${lo.titulo}». Un formato abre la puerta y el otro hace hablar.` });
+  }
   $('[data-slot="aprendizajes"]').innerHTML = tarjetas.map((t, i) => `
     <article class="tarjeta panel" data-r style="--r:${i + 1}">
       <p class="tarjeta__dato${t.cita ? ' tarjeta__dato--cita' : ''}">${t.dato}</p>
       <h3>${esc(t.titulo)}</h3>
       <p>${esc(t.texto)}</p>
     </article>`).join('');
-  const faltan = ['alcance', 'compartidos', 'reposteos', 'guardados'].filter(k => R.some(r => M(r)[k] == null)).map(minus);
+  const faltan = ['alcance', 'compartidos', 'reposteos', 'guardados', 'tiempoTotal'].filter(k => R.some(r => M(r)[k] == null)).map(minus);
   const falta = $('[data-slot="falta"]');
   const partesFalta = [];
   if (faltan.length) partesFalta.push(`Para cerrar el informe faltan las estadísticas de la cuenta: ${lista(faltan)}.`);
