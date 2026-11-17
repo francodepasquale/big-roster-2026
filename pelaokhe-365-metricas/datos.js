@@ -1,11 +1,11 @@
 // Los datos del deck. Es el único archivo que hay que tocar para completar números.
 //
-// Cómo completar un dato: cambiá `null` por el número, sin puntos ni comas de miles (12500, no 12.500).
-// Porcentajes, como número de 0 a 100 (42,5 % → 42.5). Tiempos, en segundos (7,3 s → 7.3).
-// Lo que queda en `null` se muestra como «A confirmar».
-// La captura de las estadísticas de cada reel (la fuente de sus números) va en assets/capturas/ y se nombra en `captura`:
-// la abre el botón «Ver captura» de cada reel. Los totales, la tasa de interacción, el costo por mil
-// y la comparación reel por reel se recalculan solos con lo que haya.
+// Los números salen de las estadísticas de Instagram de la cuenta de @pelao.khe (capturas del 17/11/2026, en
+// assets/capturas/ y en ../materiales/estadisticas/). El botón «Ver captura» de cada reel las muestra: son la fuente.
+//
+// Cómo cambiar un dato: el número sin puntos ni comas de miles (12500, no 12.500). Porcentajes de 0 a 100
+// (42,5 % → 42.5). Tiempos en segundos. Lo que quede en `null` se muestra como «A confirmar».
+// Los totales, la tasa de interacción, el costo por mil, los gráficos y las lecturas se recalculan solos.
 //
 // Si cambiás la fecha de corte o la fuente, cambiala en FUENTES: se muestra debajo de cada tabla.
 
@@ -21,12 +21,12 @@ window.CAMPANA = {
     seguidores: 2971070, // Instagram, perfil público, 17/11/2026
   },
 
-  // inversión total de la campaña, en pesos, para calcular el costo por mil reproducciones
+  // inversión total de la campaña, en pesos, para calcular el costo por mil visualizaciones
   inversion: null,
 
   FUENTES: {
-    publicas: 'Reproducciones, me gusta y comentarios: contadores públicos de Instagram al 17/11/2026.',
-    pendientes: 'Compartidos, reposteos, guardados, alcance y tiempo de visualización: estadísticas de la cuenta, a confirmar.',
+    publicas: 'Fuente: estadísticas de Instagram de @pelao.khe al 17/11/2026 (incluyen datos de anuncios).',
+    pendientes: 'Las capturas están en «Ver captura», en cada reel.',
   },
 
   reels: [
@@ -36,22 +36,28 @@ window.CAMPANA = {
       url: 'https://www.instagram.com/reel/DekHbVThtM3/',
       video: 'assets/reels/facto-del-dia.mp4',
       portada: 'assets/reels/facto-del-dia.webp',
-      captura: null,      // captura de las estadísticas del reel en el perfil: 'assets/capturas/facto-del-dia.webp'
-      fechaCaptura: null, // por ejemplo '17/11/2026'
+      capturas: [1, 2, 3, 4, 5, 6].map(n => `assets/capturas/facto-${n}.webp`), // resumen, visualizaciones, me gusta, sexo, país, edad
+      fechaCaptura: '17/11/2026',
       publicado: '16/10/2026', // sale del código del reel en Instagram
       duracion: 32.5,
       copy: 'Tu plata rinde más cuando sabés cómo usarla.',
       mensaje: 'Miles de beneficios en nafta, supermercados, gastronomía, cines y turismo.',
       metricas: {
-        reproducciones: 543000,
-        meGusta: 6255,
+        reproducciones: 543178,  // visualizaciones
+        alcance: 297933,         // espectadores (cuentas únicas)
+        meGusta: 6492,
         comentarios: 573,
-        compartidos: null,
-        reposteos: null,
-        guardados: null,
-        alcance: null,
-        noSeguidores: null,   // % del alcance que no sigue al creador
-        tiempoPromedio: null, // segundos
+        compartidos: 95,
+        reposteos: 62,
+        guardados: 131,
+        noSeguidores: 5.1,       // % de las interacciones que vino de no seguidores
+        tiempoTotal: 1965293,    // tiempo de reproducción: 22 d 17 h 54 min 53 s
+        nuevosSeguidores: 8,
+      },
+      publico: { // cuentas que vieron el reel
+        sexo: [['Hombres', 71.5], ['Mujeres', 28.5]],
+        edad: [['13-17', 1.8], ['18-24', 14.1], ['25-34', 49.1], ['35-44', 24.7], ['45-54', 5.9], ['55-64', 2.1], ['65+', 2.3]],
+        pais: [['Argentina', 81.6], ['Uruguay', 3.3], ['Chile', 3.2], ['España', 2.7], ['México', 2.2]],
       },
     },
     {
@@ -60,22 +66,28 @@ window.CAMPANA = {
       url: 'https://www.instagram.com/reel/DezkmnUB78D/',
       video: 'assets/reels/aura-en-la-caja.mp4',
       portada: 'assets/reels/aura-en-la-caja.webp',
-      captura: null,      // captura de las estadísticas del reel en el perfil: 'assets/capturas/aura-en-la-caja.webp'
-      fechaCaptura: null, // por ejemplo '17/11/2026'
+      capturas: [1, 2, 3, 4, 5, 6].map(n => `assets/capturas/aura-${n}.webp`), // resumen, visualizaciones, me gusta, sexo, país, edad
+      fechaCaptura: '17/11/2026',
       publicado: '22/10/2026',
       duracion: 38.8,
       copy: 'Heladera llena y bolsillo tranquilo.',
       mensaje: '15 % OFF en Jumbo los lunes y jueves. En la caja, «¡Tengo 365!».',
       metricas: {
-        reproducciones: 1100000,
-        meGusta: 7230,
+        reproducciones: 1129039,
+        alcance: 566899,
+        meGusta: 8456,
         comentarios: 1029,
-        compartidos: null,
-        reposteos: null,
-        guardados: null,
-        alcance: null,
-        noSeguidores: null,
-        tiempoPromedio: null,
+        compartidos: 291,
+        reposteos: 94,
+        guardados: 203,
+        noSeguidores: 13.4,
+        tiempoTotal: 3007743,    // 34 d 19 h 29 min 3 s
+        nuevosSeguidores: 44,
+      },
+      publico: {
+        sexo: [['Hombres', 78.5], ['Mujeres', 21.5]],
+        edad: [['13-17', 1.5], ['18-24', 10.4], ['25-34', 47.2], ['35-44', 28.4], ['45-54', 7.3], ['55-64', 2.4], ['65+', 2.8]],
+        pais: [['Argentina', 84.3], ['Uruguay', 2.6], ['Chile', 2.6], ['España', 2.3], ['México', 2.1]],
       },
     },
   ],

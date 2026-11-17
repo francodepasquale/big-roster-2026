@@ -28,7 +28,9 @@ const dec = (v, d) => v.toLocaleString('es-AR', { minimumFractionDigits: d, maxi
 function partes(v, f = 'n') {
   if (v == null || Number.isNaN(v)) return null;
   if (f === '%') return [dec(v, v < 10 ? 2 : 1), ' %'];
+  if (f === '%1') return [dec(v, 1), ' %']; // porcentajes de Instagram, que vienen con un decimal
   if (f === 's') return [dec(v, 1), ' s'];
+  if (f === 'dh') return [dec(v / 86400, 1), ' días'];
   if (f === '$') return ['$ ' + nf.format(Math.round(v)), ''];
   if (f === 'M2' && v >= 1e6) return [dec(v / 1e6, 2), ' M'];
   if (v >= 1e6) return [dec(v / 1e6, 1).replace(/,0$/, ''), ' M'];
@@ -44,17 +46,18 @@ const cifra = (v, f = 'n', clase = '', attrs = '') => (v == null ? `<b class="ci
 
 /* ── las cuentas de la campaña ── */
 const METRICAS = [
+  { k: 'alcance', nombre: 'Espectadores' },
   { k: 'meGusta', nombre: 'Me gusta' },
   { k: 'comentarios', nombre: 'Comentarios' },
   { k: 'compartidos', nombre: 'Compartidos' },
   { k: 'reposteos', nombre: 'Reposteos' },
   { k: 'guardados', nombre: 'Guardados' },
-  { k: 'alcance', nombre: 'Cuentas alcanzadas' },
-  { k: 'noSeguidores', nombre: 'Alcance fuera de seguidores', f: '%' },
-  { k: 'tiempoPromedio', nombre: 'Tiempo promedio de visualización', f: 's' },
+  { k: 'noSeguidores', nombre: 'Interacciones de no seguidores', f: '%1' },
+  { k: 'tiempoTotal', nombre: 'Tiempo de reproducción', f: 'dh' },
+  { k: 'nuevosSeguidores', nombre: 'Nuevos seguidores' },
 ];
 const INTERACCIONES = ['meGusta', 'comentarios', 'compartidos', 'reposteos', 'guardados'];
-const NOMBRE = Object.fromEntries([['reproducciones', 'Reproducciones'], ...METRICAS.map(m => [m.k, m.nombre])]);
+const NOMBRE = Object.fromEntries([['reproducciones', 'Visualizaciones'], ...METRICAS.map(m => [m.k, m.nombre])]);
 const R = C.reels, M = r => r.metricas;
 // suma de la campaña: solo si todos los reels tienen el dato
 const total = k => (R.every(r => M(r)[k] != null) ? R.reduce((s, r) => s + M(r)[k], 0) : null);
@@ -66,7 +69,10 @@ function interacciones(m) {
 const tasa = m => { const i = interacciones(m).suma; return i != null && m.reproducciones ? i / m.reproducciones * 100 : null; };
 const lista = xs => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} y ${xs.at(-1)}`);
 const minus = k => NOMBRE[k].toLowerCase();
-const TOT = Object.fromEntries(['reproducciones', ...INTERACCIONES].map(k => [k, total(k)]));
+const TOT = Object.fromEntries(['reproducciones', 'alcance', 'tiempoTotal', 'nuevosSeguidores', ...INTERACCIONES].map(k => [k, total(k)]));
+// % de interacciones de no seguidores en la campaña: ponderado por las interacciones de cada reel
+const TOT_NO_SEG = R.every(r => M(r).noSeguidores != null && interacciones(M(r)).suma)
+  ? R.reduce((s, r) => s + M(r).noSeguidores * interacciones(M(r)).suma, 0) / R.reduce((s, r) => s + interacciones(M(r)).suma, 0) : null;
 const TOT_INT = interacciones(TOT);
 const TOT_TASA = tasa(TOT);
 const CPM = C.inversion != null && TOT.reproducciones ? C.inversion / TOT.reproducciones * 1000 : null;
@@ -92,9 +98,9 @@ function armarReels() {
   const tabla = r => {
     const m = M(r), t = tasa(m), ii = interacciones(m);
     const filas = METRICAS.map(x => `<div class="fila"><dt>${x.nombre}</dt><dd>${cifra(m[x.k], x.f)}</dd></div>`).join('');
-    return `<div class="tabla__hero">${cifra(m.reproducciones, 'n', 'cifra--xl')}<span>reproducciones</span></div>
+    return `<div class="tabla__hero">${cifra(m.reproducciones, 'n', 'cifra--xl')}<span>visualizaciones</span></div>
       <dl class="tabla__filas">${filas}
-        <div class="fila fila--tasa"><dt>Tasa de interacción<small>${t == null ? '' : ii.faltan.length ? `${lista(ii.hay.map(minus))} sobre reproducciones` : 'sobre reproducciones'}</small></dt><dd>${cifra(t, '%')}</dd></div>
+        <div class="fila fila--tasa"><dt>Tasa de interacción<small>${t == null ? '' : ii.faltan.length ? `${lista(ii.hay.map(minus))} sobre visualizaciones` : 'sobre visualizaciones'}</small></dt><dd>${cifra(t, '%')}</dd></div>
       </dl>`;
   };
   const html = R.map((r, i) => `
@@ -143,16 +149,20 @@ function armarNumeros() {
   $('[data-slot="total-reproducciones"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xxl', 'data-hero="1"');
   $('[data-slot="portada-total"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xl');
   const cards = [
+    { nombre: 'Espectadores', v: TOT.alcance, nota: 'suma de los dos reels' },
     ...INTERACCIONES.map(k => ({ nombre: NOMBRE[k], v: TOT[k] })),
     { nombre: 'Interacciones', v: TOT_INT.suma, nota: TOT_INT.suma != null && TOT_INT.faltan.length ? lista(TOT_INT.hay.map(minus)) : '' },
-    { nombre: 'Tasa de interacción', v: TOT_TASA, f: '%', nota: 'sobre reproducciones' },
-    { nombre: 'Costo por mil reproducciones', v: CPM, f: '$', nota: CPM == null ? 'con la inversión' : '' },
+    { nombre: 'Tasa de interacción', v: TOT_TASA, f: '%', nota: 'sobre visualizaciones' },
+    { nombre: 'Interacciones de no seguidores', v: TOT_NO_SEG, f: '%1', nota: R.every(r => M(r).noSeguidores != null) ? R.map(r => texto(M(r).noSeguidores, '%1')).join(' y ') + ' por reel' : '' },
+    { nombre: 'Tiempo de reproducción', v: TOT.tiempoTotal, f: 'dh' },
+    { nombre: 'Nuevos seguidores', v: TOT.nuevosSeguidores },
+    { nombre: 'Costo por mil visualizaciones', v: CPM, f: '$', nota: CPM == null ? 'con la inversión' : '' },
   ];
   $('[data-slot="totales"]').innerHTML = cards.map(c => `
     <div class="total panel panel--sm">${cifra(c.v, c.f)}<span>${c.nombre}${c.nota ? `<small>${esc(c.nota)}</small>` : ''}</span></div>`).join('');
 
   // reel por reel: una fila por métrica con dato en los dos reels; cada fila con su propia escala (no hay un eje común)
-  const filas = ['reproducciones', ...METRICAS.filter(x => !x.f).map(x => x.k)].filter(k => R.every(r => M(r)[k] != null));
+  const filas = ['reproducciones', 'meGusta', 'comentarios', 'compartidos'].filter(k => R.every(r => M(r)[k] != null));
   $('[data-slot="leyenda"]').innerHTML = R.map((r, i) => `<span class="leyenda__item"><i class="serie serie--${i}"></i>${esc(r.titulo)}</span>`).join('');
   $('[data-slot="grafico"]').innerHTML = filas.map(k => {
     const max = Math.max(...R.map(r => M(r)[k]));
@@ -166,16 +176,41 @@ function armarNumeros() {
   const [a, b] = R, pa = M(a).reproducciones, pb = M(b).reproducciones;
   const mas = pb >= pa ? b : a, menos = mas === a ? b : a, ratio = Math.max(pa, pb) / Math.min(pa, pb);
   const cm = M(mas).comentarios, cn = M(menos).comentarios;
-  let lec = `«${mas.titulo}» tuvo ${veces(ratio, 'reproducciones', 'las')} que «${menos.titulo}»`;
+  let lec = `«${mas.titulo}» tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${menos.titulo}»`;
   if (cm != null && cn != null && cm > cn) lec += ` y ${veces(cm / cn, 'comentarios', 'los')}`;
   const ta = tasa(M(a)), tb = tasa(M(b));
   if (ta != null && tb != null) {
     const conv = ta >= tb ? a : b;
-    if (conv !== mas) lec += `. «${conv.titulo}» conversó más por cada reproducción: ${texto(Math.max(ta, tb), '%')} contra ${texto(Math.min(ta, tb), '%')}`;
+    if (conv !== mas) lec += `. «${conv.titulo}» conversó más por cada visualización: ${texto(Math.max(ta, tb), '%')} contra ${texto(Math.min(ta, tb), '%')}`;
   }
   $('[data-slot="lectura"]').textContent = lec + '.';
   $('[data-slot="fuentes"]').textContent = `${C.FUENTES.publicas} ${C.FUENTES.pendientes}`;
   return { mas, menos, ratio, ta, tb };
+}
+
+function armarPublico() {
+  // tres gráficos: sexo, edad y país, con los dos reels. Cada uno con su escala (el máximo del gráfico)
+  const grupos = [['sexo', 'Sexo'], ['edad', 'Edad'], ['pais', 'País']].filter(([k]) => R.every(r => r.publico?.[k]));
+  const leyenda = R.map((r, i) => `<span class="leyenda__item"><i class="serie serie--${i}"></i>${esc(r.titulo)}</span>`).join('');
+  $('[data-slot="publico"]').innerHTML = grupos.map(([k, nombre], g) => {
+    const filas = R[0].publico[k].map(([etq]) => etq);
+    const max = Math.max(...R.flatMap(r => r.publico[k].map(([, v]) => v)));
+    return `<div class="panel grafico grafico--publico" data-r style="--r:${g + 1}">
+      <h3 class="grafico__titulo">${nombre}</h3><div class="leyenda">${leyenda}</div>
+      <div class="grafico__filas">${filas.map(etq => `<div class="grafico__fila"><span class="grafico__nombre">${esc(etq)}</span>${R.map((r, i) => {
+        const v = r.publico[k].find(([e]) => e === etq)?.[1] ?? 0;
+        return `<div class="grafico__barra" data-tip="${esc(r.titulo)} · ${esc(etq)}: ${texto(v, '%1')}"><i class="serie serie--${i}" style="--w:${(v / max * 100).toFixed(2)}%"></i><b>${texto(v, '%1')}</b></div>`;
+      }).join('')}</div>`).join('')}</div></div>`;
+  }).join('');
+  $('[data-slot="publico-fuente"]').textContent = `${C.FUENTES.publicas} Público: las cuentas que vieron cada reel.`;
+  // la lectura: lo que más pesa en cada gráfico, con el rango de los dos reels
+  const top = k => { const etq = R[0].publico[k].reduce((a, b) => (b[1] > a[1] ? b : a))[0]; const vs = R.map(r => r.publico[k].find(([e]) => e === etq)[1]).sort((a, b) => a - b); return [etq, vs]; };
+  const rango = vs => (vs[0] === vs.at(-1) ? texto(vs[0], '%1') : `entre ${dec(vs[0], 1)} y ${texto(vs.at(-1), '%1')}`);
+  if (grupos.length === 3) {
+    const [sx, sxv] = top('sexo'), [ed, edv] = top('edad'), [pa, pav] = top('pais');
+    const e2 = R.map(r => r.publico.edad.filter(([e]) => e === '25-34' || e === '35-44').reduce((s, [, v]) => s + v, 0)).sort((a, b) => a - b);
+    $('[data-slot="publico-texto"]').textContent = `El público de los dos reels es casi el mismo: ${sx.toLowerCase()} (${rango(sxv)}), de ${ed.replace('-', ' a ')} años (${rango(edv)}; de 25 a 44, ${rango(e2)}) y de ${pa} (${rango(pav)}).`;
+  }
 }
 
 function armarConversacion() {
@@ -202,14 +237,14 @@ function armarAprendizajes(lec) {
   const pm = M(mas).reproducciones, pn = M(menos).reproducciones;
   const tarjetas = [
     { titulo: 'El beneficio concreto rinde más', dato: `${valor(pm)} <span class="contra">contra</span> ${valor(pn)}`,
-      texto: `«${mas.titulo}», con un descuento y los días para usarlo, tuvo ${veces(ratio, 'reproducciones', 'las')} que el reel de beneficios generales.` },
+      texto: `«${mas.titulo}», con un descuento y los días para usarlo, tuvo ${veces(ratio, 'visualizaciones', 'las')} que el reel de beneficios generales${M(mas).nuevosSeguidores != null && M(menos).nuevosSeguidores != null ? ` y sumó ${nf.format(M(mas).nuevosSeguidores)} seguidores nuevos, contra ${nf.format(M(menos).nuevosSeguidores)}` : ''}.` },
     { titulo: 'La marca entra en la charla', dato: '«ALGUIEN CON 365 por acá?»', cita: true,
       texto: 'En los comentarios, 365 aparece como la respuesta a un plan: ir al cine, hacer las compras. Lo dice la comunidad, no el aviso.' },
   ];
   if (ta != null && tb != null) {
     const [hi, lo] = ta >= tb ? [R[0], R[1]] : [R[1], R[0]];
     tarjetas.push({ titulo: `«${hi.titulo}» conversó más`, dato: `${valor(Math.max(ta, tb), '%')} <span class="contra">contra</span> ${valor(Math.min(ta, tb), '%')}`,
-      texto: `Con menos reproducciones, sumó más me gusta y comentarios por cada una que «${lo.titulo}». Un formato abre la puerta y el otro hace hablar.` });
+      texto: `Con menos visualizaciones, sumó más me gusta y comentarios por cada una que «${lo.titulo}». Un formato abre la puerta y el otro hace hablar.` });
   }
   $('[data-slot="aprendizajes"]').innerHTML = tarjetas.map((t, i) => `
     <article class="tarjeta panel" data-r style="--r:${i + 1}">
@@ -217,11 +252,11 @@ function armarAprendizajes(lec) {
       <h3>${esc(t.titulo)}</h3>
       <p>${esc(t.texto)}</p>
     </article>`).join('');
-  const faltan = ['compartidos', 'reposteos', 'guardados', 'alcance', 'tiempoPromedio'].filter(k => R.some(r => M(r)[k] == null)).map(k => (k === 'tiempoPromedio' ? 'tiempo de visualización' : minus(k)));
+  const faltan = ['alcance', 'compartidos', 'reposteos', 'guardados', 'tiempoTotal'].filter(k => R.some(r => M(r)[k] == null)).map(minus);
   const falta = $('[data-slot="falta"]');
   const partesFalta = [];
   if (faltan.length) partesFalta.push(`Para cerrar el informe faltan las estadísticas de la cuenta: ${lista(faltan)}.`);
-  if (CPM == null) partesFalta.push('Con la inversión, sale el costo por mil reproducciones.');
+  if (CPM == null) partesFalta.push('Con la inversión de la campaña, sale el costo por mil visualizaciones.');
   if (partesFalta.length) falta.textContent = partesFalta.join(' '); else falta.remove();
 }
 
@@ -245,7 +280,7 @@ async function cargar(alAvanzar) {
 async function iniciar() {
   armarReels(); armarTelefono();
   const lec = armarNumeros();
-  armarConversacion(); armarAprendizajes(lec);
+  armarPublico(); armarConversacion(); armarAprendizajes(lec);
 
   const ESC = $$('.escena');
   ESC.forEach(e => { $$('[data-r]', e).forEach((el, i) => { if (!el.style.getPropertyValue('--r')) el.style.setProperty('--r', i); }); e.inert = true; e.setAttribute('aria-hidden', 'true'); });
@@ -504,11 +539,13 @@ async function iniciar() {
   const visor = $('.visor'), visorCuerpo = $('.visor__cuerpo', visor);
   function abrirCaptura(i) {
     const r = R[i];
-    visorCuerpo.innerHTML = r.captura
-      ? `<img src="${esc(r.captura)}" alt="Captura de las estadísticas de Instagram del reel ${esc(r.titulo)}">`
+    const caps = r.capturas || [];
+    visorCuerpo.innerHTML = caps.length
+      ? caps.map((src, n) => `<img src="${esc(src)}" alt="Captura ${n + 1} de ${caps.length} de las estadísticas de Instagram del reel ${esc(r.titulo)}" loading="lazy">`).join('')
       : `<p class="visor__falta">Falta sumar la captura de las estadísticas de este reel.</p>`;
+    visorCuerpo.scrollTo?.(0, 0); $('.visor__panel', visor).scrollTo?.(0, 0);
     $('.visor__titulo', visor).textContent = `Estadísticas de «${r.titulo}»`;
-    $('.visor__nota', visor).textContent = r.captura ? `Captura del perfil de @${C.creador.usuario} en Instagram${r.fechaCaptura ? `, ${r.fechaCaptura}` : ''}.` : '';
+    $('.visor__nota', visor).textContent = caps.length ? `Capturas del perfil de @${C.creador.usuario} en Instagram${r.fechaCaptura ? `, ${r.fechaCaptura}` : ''}.` : '';
     S.sonar('pip'); visor.showModal();
   }
   document.addEventListener('click', e => { const b = e.target.closest('[data-captura]'); if (b) abrirCaptura(+b.dataset.captura); });

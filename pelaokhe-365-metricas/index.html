@@ -46,7 +46,7 @@
             <div class="portada__fila">
               <div class="panel panel--tinta portada__cifra" data-r>
                 <b class="cifra cifra--xl" data-slot="portada-total"></b>
-                <p>reproducciones entre los dos reels de la campaña</p>
+                <p>visualizaciones entre los dos reels de la campaña</p>
               </div>
               <div class="panel portada__bajada" data-r>
                 <b>Resultados de campaña</b>
@@ -73,7 +73,7 @@
           <h2 class="titulo numeros__titulo" data-r>La campaña en números</h2>
           <div class="panel panel--tinta numeros__hero" data-r>
             <span data-slot="total-reproducciones"></span>
-            <p>reproducciones entre los dos reels</p>
+            <p>visualizaciones entre los dos reels</p>
             <p class="fuente" data-slot="fuentes"></p>
             <span class="ancla ancla--numeros" data-ancla-365></span>
           </div>
@@ -84,6 +84,20 @@
             <p class="grafico__lectura" data-slot="lectura"></p>
           </div>
           <div class="totales" data-r data-slot="totales"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- El público -->
+    <section class="escena" id="publico" data-capitulo="El público" aria-label="El público">
+      <div class="escena__cuerpo">
+        <div class="rejilla rejilla--publico">
+          <div class="publico__cabeza">
+            <h2 class="titulo" data-r>Quién los vio</h2>
+            <div class="panel" data-r><p data-slot="publico-texto"></p></div>
+          </div>
+          <div class="publico__graficos" data-slot="publico"></div>
+          <p class="fuente" data-r data-slot="publico-fuente"></p>
         </div>
       </div>
     </section>
