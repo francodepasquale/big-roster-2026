@@ -29,6 +29,7 @@ window.CAMPANA = {
   // inversión total de la campaña, en pesos, para calcular el costo por mil visualizaciones
   inversion: null,
 
+  totalReproducciones: 3600000, // visualizaciones totales de la campaña, dato real (Tomás, 17/11/2026)
   corte: '17/11/2026', // el día en que se midió todo (capturas y datos públicos)
 
   FUENTES: {

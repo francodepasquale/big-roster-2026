@@ -86,8 +86,16 @@ const FACTOR = {
   nuevosSeguidores: media(r => div(r.metricas.nuevosSeguidores, r.metricas.reproducciones)),
 };
 const por = (v, k, redondeo = 1) => (v == null || FACTOR[k] == null ? null : Math.round(v * FACTOR[k] / redondeo) * redondeo);
+const SIN_CAPTURA = C.reels.filter(r => !r.metricas && r.publicos);
+const REPARTO = C.totalReproducciones && SIN_CAPTURA.length ? {
+  resto: C.totalReproducciones - BASE.reduce((s, r) => s + r.metricas.reproducciones, 0),
+  publicas: SIN_CAPTURA.reduce((s, r) => s + r.publicos.reproducciones, 0),
+} : null;
 function estimar(r) {
-  const p = r.publicos, rep = por(p.reproducciones, 'reproducciones', 1000);
+  const p = r.publicos;
+  // si se sabe el total de la campaña, lo que falta para llegar se reparte entre los reels sin captura según sus
+  // visualizaciones públicas; si no, las públicas × la relación de los reels con captura
+  const rep = REPARTO ? Math.round(REPARTO.resto * p.reproducciones / REPARTO.publicas / 1000) * 1000 : por(p.reproducciones, 'reproducciones', 1000);
   const m = {
     reproducciones: rep,
     alcance: por(rep, 'alcance', 1000),
@@ -111,7 +119,7 @@ const est = (r, k) => r.estimados.has(k);
 const ESTIMADOS = R.filter(r => r.estimados.size);
 // la tasa es estimada si lo es alguna de sus partes; un total, si lo es el dato de algún reel
 const estTasa = r => est(r, 'reproducciones') || INTERACCIONES.some(k => est(r, k));
-const estTot = k => R.some(r => est(r, k));
+const estTot = k => (k === 'reproducciones' && C.totalReproducciones ? false : R.some(r => est(r, k)));
 // suma de la campaña: solo si todos los reels tienen el dato
 const total = k => (R.every(r => M(r)[k] != null) ? R.reduce((s, r) => s + M(r)[k], 0) : null);
 // interacciones con lo que haya, y cuáles entran
@@ -123,6 +131,7 @@ const tasa = m => { const i = interacciones(m).suma; return i != null && m.repro
 const lista = xs => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} y ${xs.at(-1)}`);
 const minus = k => NOMBRE[k].toLowerCase();
 const TOT = Object.fromEntries(['reproducciones', 'alcance', 'tiempoTotal', 'nuevosSeguidores', ...INTERACCIONES].map(k => [k, total(k)]));
+if (C.totalReproducciones) TOT.reproducciones = C.totalReproducciones; // el total real de la campaña
 // % de interacciones de no seguidores en la campaña: ponderado por las interacciones de cada reel
 const TOT_NO_SEG = R.every(r => M(r).noSeguidores != null && interacciones(M(r)).suma)
   ? R.reduce((s, r) => s + M(r).noSeguidores * interacciones(M(r)).suma, 0) / R.reduce((s, r) => s + interacciones(M(r)).suma, 0) : null;
@@ -237,11 +246,14 @@ function armarNumeros() {
   }).join('');
 
   // la lectura sale de los datos: el más visto contra el segundo, y el que más conversó (solo entre reels con captura)
-  const orden = [...R].sort((x, y) => M(y).reproducciones - M(x).reproducciones);
+  // (la comparación es entre reels con visualizaciones medidas: entre estimados no se afirma quién ganó)
+  const medidosV = R.filter(r => !est(r, 'reproducciones'));
+  const orden = (medidosV.length > 1 ? medidosV : [...R]).sort((x, y) => M(y).reproducciones - M(x).reproducciones);
   const [mas, seg] = orden, ratio = M(mas).reproducciones / M(seg).reproducciones;
   const cm = M(mas).comentarios, cs = M(seg).comentarios;
-  let lec = `«${mas.titulo}» fue el más visto, con ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}», el segundo`;
-  if (cm != null && cs != null && cm > cs) lec += `, y ${veces(cm / cs, 'comentarios', 'los')}`;
+  const deTodos = R.every(r => M(r).reproducciones <= M(mas).reproducciones);
+  let lec = `«${mas.titulo}» fue el más visto${deTodos ? '' : ' de los reels con captura'}, con ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}»`;
+  if (cm != null && cs != null && cm > cs) lec += ` y ${veces(cm / cs, 'comentarios', 'los')}`;
   const medidos = R.filter(r => !estTasa(r) && tasa(M(r)) != null);
   const conv = medidos.length > 1 ? medidos.reduce((x, y) => (tasa(M(y)) > tasa(M(x)) ? y : x)) : null;
   if (conv && conv !== mas && !estTasa(mas)) lec += `. «${conv.titulo}» conversó más por cada visualización: ${texto(tasa(M(conv)), '%')} contra ${texto(tasa(M(mas)), '%')}`;
@@ -312,8 +324,8 @@ function armarAprendizajes(lec) {
   const seguidores = sm != null && ss != null && !est(mas, 'nuevosSeguidores') && !est(seg, 'nuevosSeguidores') ? `, y sumó ${nf.format(sm)} seguidores nuevos, contra ${nf.format(ss)}` : '';
   const tarjetas = [
     // el texto del final habla de «+1000 de aura en la caja» (el súper): si cambia el más visto, cambiarlo
-    { titulo: `«${mas.titulo}», el más visto`, dato: `${valor(pm, 'n', est(mas, 'reproducciones'))} <span class="contra">contra</span> ${valor(ps, 'n', est(seg, 'reproducciones'))}`,
-      texto: `Tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}», el segundo${seguidores}. El descuento en el súper, con días fijos para usarlo, fue el beneficio que más llegó.` },
+    { titulo: `«${mas.titulo}», el más visto`, // (entre los reels con captura) dato: `${valor(pm, 'n', est(mas, 'reproducciones'))} <span class="contra">contra</span> ${valor(ps, 'n', est(seg, 'reproducciones'))}`,
+      texto: `Tuvo ${veces(ratio, 'visualizaciones', 'las')} que «${seg.titulo}»${seguidores}. El descuento en el súper, con días fijos para usarlo, fue el beneficio que más llegó.` },
     { titulo: 'La marca entra en la charla', dato: '«ALGUIEN CON 365 por acá?»', cita: true,
       texto: 'En los comentarios, 365 aparece como la respuesta a un plan: ir al cine, hacer las compras. Lo dice la comunidad, no el aviso.' },
   ];
@@ -620,7 +632,9 @@ async function iniciar() {
     const rv = BASE.map(b => b.metricas.reproducciones / b.publicos.reproducciones);
     const cada100 = k => `${dec(FACTOR[k] * 100, 1)} por cada 100 me gusta`;
     const filas = [
-      ['reproducciones', 'Visualizaciones', `las públicas × ${dec(FACTOR.reproducciones, 1)} (en los reels con captura, de ${dec(Math.min(...rv), 1)} a ${dec(Math.max(...rv), 1)})`],
+      ['reproducciones', 'Visualizaciones', REPARTO
+        ? `del total de la campaña (${texto(C.totalReproducciones)}) menos lo de los reels con captura, repartido según las visualizaciones públicas`
+        : `las públicas × ${dec(FACTOR.reproducciones, 1)} (en los reels con captura, de ${dec(Math.min(...rv), 1)} a ${dec(Math.max(...rv), 1)})`],
       ['alcance', 'Espectadores', `${dec(FACTOR.alcance * 100, 0)} % de las visualizaciones`],
       ['compartidos', 'Compartidos', cada100('compartidos')],
       ['reposteos', 'Reposteos', cada100('reposteos')],
