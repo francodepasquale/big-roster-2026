@@ -448,9 +448,14 @@ async function iniciar() {
 
   // lo que pasa al entrar a cada escena
   const contadas = new WeakSet();
+  // cifras que están en 0 o contando: si se sale de la escena antes de que terminen, se clavan en su valor final
+  // (antes, salir rápido cancelaba el conteo y la cifra quedaba en 0)
+  const enCurso = new Set();
+  const terminar = el => { if (!enCurso.delete(el)) return; el.innerHTML = valor(+el.dataset.cifra, el.dataset.formato, el.dataset.aprox); };
   let timersEscena = [];
   function entrar(e, previa) {
     timersEscena.forEach(clearTimeout); timersEscena = [];
+    [...enCurso].forEach(terminar);
     const despues = (ms, fn) => timersEscena.push(setTimeout(fn, REDUCIDO ? 0 : ms));
     // el 365
     const ancla = $('[data-ancla-365]', e);
@@ -466,7 +471,7 @@ async function iniciar() {
     sonidoVideos(k);
     // las cifras cuentan
     $$('[data-cifra]', e).forEach((el, n) => {
-      if (contadas.has(el)) return; contadas.add(el);
+      if (contadas.has(el)) return; contadas.add(el); enCurso.add(el);
       el.innerHTML = valor(0, el.dataset.formato, el.dataset.aprox);
       despues(420 + n * 60, () => contar(el, el.dataset.hero ? () => { S.sonar('caja'); insignia.girar(1); } : null));
     });
@@ -477,14 +482,17 @@ async function iniciar() {
   /* ── cifras que cuentan ── */
   function contar(el, alTerminar) {
     const fin = +el.dataset.cifra, f = el.dataset.formato, aprox = el.dataset.aprox;
-    if (REDUCIDO) { el.innerHTML = valor(fin, f, aprox); alTerminar?.(); return; }
+    if (REDUCIDO || document.hidden || !enCurso.has(el)) { terminar(el); el.innerHTML = valor(fin, f, aprox); alTerminar?.(); return; }
     const grande = !!alTerminar, dur = grande ? 1800 : 1100, t0 = performance.now();
     let tic = -1;
+    // por las dudas (pestaña en segundo plano, cuadros que no llegan): al terminar el tiempo, el valor final sí o sí
+    setTimeout(() => terminar(el), dur + 400);
     const cuadro = ahora => {
+      if (!enCurso.has(el)) return; // ya se clavó en el valor final
       const k = clamp((ahora - t0) / dur), e = k === 1 ? 1 : 1 - 2 ** (-10 * k);
       el.innerHTML = valor(fin * e, f, aprox);
       if (grande) { const n = Math.floor(e * 12); if (n !== tic) { tic = n; S.sonar('tic', n); } }
-      if (k < 1) requestAnimationFrame(cuadro); else alTerminar?.();
+      if (k < 1) requestAnimationFrame(cuadro); else { enCurso.delete(el); alTerminar?.(); }
     };
     requestAnimationFrame(cuadro);
   }
