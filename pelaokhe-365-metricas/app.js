@@ -97,7 +97,7 @@ const IG = {
 function armarReels() {
   const tabla = r => {
     const m = M(r), t = tasa(m), ii = interacciones(m);
-    const filas = METRICAS.map(x => `<div class="fila"><dt>${x.nombre}</dt><dd>${cifra(m[x.k], x.f)}</dd></div>`).join('');
+    const filas = METRICAS.filter(x => m[x.k] != null).map(x => `<div class="fila"><dt>${x.nombre}</dt><dd>${cifra(m[x.k], x.f)}</dd></div>`).join('');
     return `<div class="tabla__hero">${cifra(m.reproducciones, 'n', 'cifra--xl')}<span>visualizaciones</span></div>
       <dl class="tabla__filas">${filas}
         <div class="fila fila--tasa"><dt>Tasa de interacción<small>${t == null ? '' : ii.faltan.length ? `${lista(ii.hay.map(minus))} sobre visualizaciones` : 'sobre visualizaciones'}</small></dt><dd>${cifra(t, '%')}</dd></div>
@@ -149,7 +149,7 @@ function armarNumeros() {
   $('[data-slot="total-reproducciones"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xxl', 'data-hero="1"');
   $('[data-slot="portada-total"]').outerHTML = cifra(TOT.reproducciones, 'n', 'cifra--xl');
   const cards = [
-    { nombre: 'Espectadores', v: TOT.alcance, nota: 'suma de los dos reels' },
+    // (los espectadores no se suman: quien vio los dos reels contaría dos veces; están en la tabla de cada reel)
     ...INTERACCIONES.map(k => ({ nombre: NOMBRE[k], v: TOT[k] })),
     { nombre: 'Interacciones', v: TOT_INT.suma, nota: TOT_INT.suma != null && TOT_INT.faltan.length ? lista(TOT_INT.hay.map(minus)) : '' },
     { nombre: 'Tasa de interacción', v: TOT_TASA, f: '%', nota: 'sobre visualizaciones' },
@@ -158,7 +158,8 @@ function armarNumeros() {
     { nombre: 'Nuevos seguidores', v: TOT.nuevosSeguidores },
     { nombre: 'Costo por mil visualizaciones', v: CPM, f: '$', nota: CPM == null ? 'con la inversión' : '' },
   ];
-  $('[data-slot="totales"]').innerHTML = cards.map(c => `
+  // lo que no tiene dato no se muestra (Tomás, 17/11/2026: nada de «A confirmar» en el deck)
+  $('[data-slot="totales"]').innerHTML = cards.filter(c => c.v != null).map(c => `
     <div class="total panel panel--sm">${cifra(c.v, c.f)}<span>${c.nombre}${c.nota ? `<small>${esc(c.nota)}</small>` : ''}</span></div>`).join('');
 
   // reel por reel: una fila por métrica con dato en los dos reels; cada fila con su propia escala (no hay un eje común)
@@ -224,7 +225,9 @@ function armarConversacion() {
     { nombre: 'Comentarios positivos', v: cv.positivos, f: '%' },
     { nombre: 'Respuestas del Pelao', v: cv.respuestasCreador },
   ];
-  $('[data-slot="conversacion"]').innerHTML = datos.map(d => `<div class="dato panel panel--sm">${cifra(d.v, d.f)}<span>${d.nombre}</span></div>`).join('');
+  const conDato = datos.filter(d => d.v != null);
+  if (conDato.length < 2) $('[data-slot="conversacion"]').remove(); // solo comentarios: ya lo dice el texto
+  else $('[data-slot="conversacion"]').innerHTML = conDato.map(d => `<div class="dato panel panel--sm">${cifra(d.v, d.f)}<span>${d.nombre}</span></div>`).join('');
   $('[data-slot="capturas"]').innerHTML = C.comentarios.map((c, i) => `
     <figure class="captura" data-r style="--r:${i * 2 + 1}">
       <img src="${esc(c.imagen)}" width="${c.ancho}" height="${c.alto}" alt="${esc(c.alt)}" loading="eager">
@@ -256,7 +259,6 @@ function armarAprendizajes(lec) {
   const falta = $('[data-slot="falta"]');
   const partesFalta = [];
   if (faltan.length) partesFalta.push(`Para cerrar el informe faltan las estadísticas de la cuenta: ${lista(faltan)}.`);
-  if (CPM == null) partesFalta.push('Con la inversión de la campaña, sale el costo por mil visualizaciones.');
   if (partesFalta.length) falta.textContent = partesFalta.join(' '); else falta.remove();
 }
 
