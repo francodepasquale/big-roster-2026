@@ -1,0 +1,217 @@
+/* Nestea × BIG · Una pausa para compartir
+   Identidad BIG: Barlow Condensed en mayúsculas, títulos enormes, poco texto, fotos a sangre.
+   Nestea como acento: el azul de la lata, el verde de la hoja y el amarillo del limón. La lata recorre todo el deck.
+   Sin bordes, sin divisores, sin etiquetas, sin cursivas (el énfasis va en amarillo). */
+
+@font-face { font-family: 'Barlow Condensed'; src: url(assets/fonts/barlow-condensed-800.woff2) format('woff2'); font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url(assets/fonts/barlow-condensed-600.woff2) format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url(assets/fonts/inter-variable.woff2) format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --azul: #0A4FA3;
+  --azul-claro: #3FA9E8;
+  --verde: #2E8B3A;
+  --amarillo: #F6D02F;
+  --noche: #0B1A33;
+  --nieve: #F5F8FC;
+  --big: #33419A;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --text: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --gutter: clamp(16px, 5vw, 88px);
+  --block: clamp(96px, 16vh, 180px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--azul); color: var(--nieve); font-family: var(--text); font-size: clamp(16px, .55vw + 11px, 20px); line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body[data-tone="nieve"], body[data-tone="amarillo"] { color: var(--noche); }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, strong { font-family: var(--display); font-weight: 800; line-height: .88; letter-spacing: 0; text-transform: uppercase; }
+em { font-style: normal; color: var(--amarillo); }
+main p { font-weight: 500; line-height: 1.42; }
+:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; border-radius: 6px; }
+.skip { position: fixed; left: 16px; top: 16px; z-index: 50; padding: 12px 18px; border-radius: 999px; background: var(--noche); color: var(--nieve); font-weight: 700; text-decoration: none; transform: translateY(-160%); transition: transform .5s var(--ease); }
+.skip:focus { transform: none; }
+.kicker { font: 800 clamp(20px, 1.8vw, 30px)/1 var(--display) !important; text-transform: uppercase; color: var(--amarillo); }
+.mega { font-size: clamp(72px, 10vw, 210px); }
+.h2 { font-size: clamp(64px, 8vw, 160px); }
+.split-line-mask, .split-line { padding-bottom: .08em; margin-bottom: -.08em; }
+
+/* ── Loader */
+.loader__inner { text-align: center; }
+.loader__count { font-family: var(--display); font-weight: 800; font-size: clamp(96px, 18vw, 240px); line-height: 1; font-variant-numeric: tabular-nums; }
+.loader__pct { color: var(--amarillo); }
+.loader__line { margin-top: 18px; font-weight: 600; font-size: 16px; color: var(--amarillo); }
+.loader { transition: opacity .9s var(--ease), visibility .9s; }
+.loader.is-leaving { opacity: 0; visibility: hidden; }
+
+main { position: relative; z-index: 2; overflow-x: clip; }
+section { position: relative; }
+
+/* ── Escena 3D: la lata viaja por los huecos [data-slot] */
+.stage { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+.stage canvas { width: 100%; height: 100%; display: block; }
+.slot { position: relative; }
+.slot__img { display: none; width: 100%; height: 100%; object-fit: contain; }
+.no-webgl .slot__img { display: block; }
+.no-webgl .stage { display: none; }
+
+/* ── Logos */
+.lockup { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.lockup__brand { height: clamp(52px, 5.2vw, 80px); width: auto; }
+.lockup__x { font-weight: 300; font-size: clamp(22px, 2vw, 32px); line-height: 1; }
+.lockup .big-logo { height: clamp(38px, 3.8vw, 58px); width: auto; color: var(--nieve); }
+
+/* ── Portada: azul Nestea, montaña y la lata */
+.cover { height: 260vh; }
+.cover__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: linear-gradient(180deg, var(--azul) 0%, #1468C2 60%, var(--azul-claro) 100%); }
+.cover__land { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 42vh; object-fit: cover; object-position: center 70%; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%); mask-image: linear-gradient(to bottom, transparent, #000 45%); }
+.cover .lockup { position: absolute; z-index: 3; top: clamp(20px, 5vh, 48px); left: var(--gutter); }
+.cover__intro { position: absolute; z-index: 3; left: var(--gutter); top: 50%; translate: 0 -54%; }
+.cover__dest { display: flex; align-items: center; gap: 14px; font: 800 clamp(20px, 1.7vw, 28px)/1 var(--display) !important; text-transform: uppercase; color: var(--amarillo); }
+.cover__dest img { height: clamp(44px, 4.4vw, 70px); width: auto; }
+.cover__title { margin-top: clamp(12px, 2vh, 24px); font-size: clamp(64px, min(8.6vw, 17vh), 200px); line-height: .84; color: var(--nieve); }
+.cover__title .l { display: block; }
+.cover__sub { margin-top: clamp(14px, 2.4vh, 28px); font: 800 clamp(22px, 2vw, 36px)/1 var(--display) !important; text-transform: uppercase; }
+.cover__slot { position: absolute; right: 8vw; top: 50%; translate: 0 -50%; width: min(26vw, 40vh); height: min(52vw, 78vh); }
+/* Después del gesto: la lata en el centro y la frase a sus dos lados */
+.cover__after { position: absolute; z-index: 7; inset: 0; display: grid; grid-template-columns: 1fr min(24vw, 34vh) 1fr; align-items: center; column-gap: clamp(24px, 3vw, 56px); padding: 0 var(--gutter); font: 800 clamp(48px, 6vw, 120px)/.88 var(--display) !important; text-transform: uppercase; pointer-events: none; }
+.cover__after .l { display: block; visibility: hidden; }
+.cover__after .l:nth-child(1) { grid-column: 1; grid-row: 1; text-align: right; align-self: end; }
+.cover__after .l:nth-child(2) { grid-column: 1; grid-row: 2; text-align: right; align-self: start; }
+.cover__after .l:nth-child(3) { grid-column: 3; grid-row: 1 / span 2; }
+.cover__cue { position: absolute; z-index: 3; left: var(--gutter); bottom: clamp(20px, 4vh, 40px); font-weight: 700; font-size: 15px; }
+
+/* ── El viaje */
+.viaje { height: 200vh; }
+.viaje__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.viaje__photo { position: absolute; inset: 0; margin: 0; }
+.viaje__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.viaje__title { position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); top: clamp(56px, 10vh, 110px); color: var(--nieve); font-size: clamp(60px, min(10vw, 16vh), 220px); line-height: .84; text-shadow: 0 4px 40px rgba(0, 0, 0, .25); }
+.viaje__title span { display: block; }
+.viaje__title .t2 { text-align: right; }
+.viaje__slot { position: absolute; z-index: 2; left: 32vw; top: 38vh; width: min(9vw, 14vh); height: min(18vw, 28vh); }
+.viaje__band { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 5vw, 96px); padding: clamp(26px, 4.4vh, 48px) var(--gutter) clamp(84px, 11vh, 112px); background: var(--azul); }
+.viaje__band p { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(26px, 2.25vw, 44px); line-height: 1.02; max-width: 24ch; }
+.viaje__band b { font-weight: 800; color: var(--amarillo); }
+
+/* ── Los creadores */
+.crew { padding: clamp(64px, 10vh, 120px) var(--gutter) clamp(64px, 9vh, 110px); }
+.crew--2 { padding-top: 0; padding-bottom: var(--block); }
+.crew__head { display: flex; align-items: center; gap: 2vw; margin-bottom: clamp(32px, 5vh, 64px); }
+.crew__h { color: var(--azul); }
+.crew__slot { width: clamp(60px, 6vw, 110px); height: clamp(120px, 12vw, 220px); }
+.crew__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 56px); }
+.member__photo { aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; background: #ddd; }
+.member__photo img { width: 100%; height: 100%; object-fit: cover; }
+.member h3 { margin-top: 18px; font-size: clamp(32px, 2.8vw, 52px); }
+.member__handle { display: inline-block; margin-top: 4px; font-weight: 600; text-decoration: none; color: var(--azul); }
+.member__handle:hover { text-decoration: underline; text-underline-offset: 4px; }
+.member__nets { display: flex; gap: clamp(20px, 2.4vw, 40px); margin-top: 14px; padding: 0; list-style: none; }
+.member__nets li { display: flex; flex-direction: column-reverse; }
+.member__nets b { display: block; font-family: var(--display); font-weight: 800; font-size: clamp(40px, 3.4vw, 62px); line-height: .9; }
+.member__nets span { display: block; margin-bottom: 2px; font: 600 17px/1 var(--display); text-transform: uppercase; color: var(--verde); }
+.crew2__slot { width: clamp(70px, 7vw, 120px); height: clamp(140px, 14vw, 240px); margin: clamp(24px, 4vh, 48px) 0 0 auto; }
+
+/* ── Los momentos Nestea */
+.momentos { min-height: 70vh; display: grid; align-content: center; padding: var(--block) var(--gutter); }
+.momentos .mega { margin-top: 14px; max-width: 9ch; }
+.moment { height: 100vh; height: 100svh; overflow: hidden; display: grid; align-items: end; padding: 0 var(--gutter) clamp(96px, 14vh, 150px); }
+.moment__photo { position: absolute; inset: 0; margin: 0; }
+.moment__photo img { width: 100%; height: 100%; object-fit: cover; }
+.moment__photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11, 26, 51, .88) 0%, rgba(11, 26, 51, .45) 38%, rgba(11, 26, 51, 0) 70%); }
+.moment__text { position: relative; z-index: 2; max-width: min(62vw, 1000px); }
+.moment--b .moment__text { justify-self: end; text-align: right; }
+.moment__h { margin-top: 14px; font-size: clamp(48px, 6vw, 120px); line-height: .9; color: var(--nieve); }
+.moment__slot { position: absolute; z-index: 1; top: 14vh; width: min(13vw, 22vh); height: min(26vw, 44vh); }
+.moment__slot--r { right: 9vw; }
+.moment__slot--l { left: 9vw; }
+
+/* ── La colaboración: amarillo limón */
+.colab { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .7fr); align-items: center; gap: 3vw; min-height: 100vh; padding: var(--block) var(--gutter); }
+.colab__h { color: var(--azul); font-size: clamp(64px, 7.4vw, 150px); }
+.colab__list { list-style: none; padding: 0; margin-top: clamp(36px, 6vh, 64px); display: grid; grid-template-columns: 1fr 1fr; gap: clamp(26px, 4vh, 44px) 3vw; }
+.colab__list strong { display: block; font-size: clamp(40px, 3.8vw, 72px); color: var(--azul); }
+.colab__list span { display: block; margin-top: 8px; font-size: clamp(18px, 1.35vw, 23px); font-weight: 600; max-width: 28ch; }
+.colab__list li:last-child strong { color: var(--verde); }
+.colab__slot { width: 100%; height: min(70vh, 40vw); }
+
+/* ── Cierre */
+.cierre { min-height: 100vh; min-height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .6fr); align-items: end; gap: 3vw; padding: var(--block) var(--gutter) calc(var(--block) * .8); }
+.cierre__photo { position: absolute; inset: 0; margin: 0; }
+.cierre__photo img { width: 100%; height: 100%; object-fit: cover; }
+.cierre__photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10, 79, 163, .92) 0%, rgba(10, 79, 163, .55) 45%, rgba(10, 79, 163, 0) 80%); }
+.cierre__text { position: relative; z-index: 2; }
+.cierre__title { font-size: clamp(64px, 8.4vw, 176px); line-height: .84; color: var(--nieve); }
+.cierre__title .l { display: block; }
+.lockup--end { margin-top: clamp(28px, 5vh, 56px); color: var(--nieve); }
+.cierre__slot { position: relative; z-index: 2; width: 100%; height: min(64vh, 34vw); align-self: center; }
+
+/* ── Isla */
+.island { --ib: var(--noche); --if: var(--nieve); position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 30; transform: translate(-50%, 180%); transition: transform .9s var(--ease); }
+body[data-tone="noche"] .island, body[data-tone="azul"] .island, body[data-tone="verde"] .island { --ib: var(--nieve); --if: var(--noche); }
+.island.is-visible { transform: translate(-50%, 0); }
+.island__toggle { appearance: none; border: 0; min-height: 46px; padding: 0 24px; border-radius: 999px; background: var(--ib); color: var(--if); font: 600 18px/1 var(--display); text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: background-color .6s var(--ease), color .6s var(--ease); }
+.island__list { position: absolute; left: 50%; bottom: calc(100% + 10px); min-width: 260px; padding: 8px; margin: 0; list-style: none; border-radius: 26px; background: var(--ib); color: var(--if); transform: translate(-50%, 10px); visibility: hidden; opacity: 0; transition: transform .5s var(--ease), opacity .5s var(--ease), visibility .5s; }
+.island.is-open .island__list { transform: translate(-50%, 0); visibility: visible; opacity: 1; }
+.island__list a { display: block; padding: 10px 18px; border-radius: 999px; font: 600 19px/1.1 var(--display); text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+.island__list a:hover, .island__list a[aria-current="true"] { background: var(--azul); color: var(--nieve); }
+
+.motion [data-reveal] { opacity: 0; transform: translateY(40px); }
+
+/* ── Tableta */
+@media (max-width: 1080px) {
+  .colab, .cierre { grid-template-columns: 1fr; }
+  .colab__slot { height: 36vh; order: -1; }
+  .cierre__slot { height: 34vh; order: -1; }
+}
+
+/* ── Móvil: composición propia */
+@media (max-width: 760px) {
+  .lockup__brand { height: 44px; }
+  .lockup .big-logo { height: 30px; }
+  .cover__intro { top: 96px; translate: none; right: var(--gutter); }
+  .cover__dest img { height: 40px; }
+  .cover__title { font-size: clamp(44px, 14vw, 70px); }
+  .cover__sub { font-size: 18px !important; }
+  .cover__slot { right: auto; left: 34vw; top: auto; bottom: 5svh; translate: none; width: 32vw; height: 40svh; }
+  .cover__land { height: 34svh; }
+  .cover__after { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; gap: 4px; padding-top: 12svh; font-size: clamp(36px, 11vw, 54px) !important; }
+  .cover__after .l { text-align: center !important; }
+  .viaje__title { top: 64px; font-size: clamp(38px, 11.5vw, 60px); }
+  .viaje__title .t2 { text-align: left; }
+  .viaje__slot { left: auto; right: 8vw; top: 25svh; width: 16vw; height: 20svh; }
+  .viaje__band { grid-template-columns: 1fr; gap: 12px; padding: 22px var(--gutter) 92px; }
+  .viaje__band p { font-size: clamp(19px, 5.6vw, 24px); }
+  .mega { font-size: clamp(56px, 17vw, 88px); }
+  .h2 { font-size: clamp(50px, 15vw, 76px); }
+  .crew__slot { width: 14vw; height: 28vw; }
+  .crew__grid { grid-template-columns: 1fr 1fr; gap: 28px 14px; }
+  .crew__grid .member:first-child { grid-column: 1 / -1; }
+  .member h3 { font-size: clamp(22px, 6.6vw, 30px); }
+  .member__nets { gap: 14px; }
+  .member__nets b { font-size: clamp(24px, 7.4vw, 34px); }
+  .member__nets span { font-size: 13px; }
+  .member__handle { font-size: 14px; }
+  .crew2__slot { width: 16vw; height: 32vw; }
+  .moment { padding-bottom: 100px; }
+  .moment__text { max-width: none; }
+  .moment--b .moment__text { justify-self: start; text-align: left; }
+  .moment__h { font-size: clamp(36px, 11vw, 56px); }
+  .moment__slot { top: 10svh; width: 22vw; height: 30svh; }
+  .colab__list { grid-template-columns: 1fr; }
+  .colab__list strong { font-size: clamp(34px, 10vw, 48px); }
+  .cierre__title { font-size: clamp(52px, 16vw, 84px); }
+  .island__toggle { min-height: 44px; padding: 0 20px; font-size: 16px; }
+}
+@media (max-width: 360px) { .crew__grid { grid-template-columns: 1fr; } }
+
+/* ── Movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .cover, .viaje { height: auto; }
+  .cover__sticky, .viaje__sticky { position: relative; height: auto; min-height: 100vh; }
+  .cover__after { display: none; }
+  .island, .loader, .skip { transition: none; }
+}
