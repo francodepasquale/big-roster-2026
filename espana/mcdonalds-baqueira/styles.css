@@ -1,0 +1,225 @@
+/* McDonald's × BIG · Una escapada para compartir
+   Identidad BIG: Barlow Condensed en mayúsculas, títulos enormes, poco texto, fotos a sangre.
+   McDonald's: rojo, amarillo y el verde del logo. Una caja de papas viaja por todo el recorrido y llueven papas.
+   Sin bordes, sin divisores, sin etiquetas, sin cursivas (el énfasis va en amarillo). */
+
+@font-face { font-family: 'Barlow Condensed'; src: url(assets/fonts/barlow-condensed-800.woff2) format('woff2'); font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url(assets/fonts/barlow-condensed-600.woff2) format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url(assets/fonts/inter-variable.woff2) format('woff2'); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --rojo: #DA291C;
+  --amarillo: #FFC72C;
+  --verde: #214D3D;
+  --noche: #17120F;
+  --nieve: #F7F8FA;
+  --big: #33419A;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --text: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --gutter: clamp(16px, 5vw, 88px);
+  --block: clamp(96px, 16vh, 180px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--rojo); color: var(--nieve); font-family: var(--text); font-size: clamp(16px, .55vw + 11px, 20px); line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body[data-tone="nieve"], body[data-tone="amarillo"] { color: var(--noche); }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, strong { font-family: var(--display); font-weight: 800; line-height: .88; letter-spacing: 0; text-transform: uppercase; }
+em { font-style: normal; color: var(--amarillo); }
+main p { font-weight: 500; line-height: 1.42; }
+:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; border-radius: 6px; }
+.skip { position: fixed; left: 16px; top: 16px; z-index: 50; padding: 12px 18px; border-radius: 999px; background: var(--noche); color: var(--nieve); font-weight: 700; text-decoration: none; transform: translateY(-160%); transition: transform .5s var(--ease); }
+.skip:focus { transform: none; }
+.note { font-size: clamp(14px, 1vw, 17px); font-weight: 600; }
+.kicker { font: 800 clamp(20px, 1.8vw, 30px)/1 var(--display) !important; text-transform: uppercase; color: var(--amarillo); }
+.mega { font-size: clamp(72px, 10vw, 210px); }
+.h2 { font-size: clamp(64px, 8vw, 160px); }
+.split-line-mask, .split-line { padding-bottom: .08em; margin-bottom: -.08em; }
+
+/* ── Loader */
+.loader__inner { text-align: center; }
+.loader__count { font-family: var(--display); font-weight: 800; font-size: clamp(96px, 18vw, 240px); line-height: 1; font-variant-numeric: tabular-nums; }
+.loader__pct { color: var(--amarillo); }
+.loader__line { margin-top: 18px; font-weight: 600; font-size: 16px; color: var(--amarillo); }
+.loader { transition: opacity .9s var(--ease), visibility .9s; }
+.loader.is-leaving { opacity: 0; visibility: hidden; }
+
+main { position: relative; z-index: 2; overflow-x: clip; }
+section { position: relative; }
+
+/* ── Escena 3D: el paquete de papas viaja por los huecos [data-slot] de cada pantalla */
+.stage { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+.stage canvas { width: 100%; height: 100%; display: block; }
+.slot { position: relative; }
+.slot__img { display: none; width: 100%; height: 100%; object-fit: contain; }
+/* Sin WebGL: la foto de las papas, quieta, en cada hueco */
+.no-webgl .slot__img { display: block; }
+.no-webgl .stage { display: none; }
+
+/* ── Logos */
+.lockup { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 24px); }
+.lockup__mcd { height: clamp(48px, 4.8vw, 72px); width: auto; }
+.lockup__x { font-weight: 300; font-size: clamp(22px, 2vw, 32px); line-height: 1; }
+.lockup .big-logo { height: clamp(38px, 3.8vw, 58px); width: auto; color: var(--nieve); }
+
+/* ── Portada: rojo pleno, título enorme y la caja grande */
+.cover { height: 260vh; }
+.cover__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.cover__land { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 34vh; object-fit: cover; object-position: center 70%; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 55%); mask-image: linear-gradient(to bottom, transparent, #000 55%); }
+.cover .lockup { position: absolute; z-index: 3; top: clamp(20px, 5vh, 48px); left: var(--gutter); }
+.cover__intro { position: absolute; z-index: 3; left: var(--gutter); top: 50%; translate: 0 -54%; }
+.cover__dest { display: flex; align-items: center; gap: 14px; font: 800 clamp(20px, 1.7vw, 28px)/1 var(--display) !important; text-transform: uppercase; color: var(--amarillo); }
+.cover__dest img { height: clamp(44px, 4.4vw, 70px); width: auto; }
+.cover__title { margin-top: clamp(12px, 2vh, 24px); font-size: clamp(64px, min(8.6vw, 17vh), 200px); line-height: .84; color: var(--nieve); }
+.cover__title .l { display: block; }
+.cover__sub { margin-top: clamp(14px, 2.4vh, 28px); font: 800 clamp(22px, 2vw, 36px)/1 var(--display) !important; text-transform: uppercase; }
+.cover__slot { position: absolute; right: 3vw; top: 50%; translate: 0 -50%; width: min(36vw, 70vh); height: min(36vw, 70vh); }
+.cover__after { position: absolute; z-index: 7; left: var(--gutter); right: var(--gutter); top: 12vh; text-align: center; font: 800 clamp(56px, 7.6vw, 150px)/.86 var(--display) !important; text-transform: uppercase; pointer-events: none; }
+.cover__after .l { display: block; visibility: hidden; }
+.cover__cue { position: absolute; z-index: 3; left: var(--gutter); bottom: clamp(20px, 4vh, 40px); font-weight: 700; font-size: 15px; }
+
+/* ── El viaje */
+.viaje { height: 200vh; }
+.viaje__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.viaje__photo { position: absolute; inset: 0; margin: 0; }
+.viaje__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.viaje__title { position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); top: clamp(56px, 10vh, 110px); color: var(--nieve); font-size: clamp(60px, min(10vw, 16vh), 220px); line-height: .84; text-shadow: 0 4px 40px rgba(0, 0, 0, .25); }
+.viaje__title span { display: block; }
+.viaje__title .t2 { text-align: right; }
+.viaje__slot { position: absolute; z-index: 2; left: 30vw; top: 41vh; width: min(16vw, 23vh); height: min(16vw, 23vh); }
+.viaje__band { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 5vw, 96px); padding: clamp(26px, 4.4vh, 48px) var(--gutter) clamp(84px, 11vh, 112px); background: var(--rojo); }
+.viaje__band p { font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: clamp(26px, 2.25vw, 44px); line-height: 1.02; max-width: 24ch; }
+.viaje__band b { font-weight: 800; color: var(--amarillo); }
+
+/* ── Los creadores */
+.crew { padding: clamp(64px, 10vh, 120px) var(--gutter) clamp(64px, 9vh, 110px); }
+.crew--2 { padding-top: 0; padding-bottom: var(--block); }
+.crew__head { display: flex; align-items: center; gap: 2vw; margin-bottom: clamp(32px, 5vh, 64px); }
+.crew__h { color: var(--rojo); }
+.crew__slot { width: clamp(110px, 11vw, 200px); height: clamp(110px, 11vw, 200px); }
+.crew__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 56px); }
+.member__photo { aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; background: #ddd; }
+.member__photo img { width: 100%; height: 100%; object-fit: cover; }
+.member h3 { margin-top: 18px; font-size: clamp(32px, 2.8vw, 52px); }
+.member__handle { display: inline-block; margin-top: 4px; font-weight: 600; text-decoration: none; color: var(--rojo); }
+.member__handle:hover { text-decoration: underline; text-underline-offset: 4px; }
+.member__nets { display: flex; gap: clamp(20px, 2.4vw, 40px); margin-top: 14px; padding: 0; list-style: none; }
+.member__nets li { display: flex; flex-direction: column-reverse; }
+.member__nets b { display: block; font-family: var(--display); font-weight: 800; font-size: clamp(40px, 3.4vw, 62px); line-height: .9; }
+.member__nets span { display: block; margin-bottom: 2px; font: 600 17px/1 var(--display); text-transform: uppercase; color: var(--rojo); }
+.crew2__slot { width: clamp(130px, 13vw, 230px); height: clamp(130px, 13vw, 230px); margin: clamp(24px, 4vh, 48px) 0 0 auto; }
+
+/* ── En el camino: rojo, título gigante y la caja grande al lado */
+.camino { padding: clamp(72px, 12vh, 140px) var(--gutter) var(--block); min-height: 100vh; }
+.camino__top { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: center; gap: 3vw; }
+.camino .mega { margin-top: 12px; }
+.camino__slot { width: 100%; aspect-ratio: 1; max-height: 62vh; }
+.beats { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 56px); margin-top: clamp(40px, 7vh, 80px); }
+.beats b { display: block; font: 800 clamp(22px, 1.8vw, 30px)/1 var(--display); color: var(--amarillo); }
+.beats strong { display: block; margin-top: 8px; font-size: clamp(44px, 4.6vw, 88px); }
+.beats span { display: block; margin-top: 12px; font-size: clamp(17px, 1.25vw, 22px); font-weight: 600; max-width: 24ch; }
+.camino .note { margin-top: clamp(32px, 5vh, 56px); }
+
+/* ── En la casa: la noche a sangre y la caja en la mesa */
+.casa { height: 180vh; }
+.casa__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; align-items: center; padding: 0 var(--gutter); }
+.casa__photo { position: absolute; inset: 0; margin: 0; }
+.casa__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 70%; }
+.casa__photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(23, 18, 15, .85) 0%, rgba(23, 18, 15, .55) 45%, rgba(23, 18, 15, 0) 75%); }
+.casa__text { position: relative; z-index: 2; max-width: 60vw; }
+.casa__h { margin-top: 12px; max-width: 9ch; }
+.casa__beats { list-style: none; padding: 0; margin-top: clamp(28px, 5vh, 56px); display: grid; gap: 6px; }
+.casa__beats strong { display: block; font-size: clamp(36px, 3.6vw, 68px); }
+.casa__beats li:nth-child(2) strong { color: var(--amarillo); }
+.casa__note { margin-top: clamp(24px, 4vh, 40px); }
+.casa__slot { position: absolute; z-index: 1; right: 8vw; bottom: 8vh; width: min(30vw, 48vh); height: min(30vw, 48vh); }
+
+/* ── La colaboración: amarillo pleno */
+.colab { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: center; gap: 3vw; min-height: 100vh; padding: var(--block) var(--gutter); }
+.colab__h { color: var(--rojo); font-size: clamp(64px, 7.4vw, 150px); }
+.colab__list { list-style: none; padding: 0; margin-top: clamp(36px, 6vh, 64px); display: grid; gap: clamp(22px, 3.6vh, 40px); }
+.colab__list strong { display: block; font-size: clamp(44px, 4.4vw, 84px); }
+.colab__list span { display: block; margin-top: 8px; font-size: clamp(18px, 1.35vw, 23px); font-weight: 600; }
+.colab__list li:last-child strong { color: var(--rojo); }
+.colab__slot { width: 100%; aspect-ratio: 1; max-height: 70vh; }
+
+/* ── Cierre: foto de pista a sangre y la caja en el centro */
+.cierre { min-height: 100vh; min-height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: end; gap: 3vw; padding: var(--block) var(--gutter) calc(var(--block) * .8); }
+.cierre__photo { position: absolute; inset: 0; margin: 0; }
+.cierre__photo img { width: 100%; height: 100%; object-fit: cover; }
+.cierre__photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(23, 18, 15, .9) 0%, rgba(23, 18, 15, .5) 45%, rgba(23, 18, 15, 0) 80%); }
+.cierre__text { position: relative; z-index: 2; }
+.cierre__title { font-size: clamp(60px, 7.6vw, 160px); line-height: .84; color: var(--nieve); }
+.cierre__title .l { display: block; }
+.lockup--end { margin-top: clamp(28px, 5vh, 56px); color: var(--nieve); }
+.cierre__slot { position: relative; z-index: 2; width: 100%; aspect-ratio: 1; max-height: 64vh; align-self: center; }
+
+/* ── Isla */
+.island { --ib: var(--noche); --if: var(--nieve); position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 30; transform: translate(-50%, 180%); transition: transform .9s var(--ease); }
+body[data-tone="noche"] .island, body[data-tone="rojo"] .island { --ib: var(--nieve); --if: var(--noche); }
+.island.is-visible { transform: translate(-50%, 0); }
+.island__toggle { appearance: none; border: 0; min-height: 46px; padding: 0 24px; border-radius: 999px; background: var(--ib); color: var(--if); font: 600 18px/1 var(--display); text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: background-color .6s var(--ease), color .6s var(--ease); }
+.island__list { position: absolute; left: 50%; bottom: calc(100% + 10px); min-width: 240px; padding: 8px; margin: 0; list-style: none; border-radius: 26px; background: var(--ib); color: var(--if); transform: translate(-50%, 10px); visibility: hidden; opacity: 0; transition: transform .5s var(--ease), opacity .5s var(--ease), visibility .5s; }
+.island.is-open .island__list { transform: translate(-50%, 0); visibility: visible; opacity: 1; }
+.island__list a { display: block; padding: 10px 18px; border-radius: 999px; font: 600 19px/1.1 var(--display); text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+.island__list a:hover, .island__list a[aria-current="true"] { background: var(--rojo); color: var(--nieve); }
+
+.motion [data-reveal] { opacity: 0; transform: translateY(40px); }
+
+/* ── Tableta */
+@media (max-width: 1080px) {
+  .colab, .cierre { grid-template-columns: 1fr; }
+  .colab__slot { max-height: 40vh; order: -1; }
+  .cierre__slot { max-height: 36vh; order: -1; }
+  .casa__text { max-width: none; }
+}
+
+/* ── Móvil: composición propia */
+@media (max-width: 760px) {
+  .lockup__mcd { height: 40px; }
+  .lockup .big-logo { height: 30px; }
+  .cover__intro { top: 96px; translate: none; right: var(--gutter); }
+  .cover__dest img { height: 40px; }
+  .cover__title { font-size: clamp(58px, 19vw, 96px); }
+  .cover__slot { right: auto; left: 10vw; top: auto; bottom: 10svh; translate: none; width: 80vw; height: 80vw; }
+  .cover__land { height: 30svh; }
+  .cover__after { font-size: clamp(44px, 14vw, 68px); }
+  .viaje__title { top: 64px; font-size: clamp(46px, 14vw, 76px); }
+  .viaje__title .t2 { text-align: left; }
+  .viaje__slot { left: auto; right: 6vw; top: 30svh; width: 34vw; height: 34vw; }
+  .viaje__band { grid-template-columns: 1fr; gap: 12px; padding: 24px var(--gutter) 84px; }
+  .viaje__band p { font-size: clamp(21px, 6.2vw, 26px); }
+  .mega { font-size: clamp(56px, 17vw, 88px); }
+  .h2 { font-size: clamp(50px, 15vw, 76px); }
+  .crew__slot { width: 26vw; height: 26vw; }
+  .crew__grid { grid-template-columns: 1fr 1fr; gap: 28px 14px; }
+  .crew__grid .member:first-child { grid-column: 1 / -1; }
+  .member h3 { font-size: clamp(22px, 6.6vw, 30px); }
+  .member__nets { gap: 14px; }
+  .member__nets b { font-size: clamp(24px, 7.4vw, 34px); }
+  .member__nets span { font-size: 13px; }
+  .member__handle { font-size: 14px; }
+  .crew2__slot { width: 34vw; height: 34vw; }
+  .camino__top { grid-template-columns: 1fr; }
+  .camino__slot { max-height: 40svh; width: 70vw; justify-self: center; }
+  .beats { grid-template-columns: 1fr; gap: 24px; }
+  .beats strong { font-size: clamp(38px, 11vw, 52px); }
+  .casa { height: auto; }
+  .casa__sticky { position: relative; height: auto; min-height: 100svh; padding: 72px var(--gutter) 46vw; }
+  .casa__photo::after { background: linear-gradient(180deg, rgba(23, 18, 15, .85) 0%, rgba(23, 18, 15, .55) 60%, rgba(23, 18, 15, .2) 100%); }
+  .casa__slot { right: 6vw; bottom: 4svh; width: 40vw; height: 40vw; }
+  .cierre__title { font-size: clamp(52px, 16vw, 84px); }
+  .island__toggle { min-height: 44px; padding: 0 20px; font-size: 16px; }
+}
+@media (max-width: 360px) { .crew__grid { grid-template-columns: 1fr; } }
+
+/* ── Movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .cover, .viaje, .casa { height: auto; }
+  .cover__sticky, .viaje__sticky, .casa__sticky { position: relative; height: auto; min-height: 100vh; }
+  .cover__after { display: none; }
+  .island, .loader, .skip { transition: none; }
+}

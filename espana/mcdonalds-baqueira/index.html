@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="robots" content="noindex">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#DA291C">
+  <meta name="description" content="Una propuesta de BIG Agency para McDonald's: seis creadores, una escapada a Baqueira Beret y los momentos de comida compartida del viaje.">
+  <title>McDonald's × BIG — Una escapada para compartir</title>
+  <style>
+    .loader{display:none}html.is-loading{overflow:hidden}
+    .is-loading .loader{display:flex;position:fixed;inset:0;z-index:100;background:#DA291C;color:#fff;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+    .is-loading main,.is-loading .island,.is-loading .stage{visibility:hidden}
+  </style>
+  <script>
+    document.documentElement.classList.add('is-loading');
+    window.deckFallback = setTimeout(() => {
+      document.documentElement.classList.remove('is-loading');
+      document.dispatchEvent(new Event('deck:ready'));
+    }, 15000);
+  </script>
+  <link rel="icon" href="assets/img/big.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/SplitText.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="loader.js" defer></script>
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three.module.min.js"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-tone="rojo">
+  <div class="loader" id="loader" aria-label="Cargando la presentación">
+    <div class="loader__inner">
+      <div class="loader__count" role="progressbar" aria-label="Carga de la presentación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="load-number">0</span><span class="loader__pct">%</span></div>
+      <p class="loader__line">McDonald's × BIG · Baqueira Beret</p>
+    </div>
+  </div>
+
+  <a class="skip" href="#viaje">Saltar al contenido</a>
+
+  <!-- El paquete de papas en 3D y las papas sueltas (scene.js) -->
+  <div class="stage" aria-hidden="true"><canvas id="stage"></canvas></div>
+
+  <main>
+    <!-- PORTADA · rojo McDonald's; al bajar, la caja se inclina y las papas salen volando -->
+    <section id="portada" class="cover" data-chapter="Portada" data-tone="rojo" data-rain=".3">
+      <div class="cover__sticky">
+        <img class="cover__land" src="assets/img/portada-montanas.webp" alt="" width="3200" height="875">
+        <div class="lockup">
+          <img class="lockup__mcd" src="assets/img/mcdonalds-logo.png" alt="McDonald's" width="1214" height="1222">
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+        </div>
+        <div class="cover__intro">
+          <p class="cover__dest"><span>Destino</span><img src="assets/img/baqueira-blanco.webp" alt="Baqueira Beret" width="265" height="264"></p>
+          <h1 class="cover__title"><span class="l">Una escapada</span><span class="l">para <em>compartir</em></span></h1>
+          <p class="cover__sub">Seis creadores · Diciembre 2026</p>
+        </div>
+        <div class="slot cover__slot" data-slot="cover" data-yaw="-20" data-rot="-4"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+        <p class="cover__after"><span class="l">Seis creadores.</span><span class="l">Una casa.</span><span class="l">Y algo para <em>compartir.</em></span></p>
+        <p class="cover__cue" aria-hidden="true">Desliza</p>
+      </div>
+    </section>
+
+    <!-- EL VIAJE -->
+    <section id="viaje" class="viaje" data-chapter="El viaje" data-tone="noche" data-rain="0">
+      <div class="viaje__sticky">
+        <figure class="viaje__photo"><img src="assets/img/viaje-telesilla.webp" alt="Telesilla entre pinos nevados en Baqueira Beret" width="2031" height="2160"></figure>
+        <h2 class="viaje__title"><span class="t1">Seis creadores.</span> <span class="t2">Una casa en la nieve.</span></h2>
+        <div class="slot viaje__slot" data-slot="viaje" data-yaw="25" data-rot="8"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+        <div class="viaje__band">
+          <p>Este diciembre reunimos a <b>seis creadores</b> en <b>Baqueira Beret</b>: nieve, actividades y convivencia en una <b>casa</b>.</p>
+          <p>El contenido sale en la <b>montaña</b> y también <b>entre plan y plan</b>: en el camino, en la mesa, en el sofá.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOS CREADORES · dos pantallas de tres -->
+    <section id="creadores" class="crew" data-chapter="Los creadores" data-tone="nieve" data-rain="0">
+      <div class="crew__head">
+        <h2 class="h2 crew__h" data-split>Quiénes viajan</h2>
+        <div class="slot crew__slot" data-slot="crew1" data-yaw="30" data-rot="10"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+      </div>
+      <div class="crew__grid">
+        <article class="member" data-reveal>
+          <div class="member__photo"><img src="assets/img/jorge.webp" alt="Jorge Ramón" width="658" height="823" style="object-position:50% 50%" loading="lazy"></div>
+          <h3>Jorge Ramón</h3>
+          <a class="member__handle" href="https://www.instagram.com/jorgeramonweb/" target="_blank" rel="noopener">@jorgeramonweb</a>
+          <ul class="member__nets"><li><b data-count>451K</b><span>Instagram</span></li><li><b data-count>358,8K</b><span>TikTok</span></li></ul>
+        </article>
+        <article class="member" data-reveal>
+          <div class="member__photo"><img src="assets/img/sofi.webp" alt="Sofi Sea" width="762" height="953" style="object-position:50% 50%" loading="lazy"></div>
+          <h3>Sofi Sea</h3>
+          <a class="member__handle" href="https://www.instagram.com/sofiisea/" target="_blank" rel="noopener">@sofiisea</a>
+          <ul class="member__nets"><li><b data-count>289K</b><span>Instagram</span></li><li><b data-count>413K</b><span>TikTok</span></li></ul>
+        </article>
+        <article class="member" data-reveal>
+          <div class="member__photo"><img src="assets/img/ivan.webp" alt="Iván" width="673" height="842" style="object-position:50% 50%" loading="lazy"></div>
+          <h3>Iván</h3>
+          <a class="member__handle" href="https://www.instagram.com/ivssss_/" target="_blank" rel="noopener">@ivssss_</a>
+          <ul class="member__nets"><li><b data-count>112K</b><span>Instagram</span></li><li><b data-count>58,3K</b><span>TikTok</span></li></ul>
+        </article>
+      </div>
+    </section>
+    <section class="crew crew--2" data-tone="nieve" data-rain="0" aria-label="Los creadores, segunda parte">
+      <div class="crew__grid">
+        <article class="member" data-reveal>
+          <div class="member__photo"><img src="assets/img/maria.webp" alt="María García Pescador" width="748" height="936" style="object-position:50% 50%" loading="lazy"></div>
+          <h3>María García Pescador</h3>
+          <a class="member__handle" href="https://www.instagram.com/marianinigp/" target="_blank" rel="noopener">@marianinigp</a>
+          <ul class="member__nets"><li><b data-count>102K</b><span>Instagram</span></li><li><b data-count>15,5K</b><span>TikTok</span></li></ul>
+        </article>
+        <article class="member" data-reveal>
+          <div class="member__photo"><img src="assets/img/juli.webp" alt="Juli García" width="644" height="805" style="object-position:50% 50%" loading="lazy"></div>
+          <h3>Juli García</h3>
+          <a class="member__handle" href="https://www.instagram.com/jugarciaok/" target="_blank" rel="noopener">@jugarciaok</a>
+          <ul class="member__nets"><li><b data-count>82,2K</b><span>Instagram</span></li><li><b data-count>111,3K</b><span>TikTok</span></li></ul>
+        </article>
+        <article class="member" data-reveal>
+          <div class="member__photo"><img src="assets/img/gonza.webp" alt="Gonza Maass" width="833" height="1042" style="object-position:50% 50%" loading="lazy"></div>
+          <h3>Gonza Maass</h3>
+          <a class="member__handle" href="https://www.instagram.com/gonzamaass/" target="_blank" rel="noopener">@gonzamaass</a>
+          <ul class="member__nets"><li><b data-count>23K</b><span>Instagram</span></li><li><b data-count>26,8K</b><span>TikTok</span></li></ul>
+        </article>
+      </div>
+      <div class="slot crew2__slot" data-slot="crew2" data-yaw="-30" data-rot="-12"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+    </section>
+
+    <!-- EN EL CAMINO -->
+    <section id="camino" class="camino" data-chapter="En el camino" data-tone="rojo" data-rain=".2">
+      <div class="camino__top">
+        <div class="camino__head">
+          <p class="kicker" data-reveal>Primera parada</p>
+          <h2 class="mega" data-split>McDonald's en el camino</h2>
+        </div>
+        <div class="slot camino__slot" data-slot="camino" data-yaw="-25" data-rot="10"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+      </div>
+      <ol class="beats">
+        <li data-reveal><b>01</b><strong>Cada uno elige</strong><span>Pedidos en grupo, debates incluidos.</span></li>
+        <li data-reveal><b>02</b><strong>Se comparte</strong><span>Las papas pasan de mano en mano.</span></li>
+        <li data-reveal><b>03</b><strong>Primeras escenas</strong><span>Los primeros vídeos del viaje, sin guion.</span></li>
+      </ol>
+      <p class="note" data-reveal>Parada sujeta a coordinación logística.</p>
+    </section>
+
+    <!-- EN LA CASA -->
+    <section id="casa" class="casa" data-chapter="En la casa" data-tone="noche" data-rain=".15">
+      <div class="casa__sticky">
+        <figure class="casa__photo"><img src="assets/img/apres-pueblo-noche.webp" alt="El pueblo de Baqueira iluminado de noche" width="2310" height="2160" loading="lazy"></figure>
+        <div class="casa__text">
+          <p class="kicker">Después de la nieve</p>
+          <h2 class="mega casa__h">McDonald's en la casa</h2>
+          <ol class="casa__beats">
+            <li><strong>Llegan los pedidos</strong></li>
+            <li><strong>Mesa para seis</strong></li>
+            <li><strong>Charla y juegos</strong></li>
+          </ol>
+          <p class="note casa__note">La recogida o la entrega se organiza con McDonald's.</p>
+        </div>
+        <div class="slot casa__slot" data-slot="casa" data-yaw="20" data-rot="-4"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+      </div>
+    </section>
+
+    <!-- LA COLABORACIÓN -->
+    <section id="colaboracion" class="colab" data-chapter="La colaboración" data-tone="amarillo" data-rain="0">
+      <div class="colab__text">
+        <h2 class="mega colab__h" data-split>La colaboración</h2>
+        <ul class="colab__list">
+          <li data-reveal><strong>Producto</strong><span>En la parada del camino y en la cena de la casa.</span></li>
+          <li data-reveal><strong>Aportación económica</strong><span>Para la activación y el contenido con los creadores.</span></li>
+          <li data-reveal><strong>Lo definimos juntos</strong><span>Formatos, entregables e inversión.</span></li>
+        </ul>
+      </div>
+      <div class="slot colab__slot" data-slot="colab" data-yaw="-15" data-rot="-12"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+    </section>
+
+    <!-- CIERRE -->
+    <section id="cierre" class="cierre" data-chapter="Cierre" data-tone="noche" data-rain=".35">
+      <figure class="cierre__photo"><img src="assets/img/pista.webp" alt="Una esquiadora baja por una pista de Baqueira Beret" width="2000" height="1376" loading="lazy"></figure>
+      <div class="cierre__text">
+        <h2 class="cierre__title"><span class="l">¿Compartimos</span><span class="l">la próxima</span><span class="l"><em>escapada?</em></span></h2>
+        <div class="lockup lockup--end">
+          <img class="lockup__mcd" src="assets/img/mcdonalds-logo.png" alt="McDonald's" width="1214" height="1222" loading="lazy">
+          <span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="big-logo" viewBox="0 0 410.71 466.33" role="img" aria-label="BIG"><path fill="currentColor" d="M409.52,245.64l-.46-2.58c-9.26-60.88-80.63-99.4-137.14-71.74-88.45,35.5-151.22,123.57-151.14,223.45,0,3.49-.78,6.98-2.6,9.96-9.03,14.8-34.91,11.92-39.67-5.3-.81-2.92-.82-6-.26-8.97,21.94-117.86,112.53-218.09,223.62-260.77.71-.31,1.41-.64,2.1-1,52.05-30.85,35.16-119.08-25.55-127.52-4.12-.76-8.35-1.16-12.68-1.16H0v466.33h410.49c-.73-9.18,1.48-207.5-.97-220.69Z"/></svg>
+        </div>
+      </div>
+      <div class="slot cierre__slot" data-slot="cierre" data-yaw="10" data-rot="3"><img class="slot__img" src="assets/img/papas-frente.webp" alt="" width="1234" height="1233"></div>
+    </section>
+  </main>
+
+  <nav class="island" aria-label="Índice de la presentación">
+    <button class="island__toggle" aria-expanded="false" aria-controls="island-list"><span class="island__current">Portada</span></button>
+    <ol class="island__list" id="island-list"></ol>
+  </nav>
+</body>
+</html>
