@@ -210,14 +210,15 @@ export function createScene(canvas, { reduced = false } = {}) {
       const fr = vis / Math.min(r.height, innerHeight);
       if (fr > bestF) { bestF = fr; best = el; bestR = r; }
     }
-    if (bestF < .35) best = null;
-    if (best !== F.anchor) { F.anchor = best; F.since = 0; }
+    if (bestF < (mobile ? .6 : .35)) best = null;
+    // en móvil no viaja por encima del contenido: se desvanece y aparece directamente en el hueco nuevo
+    if (best !== F.anchor) { F.anchor = best; F.since = 0; if (mobile) F.shown = Math.min(F.shown, .01); }
     F.since += dt;
     const k = 3.5 + Math.min(1, F.since / 1.2) * 12;
     if (best) {
       const isCover = best.dataset.slot === 'cover';
       let cx = bestR.left + bestR.width / 2, cy = bestR.top + bestR.height / 2, hp = Math.min(bestR.height, bestR.width);
-      if (isCover) { cx += state.lift * (innerWidth / 2 - cx); cy += state.drop * innerHeight * .3 - state.lift * hp * .05; hp *= (1 + state.lift * .25) * (1 - state.drop * .45); }
+      if (isCover) { cx += state.lift * (innerWidth / 2 - cx); cy = mobile ? cy + state.lift * (innerHeight * .5 - cy) + state.drop * innerHeight * .22 : cy + state.drop * innerHeight * .3 - state.lift * hp * .05; hp *= (1 + state.lift * (mobile ? .35 : .25)) * (1 - state.drop * .45); }
       const x = (cx / innerWidth * 2 - 1) * hW, y = -(cy / innerHeight * 2 - 1) * hH, s = (hp / innerHeight * 2 * hH) / PACK_H;
       if (!F.placed || F.shown < .02) { pack.position.set(x, y, 0); F.scale = s; F.placed = true; }
       pack.position.x = damp(pack.position.x, x, k, dt); pack.position.y = damp(pack.position.y, y, k, dt); F.scale = damp(F.scale, s, k, dt);
@@ -246,7 +247,7 @@ export function createScene(canvas, { reduced = false } = {}) {
     pack.position.y += reduced ? 0 : Math.sin(t * 1.4) * .002;
 
     // Papas sueltas
-    if (!reduced) { rainAcc += dt * state.rain * (mobile ? 3 : 5); while (rainAcc > 1) { spawnRain(); rainAcc--; } }
+    if (!reduced) { rainAcc += dt * state.rain * (mobile ? 1.6 : 5); while (rainAcc > 1) { spawnRain(); rainAcc--; } }
     P.forEach((p, i) => {
       if (!p.on) return;
       p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt; if (p.burst) p.vz *= Math.exp(-dt * .6);

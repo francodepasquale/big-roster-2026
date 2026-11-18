@@ -9,6 +9,7 @@ import { createScene } from './scene.js';
   root.classList.add('js');
   if (!reduced) root.classList.add('motion');
   gsap.registerPlugin(ScrollTrigger, SplitText);
+  ScrollTrigger.config({ ignoreMobileResize: true });   // la barra del navegador del móvil no recalcula todo al aparecer/desaparecer
   // Escena 3D (paquete de papas). Sin WebGL: la foto de las papas en cada hueco
   let scene = null;
   try {
@@ -45,14 +46,15 @@ import { createScene } from './scene.js';
   // ── Color de fondo y lluvia por sección
   const state = { rain: .3, tilt: 0, lift: 0, drop: 0, spin: 0 };
   const push = () => scene?.set(state);
-  function setTone(name, rain) {
+  function setTone(name, rain, id) {
     body.dataset.tone = name;
     gsap.to(body, { backgroundColor: COLORS[name], duration: reduced ? 0 : .9, ease: 'expo.out', overwrite: 'auto' });
+    if (narrow() && !['portada', 'cierre'].includes(id)) rain = 0;   // en móvil solo llueve en portada y cierre
     gsap.to(state, { rain, duration: 1.2, ease: 'power2.out', overwrite: 'auto', onUpdate: push });
   }
   $$('section[data-tone]').forEach(sec => ScrollTrigger.create({
     trigger: sec, start: 'top 55%', end: 'bottom 55%',
-    onToggle: self => self.isActive && setTone(sec.dataset.tone, +(sec.dataset.rain || 0)),
+    onToggle: self => self.isActive && setTone(sec.dataset.tone, +(sec.dataset.rain || 0), sec.id),
   }));
 
   // ── Portada: el título se va, la caja va al centro, se inclina y las papas salen volando
@@ -60,7 +62,7 @@ import { createScene } from './scene.js';
     let burst = false;
     const ct = gsap.timeline({ scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom bottom', scrub: .8,
       onUpdate: self => {
-        if (self.progress > .36 && !burst) { burst = true; scene?.burst(narrow() ? 70 : 140); }
+        if (self.progress > .36 && !burst) { burst = true; scene?.burst(narrow() ? 45 : 140); }
         if (self.progress < .28) burst = false;
       } }, onUpdate: push });
     ct.to(['.cover__intro', '.cover .lockup', '.cover__cue'], { y: -70, autoAlpha: 0, ease: 'power2.in', duration: .22 }, .04)
@@ -88,7 +90,7 @@ import { createScene } from './scene.js';
     gsap.fromTo('.cierre__photo img', { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.cierre', start: 'top bottom', end: 'bottom bottom', scrub: true } });
     gsap.fromTo('.cierre__title .l', { yPercent: 100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, stagger: .12, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.cierre', start: 'top 45%' } });
     // Al llegar al cierre, otra explosión de papas
-    ScrollTrigger.create({ trigger: '.cierre', start: 'top 35%', onEnter: () => scene?.burst(narrow() ? 60 : 120) });
+    ScrollTrigger.create({ trigger: '.cierre', start: 'top 35%', onEnter: () => scene?.burst(narrow() ? 40 : 120) });
   }
 
   // ── Títulos por líneas y entradas

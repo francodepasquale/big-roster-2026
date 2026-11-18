@@ -183,15 +183,16 @@ body[data-tone="noche"] .island, body[data-tone="rojo"] .island { --ib: var(--ni
   .lockup .big-logo { height: 30px; }
   .cover__intro { top: 96px; translate: none; right: var(--gutter); }
   .cover__dest img { height: 40px; }
-  .cover__title { font-size: clamp(58px, 19vw, 96px); }
-  .cover__slot { right: auto; left: 10vw; top: auto; bottom: 10svh; translate: none; width: 80vw; height: 80vw; }
+  .cover__title { font-size: clamp(44px, 14vw, 70px); }
+  .cover__sub { font-size: 18px !important; }
+  .cover__slot { right: auto; left: 21vw; top: auto; bottom: 5svh; translate: none; width: 58vw; height: 58vw; }
   .cover__land { height: 30svh; }
-  .cover__after { font-size: clamp(44px, 14vw, 68px); }
-  .viaje__title { top: 64px; font-size: clamp(46px, 14vw, 76px); }
+  .cover__after { top: 14svh; translate: none; font-size: clamp(38px, 12vw, 58px); }
+  .viaje__title { top: 64px; font-size: clamp(38px, 11.5vw, 60px); }
   .viaje__title .t2 { text-align: left; }
-  .viaje__slot { left: auto; right: 6vw; top: 30svh; width: 34vw; height: 34vw; }
-  .viaje__band { grid-template-columns: 1fr; gap: 12px; padding: 24px var(--gutter) 84px; }
-  .viaje__band p { font-size: clamp(21px, 6.2vw, 26px); }
+  .viaje__slot { left: auto; right: 5vw; top: 27svh; width: 28vw; height: 28vw; }
+  .viaje__band { grid-template-columns: 1fr; gap: 12px; padding: 22px var(--gutter) 92px; }
+  .viaje__band p { font-size: clamp(19px, 5.6vw, 24px); }
   .mega { font-size: clamp(56px, 17vw, 88px); }
   .h2 { font-size: clamp(50px, 15vw, 76px); }
   .crew__slot { width: 26vw; height: 26vw; }
@@ -204,13 +205,13 @@ body[data-tone="noche"] .island, body[data-tone="rojo"] .island { --ib: var(--ni
   .member__handle { font-size: 14px; }
   .crew2__slot { width: 34vw; height: 34vw; }
   .camino__top { grid-template-columns: 1fr; }
-  .camino__slot { max-height: 40svh; width: 70vw; justify-self: center; }
+  .camino__slot { max-height: 34svh; width: 54vw; justify-self: center; }
   .beats { grid-template-columns: 1fr; gap: 24px; }
   .beats strong { font-size: clamp(38px, 11vw, 52px); }
   .casa { height: auto; }
   .casa__sticky { position: relative; height: auto; min-height: 100svh; padding: 72px var(--gutter) 46vw; }
   .casa__photo::after { background: linear-gradient(180deg, rgba(23, 18, 15, .85) 0%, rgba(23, 18, 15, .55) 60%, rgba(23, 18, 15, .2) 100%); }
-  .casa__slot { right: 6vw; bottom: 4svh; width: 40vw; height: 40vw; }
+  .casa__slot { right: 6vw; bottom: 4svh; width: 34vw; height: 34vw; }
   .cierre__title { font-size: clamp(52px, 16vw, 84px); }
   .island__toggle { min-height: 44px; padding: 0 20px; font-size: 16px; }
 }
