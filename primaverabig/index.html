@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#cfa9ee">
+  <title>BIG × Disney+ × Primavera Sound</title>
+  <meta name="description" content="Campaña de BIG Agency con ocho de sus creadores para que el Primavera Sound Buenos Aires se vea en vivo por Disney+. 28 y 29 de noviembre, Club Ciudad de Buenos Aires.">
+  <!-- la vista previa al compartir el link (WhatsApp, Slack, mail) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BIG × Disney+ × Primavera Sound">
+  <meta property="og:description" content="Ocho creadores de BIG para que el Primavera Sound Buenos Aires se vea en vivo por Disney+. 28 y 29 de noviembre.">
+  <meta property="og:url" content="https://roster.bigagency.com.ar/primaverabig/">
+  <meta property="og:image" content="https://roster.bigagency.com.ar/primaverabig/assets/img/compartir.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/flor.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/roboto-serif-condensada.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/libre-franklin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css?v=20261119">
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script type="module" src="app.js?v=20261119"></script>
+</head>
+<body class="is-cargando">
+  <!-- El fondo es el degradé del afiche (lila arriba, rosa abajo). app.js lo cambia por capítulo: en «En vivo» se hace
+       de noche, con el azul de Disney+ -->
+  <div class="fondo" aria-hidden="true"></div>
+  <!-- La flor 3D (escena.js). Sin WebGL la reemplaza .flor-plana, el logo plano que sigue los mismos movimientos -->
+  <canvas class="tres" aria-hidden="true"></canvas>
+  <div class="flor-plana" aria-hidden="true"></div>
+
+  <!-- El cargador: la flor se dibuja cinta por cinta con la carga real -->
+  <div class="cargador" role="status" aria-live="polite">
+    <div class="cargador__flor"></div>
+    <p class="cargador__n" aria-hidden="true">0</p>
+    <p class="sr-only">Cargando la propuesta</p>
+    <button class="cargador__sonido" type="button" data-activar-sonido>
+      <span class="ondas" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Activar sonido
+    </button>
+  </div>
+
+  <!-- La barra aparece al dejar la portada: marca, índice de capítulos (lo arma app.js) y sonido -->
+  <header class="barra">
+    <a class="barra__marca lockup" href="#inicio" aria-label="BIG × Disney+ × Primavera Sound. Volver al inicio">
+      <svg class="logo logo--b" viewBox="0 0 1162.87 1320.36" aria-hidden="true"><use href="#logo-b"/></svg><span class="lockup__x" aria-hidden="true">×</span>
+      <svg class="logo logo--disney" aria-hidden="true"><use href="#logo-disney"/></svg><span class="lockup__x" aria-hidden="true">×</span>
+      <svg class="logo logo--ps" aria-hidden="true"><use href="#logo-ps"/></svg>
+    </a>
+    <span aria-hidden="true"></span>
+    <button class="sonido" type="button" aria-pressed="true" aria-label="Sonido">
+      <span class="ondas" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <!-- La isla: el índice de siempre (como en Red Bull × Pelao Khe). Muestra el capítulo y cuánto falta; al tocarla se
+       abre la lista de capítulos. La lista la arma app.js desde los data-capitulo de los tramos -->
+  <div class="isla-fondo" hidden></div>
+  <nav class="isla-caja" aria-label="Índice de la propuesta"><div class="isla">
+    <button class="isla__pildora" type="button" aria-label="Abrir el índice" aria-expanded="false" aria-controls="isla-menu">
+      <span class="isla__flor" aria-hidden="true"></span><span class="isla__capitulo">Portada</span>
+      <svg class="isla__avance" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle class="pista" cx="12" cy="12" r="10"/><circle class="lleno" cx="12" cy="12" r="10"/></svg>
+    </button>
+    <div class="isla__menu" id="isla-menu" inert aria-hidden="true">
+      <div class="isla__cabeza"><button class="isla__cerrar" type="button" aria-label="Cerrar el índice">×</button></div>
+      <div class="isla__lista"></div>
+    </div>
+  </div></nav>
+
+  <!-- El escenario fijo: cada .capa es una escena. Su entrada, su salida y lo que pasa adentro lo mueve el scroll
+       (GUION en app.js). Los [data-ancla] marcan dónde se para la flor 3D en cada momento -->
+  <div class="escenario">
+
+    <section class="capa portada" data-capa="portada" aria-labelledby="t-portada">
+      <!-- el arco de Disney+, gigante: barre la pantalla en la entrada y queda abrazando la flor (lo dibuja app.js) -->
+      <svg class="portada__arco" aria-hidden="true"></svg>
+      <!-- El título de la portada es la pregunta de la campaña. Está en el mismo lugar y con el mismo tamaño que la del
+           desafío: al bajar, la portada se va y la pregunta queda (la del desafío la reemplaza sin que se note) -->
+      <h1 id="t-portada" class="titulo serif desafio__pregunta portada__pregunta" data-partir>¿Cómo se entera la gente<br>de que el Primavera está en<br>Disney+?</h1>
+      <div class="ancla ancla--portada" data-ancla="portada"></div>
+      <!-- los ocho creadores, como historias: se prenden uno por uno en la entrada, a la derecha, debajo del arco -->
+      <div class="portada__caras" aria-label="Los ocho creadores de BIG"></div>
+      <div class="portada__pie">
+        <div class="vidrio portada__panel">
+          <p class="portada__texto">Campaña de BIG Agency con ocho de sus creadores para que el Primavera Sound Buenos Aires se vea en vivo por Disney+.</p>
+          <div class="portada__datos">
+            <p>28 y 29 de noviembre</p>
+            <p>Club Ciudad, Buenos Aires</p>
+          </div>
+          <p class="portada__para">Propuesta de BIG para Creative Hub · Noviembre 2026</p>
+        </div>
+      </div>
+      <p class="portada__seguir" aria-hidden="true"><i></i>Deslizá para ver la campaña</p>
+    </section>
+
+    <section class="capa desafio" data-capa="desafio" aria-labelledby="t-desafio">
+      <h2 id="t-desafio" class="titulo serif desafio__pregunta" data-partir>¿Cómo se entera la gente<br>de que el Primavera está en<br>Disney+?</h2>
+      <div class="panel desafio__panel">
+        <p>El público que hay que ganar es el que no va a estar en el Club Ciudad. Tiene que saber tres cosas antes del sábado:</p>
+      </div>
+      <p class="desafio__tres">
+        <span class="cosa" data-cosa="0">Que se ve en vivo</span><span class="cosa" data-cosa="1">A qué hora</span><span class="cosa" data-cosa="2">Que está en Disney+</span>
+      </p>
+      <!-- La ficha del festival en Disney+: se arma con las tres cosas. La flor 3D se ve por la ventana del arte -->
+      <figure class="ficha-disney" aria-label="Así lo encuentra la gente en Disney+">
+        <div class="ficha-disney__arte"><div class="ancla" data-ancla="arte"></div></div>
+        <figcaption class="ficha-disney__info">
+          <p class="ficha-disney__titulo">Primavera Sound Buenos Aires</p>
+          <p class="ficha-disney__vivo" data-cosa="0"><i aria-hidden="true"></i>En vivo</p>
+          <p class="ficha-disney__hora" data-cosa="1"><b>Sábado 28</b> desde las 14:30<br><b>Domingo 29</b> desde las 13:45</p>
+          <div class="ficha-disney__marca" data-cosa="2">
+            <svg class="disney-arco" viewBox="0 0 1041 565" role="img" aria-label="Disney+">
+              <defs>
+                <mask id="arco-trazo" maskUnits="userSpaceOnUse" x="0" y="-40" width="1041" height="400">
+                  <path d="M194 200.5C272 88 405 11.5 548.65 11.5C692 11.5 822 96 943.5 277.3" fill="none" stroke="#fff" stroke-width="54" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+                </mask>
+              </defs>
+              <use href="#disney-palabra" class="disney-arco__palabra"/>
+              <path class="disney-arco__arco" mask="url(#arco-trazo)" fill="url(#arco-disney-claro)" d="M955.3 273.9C922.8 194 867.9 125.9 796.5 76.9 723.4 26.8 637.7.3 548.7.3 401.5.3 264.9 73.4 183.4 195.9 182.5 197.2 182.3 198.9 182.8 200.4 183.3 202 184.5 203.1 186 203.6L197.4 207.5C198.1 207.7 198.8 207.8 199.4 207.8 201.5 207.8 203.5 206.7 204.7 205 242.1 150 292.7 104.3 351.1 72.7 411.4 40.1 479.7 22.8 548.6 22.8 631.9 22.8 712.2 47.4 781 93.8 848.1 139.1 900.2 202.4 931.7 276.7 932.6 278.9 934.8 280.4 937.2 280.4L950.8 280.4C952.4 280.4 953.9 279.6 954.7 278.3 955.7 277 955.9 275.4 955.3 273.9Z"/>
+            </svg>
+          </div>
+        </figcaption>
+      </figure>
+      <div class="ancla ancla--desafio" data-ancla="desafio"></div>
+    </section>
+
+    <section class="capa lineup" data-capa="lineup" aria-labelledby="t-lineup">
+      <div class="lineup__cartel panel">
+        <h2 id="t-lineup" class="lineup__titulo serif">Ocho creadores de BIG.</h2>
+        <!-- El line-up, como el del festival: más grande quien tiene más seguidores. Lo arma app.js desde datos.js -->
+        <div class="lineup__nombres"></div>
+      </div>
+      <figure class="ficha" aria-live="polite"></figure>
+      <div class="ancla ancla--lineup" data-ancla="lineup"></div>
+    </section>
+
+    <section class="capa campana" data-capa="campana" aria-labelledby="t-campana">
+      <div class="ancla ancla--resumen" data-ancla="resumen"></div>
+      <div class="resumen">
+        <h2 id="t-campana" class="titulo serif resumen__titulo" data-partir>Antes, durante y después de la transmisión.</h2>
+        <div class="resumen__etapas"></div>
+      </div>
+      <!-- El recorrido día por día: la etapa, la pieza (guion), el teléfono y el calendario. Lo arma app.js -->
+      <div class="recorre">
+        <div class="etapa"></div>
+        <div class="guion"></div>
+        <div class="chat" aria-live="polite"></div>
+        <div class="telefono" aria-hidden="true">
+          <div class="telefono__pantalla"><div class="telefono__cinta"></div></div>
+        </div>
+        <div class="calendario" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="capa distribucion" data-capa="distribucion" aria-labelledby="t-dist">
+      <h2 id="t-dist" class="titulo serif" data-partir>Dónde vive cada pieza.</h2>
+      <div class="ancla ancla--distribucion" data-ancla="distribucion"></div>
+      <div class="canales"></div>
+    </section>
+
+    <section class="capa inversion" data-capa="inversion" aria-labelledby="t-inv">
+      <div class="inversion__izq">
+        <h2 id="t-inv" class="titulo serif">Inversión total.</h2>
+        <p class="monto" aria-label="12.000 dólares"><span class="monto__moneda">US$</span><span class="monto__n">12.000</span><span class="ancla ancla--monto" data-ancla="inversion"></span></p>
+        <div class="panel inversion__panel">
+          <p>Más impuestos. Incluye talento, pauta en Meta, producción en el predio, edición del recap y reporte final.</p>
+          <p><b>No incluye:</b> pauta en TikTok, acreditaciones al festival y uso de imágenes de la transmisión, que quedan a cargo de Disney+.</p>
+        </div>
+      </div>
+      <div class="inversion__der">
+        <h3 class="inversion__sub serif">Entregables</h3>
+        <ul class="entregables"></ul>
+      </div>
+    </section>
+
+    <section class="capa pasos" data-capa="pasos" aria-labelledby="t-pasos">
+      <h2 id="t-pasos" class="titulo serif pasos__titulo" data-partir>El festival es en diez días. Arrancamos esta semana.</h2>
+      <div class="plan"></div>
+      <ul class="pasos__lista"></ul>
+    </section>
+
+    <section class="capa cierre" data-capa="cierre" aria-labelledby="t-cierre">
+      <div class="ancla ancla--cierre" data-ancla="cierre"></div>
+      <div class="cierre__caja">
+        <h2 id="t-cierre" class="serif cierre__titulo" data-partir>¿Hablamos?</h2>
+        <div class="lockup lockup--cierre" aria-label="BIG × Disney+ × Primavera Sound">
+          <svg class="logo logo--big" aria-hidden="true"><use href="#logo-big"/></svg><span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="logo logo--disney" aria-hidden="true"><use href="#logo-disney"/></svg><span class="lockup__x" aria-hidden="true">×</span>
+          <svg class="logo logo--ps" aria-hidden="true"><use href="#logo-ps"/></svg>
+        </div>
+        <a class="boton" data-correo href="mailto:contacto@bigagency.com.ar?subject=Disney%2B%20%C3%97%20Primavera%20Sound">
+          <span class="boton__circulo" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 14L14 6M7.5 6H14v6.5"/></svg></span>Escribir a BIG
+        </a>
+        <p class="cierre__pie">contacto@bigagency.com.ar</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- El recorrido: cada tramo es el largo de scroll de una escena (--largo en alturas de pantalla × 100).
+       data-capitulo es su nombre en el índice. Los links #desafio, #creadores, etc. van directo -->
+  <main class="recorrido">
+    <section class="tramo" id="inicio" data-tramo="portada" style="--largo:150"></section>
+    <section class="tramo" id="desafio" data-tramo="desafio" data-capitulo="El desafío" style="--largo:250"></section>
+    <section class="tramo" id="creadores" data-tramo="lineup" data-capitulo="Creadores" style="--largo:270"></section>
+    <section class="tramo" id="campana" data-tramo="campana" data-capitulo="Campaña" style="--largo:1060"></section>
+    <section class="tramo" id="distribucion" data-tramo="distribucion" data-capitulo="Distribución" style="--largo:190"></section>
+    <section class="tramo" id="inversion" data-tramo="inversion" data-capitulo="Inversión" style="--largo:190"></section>
+    <section class="tramo" id="pasos" data-tramo="pasos" data-capitulo="Próximos pasos" style="--largo:240"></section>
+    <section class="tramo" id="cierre" data-tramo="cierre" style="--largo:140"></section>
+  </main>
+</body>
+</html>
