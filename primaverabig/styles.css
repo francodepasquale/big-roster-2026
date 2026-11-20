@@ -1,11 +1,3 @@
-/* BIG × Disney+ × Primavera Sound
-   La identidad es la del Primavera Sound Buenos Aires '26: el degradé lila y rosa del afiche, la serif condensada de
-   los títulos, la grotesca del line-up y las cintas de la flor. Disney+ entra como la plataforma: su logo, su arco y la
-   noche azul de «En vivo».
-   Reglas del deck: sin etiquetas sobre los títulos, sin chips, sin numeración, sin divisores ni bordes. Los textos de
-   lectura van siempre en un soporte (.panel: blanco lleno, sin borde, esquinas redondeadas). Los títulos cortos y grandes
-   van sueltos. Sin cursivas ni espaciado negativo. */
-
 @font-face { font-family: 'Roboto Serif Cond'; src: url(assets/fonts/roboto-serif-condensada.woff2) format('woff2'); font-weight: 300 700; font-display: swap; }
 @font-face { font-family: 'Libre Franklin'; src: url(assets/fonts/libre-franklin.woff2) format('woff2'); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: 'DM Mono'; src: url(assets/fonts/dm-mono-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
@@ -13,9 +5,9 @@
 
 :root {
   --tinta: #221d27;
-  --tenue: #8b7c9b;          /* lo que todavía no pasó: líneas del guion, días del calendario */
+  --tenue: #8b7c9b;
   --papel: #ffffff;
-  --pista: rgba(255, 255, 255, .5); /* el riel de las cintas antes de llenarse */
+  --pista: rgba(255, 255, 255, .5);
   --lila: #cba5ee;
   --rosa: #f4dfee;
   --azul: #4d80e7; --celeste: #a9c5f7; --violeta: #7041d6; --lavanda: #c6adf5;
@@ -47,18 +39,11 @@ a { color: inherit; }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* Tipos: la serif condensada para títulos (como Tiempos en el afiche), Libre Franklin para todo lo demás
-   (como GT America) y DM Mono para fechas y cifras chicas (como GT America Mono) */
-/* el corte de titular (opsz 144) en todos los tamaños: es el que tiene las proporciones angostas del afiche */
 .serif { font-family: var(--serif); font-weight: 420; font-variation-settings: 'opsz' 144; letter-spacing: 0; }
 .titulo { font-size: clamp(40px, 5.2vw, 92px); line-height: .98; }
-/* las palabras de los títulos suben desde una máscara */
 .p { display: inline-block; overflow: hidden; vertical-align: top; padding: .02em .02em .14em; margin: -.02em -.02em -.14em; }
 .p__i { display: inline-block; will-change: transform; }
 
-/* El soporte de todo texto de lectura */
-/* Todos los recuadros son de vidrio líquido (como el de la portada): fondo desenfocado y saturado, canto de luz y
-   sombra suave. De noche, el mismo vidrio en el azul de Disney+ */
 :where(.panel, .vidrio, .calendario, .entregable, .etapa__detalle, .globo--creador .globo__t, .escribe, .ficha) {
   background: linear-gradient(160deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .26) 55%, rgba(255, 255, 255, .36));
   -webkit-backdrop-filter: blur(24px) saturate(1.8) brightness(1.05); backdrop-filter: blur(24px) saturate(1.8) brightness(1.05);
@@ -75,7 +60,6 @@ a { color: inherit; }
   transition: background-color .7s ease, color .7s ease;
 }
 
-/* ───────── fondo, flor, escenario ───────── */
 .fondo {
   position: fixed; inset: 0; z-index: 0;
   background: linear-gradient(180deg, var(--fondo-a, var(--lila)) 0%, var(--fondo-b, var(--rosa)) 62%);
@@ -88,15 +72,13 @@ a { color: inherit; }
 .escenario { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 .capa { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
 .capa.portada { visibility: visible; opacity: 1; }
-/* mientras carga, solo el cargador */
 .is-cargando .escenario, .is-cargando .tres, .is-cargando .barra, .is-cargando .isla-caja, .is-cargando .flor-plana { visibility: hidden; opacity: 0; }
 .capa a, .capa button, .capa .nombre { pointer-events: auto; }
-.recorrido { position: relative; z-index: 0; padding-bottom: 100vh; } /* la última pantalla: así se llega al final del cierre */
+.recorrido { position: relative; z-index: 0; padding-bottom: 100vh; }
 .tramo { height: calc(var(--largo) * 1vh); }
 .ancla { position: absolute; pointer-events: none; width: 2px; }
 .flor { display: block; width: 100%; height: 100%; overflow: visible; }
 
-/* ───────── cargador ───────── */
 .cargador { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; pointer-events: none; }
 .cargador > * { pointer-events: auto; }
 .cargador__flor { width: min(30vh, 54vw); aspect-ratio: 446 / 409; }
@@ -115,13 +97,11 @@ a { color: inherit; }
 .cargador__sonido:hover { transform: translateX(-50%) translateY(-2px); }
 .cargador__sonido.is-listo .ondas i { animation-play-state: running; }
 
-/* las ondas del botón de sonido */
 .ondas { display: inline-flex; align-items: center; gap: 2.5px; height: 14px; }
 .ondas i { width: 2.5px; height: 100%; border-radius: 2px; background: currentColor; transform: scaleY(.3); animation: onda 1.1s ease-in-out infinite; animation-play-state: paused; }
 .ondas i:nth-child(2) { animation-delay: -.3s; } .ondas i:nth-child(3) { animation-delay: -.6s; } .ondas i:nth-child(4) { animation-delay: -.15s; }
 @keyframes onda { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
 
-/* ───────── barra ───────── */
 .barra {
   position: fixed; z-index: 10; top: 0; left: 0; right: 0; height: var(--barra);
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; padding: 0 var(--m);
@@ -135,8 +115,6 @@ a { color: inherit; }
 .barra .logo--b { height: 26px; width: calc(26px * .8807); }
 .barra .logo--disney { height: 30px; width: calc(30px * 1.8425); margin-top: -4px; }
 .barra .logo--ps { height: 12px; width: calc(12px * 8.635); }
-/* La isla (el índice de siempre, como en Red Bull × Pelao Khe): arriba al centro, como la del iPhone. Cerrada es una
-   píldora con la flor, el capítulo y un anillo con su avance; al tocarla crece y muestra los capítulos */
 .isla-fondo { position: fixed; inset: 0; z-index: 11; background: rgba(20, 8, 40, .32); }
 .isla-caja { position: fixed; z-index: 12; left: 50%; top: calc((var(--barra) - 50px) / 2); translate: -50% -140%; visibility: hidden; transition: translate .8s var(--sale), visibility 0s .8s; }
 .con-isla .isla-caja { translate: -50% 0; visibility: visible; transition: translate .8s var(--sale), visibility 0s; }
@@ -170,7 +148,6 @@ a { color: inherit; }
 .sin-sonido .sonido .ondas i { animation: none; transform: scaleY(.25); }
 .sonido-bloqueado .sonido::after { content: ''; position: absolute; top: 3px; right: 3px; width: 9px; height: 9px; border-radius: 50%; background: var(--fucsia); }
 
-/* ───────── portada ───────── */
 .portada { --t: min(12.4vw, 20.5vh); }
 .portada__big { position: absolute; left: var(--m); top: 26px; }
 .portada__big { gap: .8em; }
@@ -178,12 +155,8 @@ a { color: inherit; }
 .portada__big .logo--disney { height: 44px; width: calc(44px * 1.8425); margin-top: -7px; }
 .portada__big .logo--ps { height: 17px; width: calc(17px * 8.635); }
 .portada__big .lockup__x { font-size: 19px; }
-/* el arco de Disney+ sobre la flor: luz que barre en la entrada y queda */
 .portada__arco { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-/* los creadores como historias de Instagram: el aro con los colores de la flor */
-/* los paneles grandes con mucho texto, un poco más opacos para leer bien sobre la flor */
 .lineup__cartel { background: linear-gradient(160deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .6) 55%, rgba(255, 255, 255, .7)); }
-/* las caras van a la derecha, debajo del arco de Disney+, siguiendo su curva (--y la pone app.js) */
 .portada__caras { position: absolute; left: 49vw; right: var(--m); top: 46vh; display: flex; justify-content: center; align-items: flex-start; }
 .portada__caras .cara { translate: 0 var(--y, 0px); }
 .cara { position: relative; width: clamp(56px, 6.2vw, 104px); aspect-ratio: 1; border-radius: 50%; padding: 3px; margin: 0 -5px;
@@ -206,8 +179,6 @@ a { color: inherit; }
 .ancla--portada { left: 50%; top: 47vh; height: 112vh; }
 .portada__pie { position: absolute; left: var(--m); right: var(--m); bottom: 6.5vh; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
 .portada__panel { max-width: 31em; }
-/* Vidrio líquido (estilo Apple): deja ver la flor y el fondo desenfocados y saturados, con el brillo del borde de
-   arriba, un reflejo que cruza en diagonal y una sombra suave. Sin borde dibujado: el canto es luz */
 .vidrio {
   position: relative; isolation: isolate; overflow: hidden; color: var(--tinta);
   padding: clamp(18px, 1.7vw, 28px); border-radius: 28px;
@@ -219,17 +190,16 @@ a { color: inherit; }
     inset 0 0 28px rgba(255, 255, 255, .28),
     0 24px 60px -24px rgba(70, 25, 120, .45), 0 6px 18px -8px rgba(70, 25, 120, .2);
 }
-.vidrio::before { /* el reflejo */
+.vidrio::before {
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
   background: linear-gradient(115deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, .22) 100%);
 }
-.vidrio::after { /* el brillo que se mueve con el puntero (--px, --py los pone app.js) */
+.vidrio::after {
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
   background: radial-gradient(60% 90% at var(--px, 20%) var(--py, 0%), rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 70%);
 }
 .vidrio .portada__datos p { background: rgba(255, 255, 255, .42); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8); }
 .portada__texto { font: 400 clamp(16px, 1.32vw, 21px)/1.4 var(--sans); }
-/* los datos, cada uno en su recuadro (como en la ficha de cada pieza), y la firma aparte, más chica */
 .portada__datos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
 .portada__datos p { display: grid; gap: 6px; padding: 12px 14px; border-radius: 14px; background: var(--rosa); font: 600 clamp(14px, 1.05vw, 17px)/1.25 var(--sans); }
 .portada__panel .portada__para { position: static; margin-top: 16px; font: 400 13px/1.3 var(--sans); color: var(--tenue); text-transform: none; letter-spacing: 0; }
@@ -243,22 +213,19 @@ a { color: inherit; }
 .portada__seguir i { display: none; width: 1.5px; height: 14px; background: currentColor; transform-origin: top; animation: seguir 2.2s var(--sale) infinite; }
 @keyframes seguir { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); transform-origin: top; } 46% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
-/* ───────── el desafío ───────── */
 .desafio__pregunta { position: absolute; left: var(--m); top: calc(var(--barra) + 8vh); width: max-content; max-width: calc(100vw - 2 * var(--m)); font-size: clamp(40px, 5.3vw, 96px); line-height: .97; }
 .desafio__panel { position: absolute; left: var(--m); top: 58vh; max-width: min(31em, 46vw); font: 400 clamp(16px, 1.32vw, 21px)/1.42 var(--sans); }
 .ancla--desafio { left: 79vw; top: 36vh; height: 50vh; }
-.desafio__tres {
-  position: absolute; left: var(--m); top: max(calc(var(--barra) + 8vh + clamp(42px, 6.1vw, 108px) * 2.1), 42vh); width: min(48vw, 15em);
-  font: 800 clamp(30px, 4.5vw, 78px)/1.06 var(--sans);
-}
-.cosa { --prendida: 0; display: block; color: color-mix(in srgb, var(--tinta) calc(var(--prendida) * 100%), var(--tenue)); }
+.desafio__tres { position: absolute; left: var(--m); top: max(calc(var(--barra) + 8vh + clamp(42px, 6.1vw, 108px) * 1.9), 38vh); width: min(50vw, 52em); }
+.desafio__bajada { margin: 0 0 .9em; font: 500 clamp(15px, 1.2vw, 19px)/1.35 var(--sans); color: var(--tinta); }
+.desafio__lista { margin: 0; padding: 0; list-style: none; font: 800 clamp(30px, 4.3vw, 74px)/1.08 var(--sans); }
+.cosa { --prendida: 0; display: flex; align-items: center; gap: .3em; color: color-mix(in srgb, var(--tinta) calc(var(--prendida) * 100%), var(--tenue)); }
+.cosa .num { flex: 0 0 auto; display: grid; place-items: center; width: 2.1em; height: 2.1em; border-radius: 50%; border: 2px solid currentColor; font: 500 .3em/1 var(--mono); translate: 0 .1em; }
 .ficha-disney {
-  position: absolute; right: var(--m); top: calc(var(--barra) + 5vh); width: min(39vw, 600px);
+  position: absolute; right: var(--m); top: calc(var(--barra) + 4vh); width: min(39vw, 600px, max(300px, calc((100vh - var(--barra) - 8vh - 300px) * 1.5)));
   border-radius: 26px; overflow: hidden; display: flex; flex-direction: column; color: #fff;
 }
-/* el arte es una ventana: deja ver el afiche (el fondo y la flor 3D). El resto de la ficha es el azul de Disney+ */
 .ficha-disney__arte { position: relative; flex: 0 0 auto; aspect-ratio: 16 / 10.5; margin: 12px 12px 0; border-radius: 16px; box-shadow: 0 0 0 40px var(--noche); container-type: size; }
-/* la flor entra entera en la ventana, sea apaisada o vertical */
 .ficha-disney__arte .ancla { left: 50%; top: 50%; height: min(82cqh, 72cqw); transform: translateY(-50%); }
 .ficha-disney__info {
   position: relative; flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 22px 26px 26px;
@@ -270,10 +237,11 @@ a { color: inherit; }
 @keyframes latido { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 107, .55); } 100% { box-shadow: 0 0 0 12px rgba(255, 59, 107, 0); } }
 .ficha-disney__hora { font: 400 clamp(15px, 1.15vw, 18px)/1.5 var(--sans); }
 .ficha-disney__hora b { font-weight: 700; }
-.ficha-disney__marca { margin-top: 10px; }
+.ficha-disney__fila { display: flex; align-items: center; gap: 12px; }
+.ficha-disney__fila .num { flex: 0 0 auto; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, .6); font: 500 11px/1 var(--mono); color: #fff; }
+.ficha-disney__marca { margin-top: 6px; }
 .disney-arco { display: block; width: clamp(120px, 11vw, 170px); height: auto; color: #fff; fill: #fff; overflow: visible; }
 
-/* ───────── line-up ───────── */
 .lineup__cartel {
   position: absolute; left: var(--m); top: calc(var(--barra) + 3vh); bottom: 6vh; width: calc(100vw - 2 * var(--m) - min(26vw, 400px) - 18px);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4.4vh; padding: 3vh 3vw;
@@ -301,7 +269,6 @@ a { color: inherit; }
 .ficha__dato b { font-weight: 500; }
 .ancla--lineup { left: 36vw; top: -6vh; height: 116vh; }
 
-/* ───────── la campaña: resumen ───────── */
 .ancla--resumen { right: calc(var(--m) + 7vh); top: calc(var(--barra) + 2vh); height: 15vh; }
 .resumen { position: absolute; left: var(--m); right: var(--m); top: calc(var(--barra) + 2vh); bottom: 5vh; display: flex; flex-direction: column; justify-content: center; gap: 5.5vh; }
 .resumen__titulo { width: min(70vw, 13em); }
@@ -310,7 +277,6 @@ a { color: inherit; }
 .etapa-r__nombre { font-size: clamp(36px, 4.4vw, 78px); line-height: .92; }
 .etapa-r__fechas { font: 500 12px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .etapa-r__texto { font: 400 clamp(15px, 1.3vw, 21px)/1.4 var(--sans); }
-/* lo que entrega cada etapa: mazos de cartas en abanico, alineados abajo en las tres tarjetas */
 .entrega { margin-top: auto; display: grid; gap: 12px; padding-top: 6px; }
 .entrega__mesa { display: flex; align-items: flex-end; gap: 10px; height: 104px; }
 .entrega__mas { align-self: center; margin-bottom: 18px; font: 300 22px/1 var(--sans); color: var(--tenue); }
@@ -334,16 +300,13 @@ a { color: inherit; }
 .mini-cal i b { font-weight: 500; }
 .mini-cal i.si { background: linear-gradient(90deg, var(--a), var(--b)); color: #fff; transform-origin: left; }
 
-/* ───────── la campaña: el recorrido día por día ───────── */
 .recorre { position: absolute; inset: 0; }
-/* tres columnas: a la izquierda la etapa y la ficha de la pieza, al centro el teléfono, a la derecha el chat */
 .recorre { --th: calc(100vh - var(--barra) - 1vh - 24vh); --tw: calc(var(--th) * 9 / 19.2); --col: calc((100vw - 2 * var(--m) - var(--tw)) / 2 - 3vw); }
 .etapa { position: absolute; left: var(--m); top: calc(var(--barra) + 2vh); width: var(--col); height: 23vh; }
 .etapa__item { position: absolute; left: 0; top: 0; width: 100%; }
 .etapa__nombre { font-size: clamp(46px, 6.2vw, 110px); line-height: .9; }
 .etapa__detalle { display: inline-block; margin-top: 14px; padding: 12px 16px; border-radius: 14px; font: 400 clamp(14px, 1.08vw, 17px)/1.4 var(--sans); max-width: 34em; transition: background-color .7s ease, color .7s ease; }
 .etapa__detalle b { font-weight: 700; }
-/* la ficha de la pieza: quiénes, título, y formato y fecha cada uno en su renglón */
 .guion { position: absolute; left: var(--m); top: calc(var(--barra) + 2vh + 23vh + 2vh); width: var(--col); }
 .guion__pieza { position: absolute; left: 0; top: 0; width: 100%; display: grid; gap: 16px; }
 .guion__quien { display: flex; align-items: center; gap: 12px; font: 700 clamp(14px, 1.1vw, 17px)/1.2 var(--sans); }
@@ -354,7 +317,6 @@ a { color: inherit; }
 .guion__datos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .guion__datos p { display: grid; gap: 6px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, .42); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8); font: 600 clamp(13.5px, 1vw, 16px)/1.3 var(--sans); transition: background-color .7s ease; }
 
-/* el guion como chat: el creador habla en su globo; lo que pasa en el video lo cuenta BIG */
 .av-c { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: #ddd; }
 .av-c img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
 .av-c--big { background: #33419a; }
@@ -375,7 +337,6 @@ a { color: inherit; }
 .escribe i:nth-child(2) { animation-delay: .15s; } .escribe i:nth-child(3) { animation-delay: .3s; }
 @keyframes escribe { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
 
-/* el teléfono: un solo vertical, al centro; los videos pasan en el mismo lugar */
 .telefono {
   --th: inherit;
   position: absolute; left: calc(50vw - var(--tw) / 2); top: calc(var(--barra) + 1vh); height: var(--th); aspect-ratio: 9 / 19.2;
@@ -388,14 +349,13 @@ a { color: inherit; }
 .reel { --f: 0; position: absolute; left: 0; right: 0; top: calc(var(--i) * 100%); height: 100%; overflow: hidden; color: #fff; font-size: calc(var(--th) * .026); }
 .reel__video { position: absolute; inset: 0; background: #222; }
 .reel__video video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
-.reel__video--doble { display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); gap: 3px; background: #000; }
-.reel__video--doble video { min-height: 0; }
-.reel__video--recap video { position: absolute; inset: 0; opacity: 0; }
-.reel__video--recap video.is-ve { opacity: 1; }
+.reel__video--placa { overflow: hidden; background: radial-gradient(90% 60% at 50% 30%, #2a3a9a, var(--noche)); }
+.reel__video--placa img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; transform-origin: 50% 30%; animation: placa 14s ease-in-out infinite alternate; }
+@keyframes placa { from { transform: scale(1.04); } to { transform: scale(1.16) translateY(-2%); } }
 .reel__sombra { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, .62)); }
 .reel__texto {
   position: absolute; left: 9%; right: 9%; top: 20%; text-align: center; line-height: 1.52;
-  opacity: calc(clamp(0, (var(--f) - .01) * 16, 1) * clamp(0, (.4 - var(--f)) * 14, 1));
+  opacity: calc(clamp(0, (var(--f) - .01) * 16, 1) * clamp(0, (.97 - var(--f)) * 14, 1));
   transform: translateY(calc((1 - clamp(0, (var(--f) - .01) * 12, 1)) * 14px)) scale(calc(.94 + clamp(0, (var(--f) - .01) * 12, 1) * .06));
 }
 .reel__texto span { background: #fff; color: #111; font: 700 1.08em/1.52 var(--sans); padding: .22em .5em; border-radius: .4em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
@@ -409,36 +369,8 @@ a { color: inherit; }
 .reel__quien { font: 400 .92em/1.3 var(--sans); }
 .reel__quien b { font-weight: 700; }
 .reel__quien small { display: block; font-size: .86em; }
-.reel__fin {
-  position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.4em; padding: 12%; text-align: center;
-  background: radial-gradient(120% 80% at 50% 0%, #1b2f86, var(--noche) 70%);
-  opacity: clamp(0, (var(--f) - .7) * 9, 1);
-}
-.reel__disney { width: 62%; aspect-ratio: 1041 / 565; fill: #fff; transform: translateY(calc((1 - clamp(0, (var(--f) - .7) * 7, 1)) * 18px)); }
-.reel__fin p { font: 400 1.5em/1.25 var(--serif); font-variation-settings: 'opsz' 60; }
-.reel__flor { width: 18%; height: auto; }
 .reel__barra { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; height: 3px; background: rgba(255, 255, 255, .28); }
 .reel__barra i { display: block; height: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--f)); }
-/* la historia de Morena: barras de arriba, quién y el link a la transmisión */
-.historia__barras { position: absolute; z-index: 3; left: 4%; right: 4%; top: 6.5%; display: flex; gap: 4px; }
-.historia__barras i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .35); overflow: hidden; }
-.historia__barras b { display: block; height: 100%; background: #fff; transform-origin: left; }
-.historia__barras i:nth-child(1) b { transform: scaleX(clamp(0, var(--f) * 4, 1)); }
-.historia__barras i:nth-child(2) b { transform: scaleX(clamp(0, var(--f) * 4 - 1, 1)); }
-.historia__barras i:nth-child(3) b { transform: scaleX(clamp(0, var(--f) * 4 - 2, 1)); }
-.historia__barras i:nth-child(4) b { transform: scaleX(clamp(0, var(--f) * 4 - 3, 1)); }
-.historia__quien { position: absolute; z-index: 3; left: 4%; top: 9.5%; display: flex; align-items: center; gap: .6em; font: 400 .9em/1 var(--sans); }
-.historia__quien b { font-weight: 700; }
-.historia__quien .reel__avatar { width: 2.2em; height: 2.2em; }
-.historia__link {
-  position: absolute; z-index: 3; left: 50%; bottom: 17%; transform: translateX(-50%) rotate(-3deg) scale(calc(.8 + clamp(0, var(--f) * 5, 1) * .2));
-  display: flex; align-items: center; gap: .5em; padding: .7em 1em; border-radius: .9em; background: #fff; color: #111; font: 700 1em/1 var(--sans); white-space: nowrap;
-  opacity: clamp(0, var(--f) * 6, 1);
-}
-.historia__cadena { width: 1.3em; height: 1.3em; fill: none; stroke: var(--violeta); stroke-width: 2.2; stroke-linecap: round; }
-.historia__disney { width: 3.4em; height: 1.85em; fill: var(--disney); }
-
-/* el calendario: 14 días, del 22 de noviembre al 5 de diciembre */
 .calendario {
   --dia: -1;
   position: absolute; left: var(--m); right: var(--m); bottom: 3.2vh; padding: 14px 18px 12px; border-radius: var(--radio);
@@ -454,14 +386,12 @@ a { color: inherit; }
 .dia.is-hoy .dia__n { color: var(--tinta); font-weight: 800; transform: scale(1.18); }
 .dia.is-hoy .dia__sem { color: var(--tinta); }
 .cinta {
-  /* se llena desde --t0 hasta --t1 (en días): la de En vivo recién al llegar al 28, y entera en las dos jornadas */
   --llena: clamp(0, calc((var(--dia) - var(--t0)) / (var(--t1) - var(--t0))), 1);
   position: relative; height: 24px; margin: 0 3px; border-radius: 12px; overflow: hidden; background: var(--pista);
 }
 .cinta i { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, var(--a), var(--b)); transform-origin: left; transform: scaleX(var(--llena)); }
 .cinta span { position: relative; display: block; padding: 0 12px; font: 700 11px/24px var(--sans); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* ───────── distribución ───────── */
 .distribucion .titulo { position: absolute; left: var(--m); top: calc(var(--barra) + 4vh); }
 .ancla--distribucion { right: calc(var(--m) + 6vh); top: calc(var(--barra) + 2vh); height: 13vh; }
 .canales { position: absolute; left: var(--m); right: var(--m); top: calc(var(--barra) + 4vh + clamp(40px, 5.2vw, 92px) * 1.55); display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch; gap: 16px; }
@@ -497,9 +427,10 @@ a { color: inherit; }
 .ventana i { height: 30px; border-radius: 7px; display: grid; place-items: center; font: 500 10px/1 var(--mono); font-style: normal; color: var(--tenue); background: #fff; transform-origin: bottom; }
 .ventana i.si { background: linear-gradient(180deg, var(--celeste), var(--azul)); color: #fff; }
 .abanico { position: relative; height: 74%; aspect-ratio: 1; }
-.abanico img { position: absolute; left: 50%; bottom: 0; height: 84%; aspect-ratio: 9 / 16; margin-left: calc(88% * -9 / 32); object-fit: cover; object-position: 50% 20%; border-radius: 9px; box-shadow: 0 0 0 2px var(--rosa); transform-origin: 50% 120%; }
+.abanico > * { position: absolute; left: 50%; bottom: 0; height: 84%; aspect-ratio: 9 / 16; margin-left: calc(88% * -9 / 32); object-fit: cover; object-position: 50% 20%; border-radius: 9px; box-shadow: 0 0 0 2px var(--rosa); transform-origin: 50% 120%; }
+.abanico__recap { display: grid; place-items: center; background: #33419a; }
+.abanico__recap .av-c { width: 70%; height: auto; aspect-ratio: 1; background: none; }
 
-/* ───────── inversión ───────── */
 .inversion__izq, .inversion__der { position: absolute; top: var(--barra); bottom: 2vh; display: flex; flex-direction: column; justify-content: center; }
 .inversion__izq { left: var(--m); width: 46vw; }
 .monto { display: flex; align-items: flex-start; margin: 3.4vh 0 3.4vh; font: 900 clamp(64px, 8.6vw, 156px)/.86 var(--sans); white-space: nowrap; }
@@ -522,7 +453,6 @@ a { color: inherit; }
 .entregable__t { font: 500 clamp(15px, 1.22vw, 19px)/1.3 var(--sans); }
 .entregable__n { font: 900 clamp(26px, 2.6vw, 46px)/1 var(--sans); font-variant-numeric: tabular-nums; }
 
-/* ───────── próximos pasos ───────── */
 .pasos__titulo { position: absolute; left: var(--m); top: calc(var(--barra) + 4vh); width: min(74vw, 15em); }
 .plan { --v: 0; position: absolute; left: var(--m); right: var(--m); top: 47vh; height: 18vh; }
 .plan__linea { position: absolute; left: 0; right: 0; top: 0; height: 12px; border-radius: 6px; background: rgba(255, 255, 255, .7); overflow: hidden; }
@@ -535,13 +465,11 @@ a { color: inherit; }
 .hito__cuando { margin-top: 6px; font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .hito__texto { font: 400 clamp(14px, 1.12vw, 18px)/1.35 var(--sans); color: var(--tenue); transition: color .4s ease; }
 .hito.is-paso .hito__texto { color: var(--tinta); }
-/* cada paso en su tarjeta: de qué se trata y el texto de la propuesta */
 .pasos__lista { position: absolute; left: var(--m); right: var(--m); bottom: 6vh; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .paso { display: flex; flex-direction: column; gap: 10px; }
 .paso__titulo { font: 800 clamp(18px, 1.5vw, 25px)/1.1 var(--sans); }
 .paso__texto { font: 400 clamp(14.5px, 1.12vw, 18px)/1.42 var(--sans); }
 
-/* ───────── cierre ───────── */
 .ancla--cierre { left: 50%; top: 9vh; height: 44vh; }
 .cierre__caja { position: absolute; left: 0; right: 0; bottom: 7vh; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; }
 .cierre__titulo { font-size: clamp(64px, 9.6vw, 170px); line-height: .9; }
@@ -560,7 +488,6 @@ a { color: inherit; }
 .boton:hover .boton__circulo svg { transform: translate(2px, -2px); }
 .cierre__pie { font: 500 12px/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 
-/* ───────── la noche de «En vivo» (el azul de Disney+) ───────── */
 .es-noche { color: #fff; }
 .es-noche .barra, .es-noche .lockup { color: #fff; }
 .es-noche .isla { background: var(--panel-noche); }
@@ -577,7 +504,6 @@ a { color: inherit; }
 .es-noche .dia.is-paso .dia__n, .es-noche .dia.is-paso .dia__sem, .es-noche .dia.is-hoy .dia__n, .es-noche .dia.is-hoy .dia__sem, .es-noche .guion__lineas li.is-ahora { color: #fff; }
 .es-noche .barra .logo--disney use { fill: #fff; }
 
-/* ───────── teléfono (pantallas angostas) ───────── */
 @media (max-width: 760px) {
   :root { --barra: 56px; --radio: 18px; }
   .barra { grid-template-columns: auto 1fr auto; gap: 10px; }
@@ -619,9 +545,13 @@ a { color: inherit; }
   .desafio__pregunta { top: calc(var(--barra) + 4vh); font-size: 8.4vw; }
   .desafio__panel { top: auto; bottom: 7vh; max-width: none; right: var(--m); font-size: 16px; }
   .ancla--desafio { left: 50vw; top: 41vh; height: 26vh; }
-  .desafio__tres { top: calc(var(--barra) + 4vh + 8.4vw * 3.6); width: calc(100vw - 2 * var(--m)); font-size: 7.6vw; }
-  .ficha-disney { left: var(--m); width: auto; top: auto; height: 42vh; bottom: 4vh; flex-direction: row; }
-  .ficha-disney__arte { aspect-ratio: auto; width: 42%; margin: 10px 0 10px 10px; }
+  .desafio__tres { top: calc(var(--barra) + 4vh + 8.4vw * 3.3); width: calc(100vw - 2 * var(--m)); }
+  .desafio__bajada { font-size: 14px; margin-bottom: .6em; }
+  .desafio__lista { font-size: 7.4vw; }
+  .ficha-disney { left: var(--m); width: auto; top: auto; height: auto; bottom: 3vh; flex-direction: row; }
+  .ficha-disney__arte { aspect-ratio: auto; width: 38%; margin: 10px 0 10px 10px; }
+  .ficha-disney__fila { gap: 9px; }
+  .ficha-disney__fila .num { width: 19px; height: 19px; font-size: 10px; }
   .ficha-disney__info { gap: 10px; padding: 16px; }
   .ficha-disney__titulo { font-size: 17px; }
   .ficha-disney__hora { font-size: 13px; }
@@ -629,7 +559,6 @@ a { color: inherit; }
 
   .lineup__cartel { right: var(--m); width: auto; bottom: 34vh; padding: 3vh 4vw; gap: 2.2vh; }
   .lineup__titulo { font-size: 9vw; }
-  /* en el teléfono, un nombre por línea: el line-up baja como una columna */
   .lineup__nombres { gap: .6vh; }
   .lineup__fila { width: auto; white-space: normal; }
   .nombre { display: block; }
@@ -664,7 +593,6 @@ a { color: inherit; }
   .etapa { top: calc(var(--barra) + 1vh); width: calc(100vw - 2 * var(--m)); height: 8vh; }
   .etapa__nombre { font-size: 9vw; }
   .etapa__detalle { display: none; }
-  /* en el teléfono: el video arriba, el título y el chat debajo */
   .recorre { --th: 33vh; --col: calc(100vw - 2 * var(--m)); }
   .telefono { top: calc(var(--barra) + 6.5vh); }
   .guion { top: calc(var(--barra) + 6.5vh + 33vh + 1.2vh); }
@@ -703,7 +631,6 @@ a { color: inherit; }
   .inversion__izq, .inversion__der { bottom: auto; display: block; }
   .inversion__izq { width: auto; right: var(--m); top: calc(var(--barra) + 3vh); }
   .monto { position: relative; font-size: 17.5vw; margin: 1.6vh 0; }
-  /* la flor va arriba del monto, a la derecha (al lado del número se salía de la pantalla) */
   .ancla--monto { position: absolute; right: 0; top: -1.15em; width: .7em; height: .62em; margin: 0; }
   .inversion__panel { font-size: 13.5px; gap: 8px; }
   .inversion__der { left: var(--m); right: var(--m); width: auto; top: auto; bottom: 2.5vh; }

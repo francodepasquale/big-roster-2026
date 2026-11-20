@@ -1,16 +1,9 @@
-// La flor de Primavera Sound Buenos Aires '26: seis pétalos de cinta entrelazados. Sale de flor-datos.js (la traza
-// exacta del logo oficial) y se arma de dos maneras:
-//   · svgFlor(): el logo plano a color, con los degradés del afiche. Con { dibujo: true } trae una máscara por tramo
-//     para dibujarse cinta por cinta (dibujar(svg, p), p de 0 a 1). Es el cargador y la flor chica de la portada.
-//   · flor3D(THREE): el logo en volumen. Cada tramo es una cinta extruida con canto redondeado; donde una cinta pasa por
-//     debajo de otra, se hunde, y la de arriba se levanta (la trama). Cada pétalo gira sobre su bisagra para abrirse.
 import { FLOR } from './flor-datos.js';
 
 export { FLOR };
 const MARGEN = 6;
 let cuenta = 0;
 
-/** Color de cada pétalo en sus dos puntas: { azul: ['#4d80e7', '#a9c5f7'], … } */
 export const COLORES = Object.fromEntries(FLOR.petalos.map(p => [p.id, [p.grad[0][2], p.grad[1][2]]]));
 
 const caja = () => {
@@ -18,7 +11,6 @@ const caja = () => {
   return [x0 - MARGEN, y0 - MARGEN, x1 - x0 + 2 * MARGEN, y1 - y0 + 2 * MARGEN];
 };
 
-/** El logo plano a color (string SVG). dibujo: agrega las máscaras para dibujarlo; mono: un solo color (currentColor) */
 export function svgFlor({ dibujo = false, mono = false, clase = '', titulo = '' } = {}) {
   const id = 'flor' + (++cuenta);
   const [vx, vy, vw, vh] = caja();
@@ -41,7 +33,6 @@ export function svgFlor({ dibujo = false, mono = false, clase = '', titulo = '' 
   return `<svg class="flor ${clase}" viewBox="${vx} ${vy} ${vw} ${vh}" ${rotulo}><defs>${defs}</defs>${cuerpo}</svg>`;
 }
 
-// El orden del dibujo: pétalo por pétalo, cada uno recorre sus dos tramos como un lazo
 const ORDEN = (() => {
   const lista = [];
   FLOR.petalos.forEach((p, k) => {
@@ -51,11 +42,9 @@ const ORDEN = (() => {
     lista.push({ i: p.piezas[0], desde: t0, hasta: t0 + dur * largos[0] / total });
     lista.push({ i: p.piezas[1], desde: t0 + dur * largos[0] / total, hasta: t0 + dur });
   });
-  // el pedacito rosa (6) se dibuja con su pétalo
   return lista;
 })();
 
-/** Dibuja la flor hasta p (0 a 1). La flor tiene que venir de svgFlor({ dibujo: true }) */
 export function dibujar(svg, p) {
   const fin = ORDEN.reduce((m, o) => Math.max(m, o.hasta), 0);
   for (const o of ORDEN) {
@@ -65,22 +54,19 @@ export function dibujar(svg, p) {
   }
 }
 
-/* ───────────────────────────── 3D ───────────────────────────── */
-
-// Medidas en unidades de la escena: la flor mide 1 de alto
 const K = 1 / (FLOR.caja[3] - FLOR.caja[1]);
 const CX = (FLOR.caja[0] + FLOR.caja[2]) / 2, CY = (FLOR.caja[1] + FLOR.caja[3]) / 2;
 const A3 = (x, y) => [(x - CX) * K, -(y - CY) * K];
 const ANCHO = FLOR.ancho * K;
-export const PROPORCION = (FLOR.caja[2] - FLOR.caja[0]) / (FLOR.caja[3] - FLOR.caja[1]); // ancho / alto
+export const PROPORCION = (FLOR.caja[2] - FLOR.caja[0]) / (FLOR.caja[3] - FLOR.caja[1]);
 
 const CINTA = {
-  grosor: ANCHO * .44,   // espesor de la cinta
-  canto: ANCHO * .17,    // redondeo del borde
-  hundir: ANCHO * .9,    // cuánto baja una cinta donde pasa por debajo
-  subir: ANCHO * .38,    // cuánto sube la que pasa por arriba
-  radio: ANCHO * 2.1,    // qué tan largo es ese desnivel
-  cerrada: 1.32,         // giro de cada pétalo con la flor cerrada (radianes)
+  grosor: ANCHO * .44,
+  canto: ANCHO * .17,
+  hundir: ANCHO * .9,
+  subir: ANCHO * .38,
+  radio: ANCHO * 2.1,
+  cerrada: 1.32,
 };
 
 function forma(THREE, d) {
@@ -95,8 +81,6 @@ function forma(THREE, d) {
   return s;
 }
 
-// Une los vértices repetidos (ExtrudeGeometry los duplica por cara) para que las normales del canto salgan suaves.
-// Las tapas (los triángulos a la altura máxima, frente y dorso) quedan aparte: devuelve sus vértices con su signo
 function soldar(THREE, geo, zMax) {
   const pos = geo.getAttribute('position');
   const mapa = new Map(), nuevos = [], indice = [], tapa = new Map();
@@ -120,16 +104,12 @@ function soldar(THREE, geo, zMax) {
   return { geo: g, tapa: [...tapa.entries()] };
 }
 
-/**
- * Arma la flor 3D. Devuelve { grupo, material, uniformes, abrir(v), petalos }.
- * abrir(1) = el logo tal cual; abrir(0) = pimpollo (los pétalos levantados hacia la cámara).
- */
 export function flor3D(THREE) {
   const uniformes = {
-    uBrillo: { value: 0 },                       // luz propia de las cintas (la noche de En vivo)
-    uFade: { value: 0 },                         // cuánto se funde con el fondo hacia abajo de la pantalla (afiche)
-    uFadeDesde: { value: .62 },                  // desde qué altura de la pantalla (0 arriba, 1 abajo)
-    uFondoA: { value: new THREE.Color(0xc8a2ec) },// el degradé del fondo, para fundirse con él
+    uBrillo: { value: 0 },
+    uFade: { value: 0 },
+    uFadeDesde: { value: .62 },
+    uFondoA: { value: new THREE.Color(0xc8a2ec) },
     uFondoB: { value: new THREE.Color(0xf3dded) },
     uRes: { value: new THREE.Vector2(1, 1) },
   };
@@ -154,13 +134,12 @@ export function flor3D(THREE) {
   const color = new THREE.Color(), ca = new THREE.Color(), cb = new THREE.Color();
   const petalos = FLOR.petalos.map((p, k) => {
     const [bx, by] = A3(...p.bisagra);
-    const dir = new THREE.Vector2(p.eje[0], -p.eje[1]).normalize();   // de la punta hacia el centro
-    const eje = new THREE.Vector3(-dir.y, dir.x, 0);                   // la bisagra
+    const dir = new THREE.Vector2(p.eje[0], -p.eje[1]).normalize();
+    const eje = new THREE.Vector3(-dir.y, dir.x, 0);
     const g = new THREE.Group();
     g.position.set(bx, by, 0);
     g.userData = { eje, k };
     grupo.add(g);
-    // degradé del pétalo
     const [[ax, ay, cA], [bx2, by2, cB]] = p.grad;
     ca.set(cA); cb.set(cB);
     const gx = bx2 - ax, gy = by2 - ay, gl2 = gx * gx + gy * gy;
@@ -176,9 +155,8 @@ export function flor3D(THREE) {
       const pos = geo.getAttribute('position');
       const cols = new Float32Array(pos.count * 3);
       const abajo = FLOR.cruces.filter(c => c.abajo === i), arriba = FLOR.cruces.filter(c => c.arriba === i);
-      // la trama: se hunde junto a sus cortes y se levanta donde pasa por encima de otra
       const desnivel = (x, y) => {
-        const px = x / K + CX, py = -y / K + CY;           // de vuelta a píxeles del logo
+        const px = x / K + CX, py = -y / K + CY;
         let dz = i === 6 ? -CINTA.hundir * .7 : 0;
         for (const c of abajo) { const d = Math.hypot(px - c.en[0], py - c.en[1]) * K; dz -= CINTA.hundir * Math.exp(-((d / CINTA.radio) ** 2)); }
         for (const c of arriba) { const d = Math.hypot(px - c.sobre[0], py - c.sobre[1]) * K; dz += CINTA.subir * Math.exp(-((d / CINTA.radio) ** 2)); }
@@ -194,8 +172,6 @@ export function flor3D(THREE) {
       }
       geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
       geo.computeVertexNormals();
-      // las tapas (frente y dorso) son triángulos largos y finos: sus normales se calculan con la pendiente de la
-      // trama, así no aparecen reflejos en diagonal
       const nor = geo.getAttribute('normal'), e = ANCHO * .05;
       for (const [v, signo] of tapa) {
         const x = pos.getX(v), y = pos.getY(v);
@@ -212,7 +188,6 @@ export function flor3D(THREE) {
     return g;
   });
 
-  /** v = 1: abierta (el logo); v = 0: pimpollo. desfase: los pétalos de abajo se abren un poco después */
   function abrir(v, t = 0) {
     for (const g of petalos) {
       const { eje, k } = g.userData;

@@ -1,9 +1,6 @@
-// La escena 3D: una sola flor de cintas que acompaña todo el deck. app.js le dice dónde estar en la pantalla (en
-// píxeles: centro y alto), cómo girar, cuánto abrirse y cuánto brillar; acá se convierte eso a la cámara.
-// El canvas es transparente: el fondo (el degradé del afiche) es CSS, y la flor se funde con él hacia abajo.
 import * as THREE from 'three';
 import { RoomEnvironment } from './assets/vendor/RoomEnvironment.js';
-import { flor3D } from './flor.js';
+import { flor3D } from './flor.js?v=20261120';
 
 const FOV = 24, DIST = 10;
 
@@ -31,7 +28,6 @@ export function crearEscena(canvas) {
   const camara = new THREE.PerspectiveCamera(FOV, 1, .1, 60);
   camara.position.set(0, 0, DIST);
 
-  // luz principal desde arriba a la izquierda: arma la sombra sobre una pared invisible detrás de la flor
   const luz = new THREE.DirectionalLight(0xffffff, 1.35);
   luz.castShadow = true;
   luz.shadow.mapSize.set(movil ? 1024 : 2048, movil ? 1024 : 2048);
@@ -44,13 +40,12 @@ export function crearEscena(canvas) {
   escena.add(new THREE.HemisphereLight(0xffffff, 0xcaa3ea, .55));
 
   const flor = flor3D(THREE);
-  const soporte = new THREE.Group();   // dónde está y qué tamaño tiene
-  const giro = new THREE.Group();      // cómo está girada
+  const soporte = new THREE.Group();
+  const giro = new THREE.Group();
   giro.add(flor.grupo);
   soporte.add(giro);
   escena.add(soporte);
 
-  // la pared que recibe la sombra (no se ve: solo la sombra). Se funde con el fondo igual que la flor
   const sombraMat = new THREE.ShadowMaterial({ color: 0x3b1c63, opacity: .13 });
   sombraMat.onBeforeCompile = sh => {
     Object.assign(sh.uniforms, flor.uniformes);
@@ -64,12 +59,11 @@ export function crearEscena(canvas) {
   pared.receiveShadow = true;
   escena.add(pared);
 
-  // lo que pide app.js
   const estado = {
-    x: innerWidth / 2, y: innerHeight / 2, h: innerHeight * .5, // centro y alto, en px de la pantalla
-    rx: 0, ry: 0, rz: 0,                                         // giro (radianes)
+    x: innerWidth / 2, y: innerHeight / 2, h: innerHeight * .5,
+    rx: 0, ry: 0, rz: 0,
     abre: 1, brillo: 0, fade: 0, fadeDesde: .62, sombra: 1, visible: true,
-    puntero: 1,                                                  // cuánto sigue al puntero
+    puntero: 1,
   };
   const puntero = { x: 0, y: 0, sx: 0, sy: 0 };
   addEventListener('pointermove', e => { puntero.x = e.clientX / innerWidth * 2 - 1; puntero.y = e.clientY / innerHeight * 2 - 1; }, { passive: true });
@@ -88,10 +82,9 @@ export function crearEscena(canvas) {
   const altoVisible = () => 2 * DIST * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 
   function render(t) {
-    const s = altoVisible() / H; // unidades por píxel
+    const s = altoVisible() / H;
     const e = estado;
     soporte.visible = e.visible && e.h > 2;
-    // el puntero, suavizado
     puntero.sx += (puntero.x - puntero.sx) * .06;
     puntero.sy += (puntero.y - puntero.sy) * .06;
     const escala = e.h * s;
@@ -106,7 +99,6 @@ export function crearEscena(canvas) {
     flor.uniformes.uBrillo.value = e.brillo;
     flor.uniformes.uFade.value = e.fade;
     flor.uniformes.uFadeDesde.value = e.fadeDesde;
-    // la luz y la pared siguen a la flor
     const p = soporte.position;
     pared.position.set(p.x, p.y, p.z - escala * .3);
     pared.scale.setScalar(escala * 5);
@@ -121,7 +113,6 @@ export function crearEscena(canvas) {
     renderer.render(escena, camara);
   }
 
-  /** El degradé del fondo (en CSS) para que la flor se funda con él */
   function fondo(a, b) {
     flor.uniformes.uFondoA.value.set(a).convertLinearToSRGB();
     flor.uniformes.uFondoB.value.set(b).convertLinearToSRGB();
