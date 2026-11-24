@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from './assets/vendor/RoomEnvironment.js';
-import { flor3D } from './flor.js?v=20261124c';
+import { flor3D } from './flor.js?v=20261124d';
 
 const FOV = 24, DIST = 10;
 
