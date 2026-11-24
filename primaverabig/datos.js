@@ -10,35 +10,32 @@ export const CREADORES = {
 
 export const ETAPAS = [
   {
-    id: 'previa', nombre: 'Previa', fechas: '24 al 27 de noviembre', desde: 2, hasta: 5, color: 'naranja',
+    id: 'previa', nombre: 'Previa', fechas: '26 y 27 de noviembre', desde: 4, hasta: 5, color: 'naranja',
     resumen: 'Avisamos que el Primavera se ve en Disney+, con días y horarios.',
     cartas: [['reel', 2]],
-    detalle: 'La semana antes, dos Reels que dicen dónde y cuándo ver el festival.',
   },
   {
     id: 'vivo', nombre: 'En vivo', fechas: '28 y 29 de noviembre', desde: 6, hasta: 7, color: 'celeste',
     resumen: 'Desde el predio y desde un sillón, mandamos a la transmisión mientras pasa.',
     cartas: [['reel', 3], ['story', 4]],
-    detalle: 'Tres creadores en el predio y una en su casa, con stories en tiempo real y link a la transmisión. Morena López, además, cubre el festival desde el público.',
   },
   {
     id: 'repeticion', nombre: 'Repetición', fechas: '30 de noviembre al 5 de diciembre', desde: 8, hasta: 13, color: 'lila',
     resumen: 'Lo que te perdiste sigue 30 días en Disney+.',
     cartas: [['reel', 2], ['story', 1], ['recap', 1]],
-    detalle: 'Los shows siguen 30 días en Disney+. Lo recordamos la semana después, y cerramos con un recap de los siete creadores.',
   },
 ];
 
 export const PIEZAS = [
   {
-    id: 'ber', quien: 'Ber Scarnato', etapa: 'previa', dia: 3, cuando: '25 de noviembre', formato: 'Reel en collab', creadores: ['ber'],
+    id: 'ber', quien: 'Ber Scarnato', etapa: 'previa', dia: 4, cuando: '26 de noviembre', formato: 'Reel en collab', creadores: ['ber'],
     titulo: 'El que va vs. el que lo mira en Disney+',
     gancho: { texto: 'Este finde hay dos tipos de personas: los que van al Primavera y los que lo miran en Disney+.', cita: true },
     pasa: 'Ber hace de los dos: el que sufre el festival (la fila, el calor, uno alto adelante) y el que lo mira tirado en el sillón, en primera fila.',
     cierre: { texto: 'Sábado desde las 14:30, en vivo por Disney+.', cita: true },
   },
   {
-    id: 'morena', quien: 'Morena López', etapa: 'previa', dia: 4, cuando: '26 de noviembre', formato: 'Reel en collab', creadores: ['morena'],
+    id: 'morena', quien: 'Morena López', etapa: 'previa', dia: 5, cuando: '27 de noviembre', formato: 'Reel en collab', creadores: ['morena'],
     titulo: 'Los shows que no me pierdo',
     gancho: { texto: 'Mi agenda del Primavera, para que no te pierdas nada.', cita: true },
     pasa: 'Arma su lista de imperdibles de los escenarios 1 y 2, con día y hora, y canta un fragmento de su favorito.',
@@ -67,9 +64,9 @@ export const PIEZAS = [
   },
   {
     id: 'pablo', quien: 'Pablo Bruschi', etapa: 'repeticion', dia: 10, cuando: '2 de diciembre', formato: 'Reel en collab', creadores: ['pablo'],
-    titulo: 'Lo que te perdiste, doblado',
-    gancho: { texto: 'Momentos de la transmisión, con voces nuevas.', cita: false },
-    pasa: 'Dobla escenas del festival al estilo de sus Bruschimichis.',
+    titulo: 'Yo estuve en el Primavera (mentira)',
+    gancho: { texto: 'El lunes todos dicen que fueron al Primavera.', cita: true },
+    pasa: 'Un sketch en la oficina: Pablo cuenta el festival como si hubiera estado, con detalles que solo sabe porque lo vio después en Disney+.',
     cierre: { texto: 'Los shows completos, 30 días en Disney+.', cita: true },
   },
   {
@@ -89,18 +86,16 @@ export const DISTRIBUCION = [
 ];
 
 export const ENTREGABLES = [
-  { n: 7, texto: 'Reels en collab en Instagram' },
-  { n: 5, texto: 'Sets de stories con link a Disney+' },
-  { n: 1, texto: 'Recap de la campaña para las cuentas de Disney+' },
-  { n: 1, texto: 'Campaña de Partnership Ads en Meta' },
-  { n: 1, texto: 'Reporte final con clics y alcance' },
-  { n: 8, texto: 'Piezas listas para pautar en dark en TikTok' },
+  { n: 7, texto: 'Creadores' },
+  { n: 7, texto: 'Reels' },
+  { n: 7, texto: 'Stories' },
+  { n: 1, texto: 'Reporte final' },
 ];
 
 export const PLAN = [
   { cuando: '22 nov', texto: 'Aprobación de la propuesta.' },
   { cuando: '23 nov', texto: 'Guiones y aprobación de ustedes.' },
-  { cuando: '24 al 27 nov', texto: 'Previa y arranque de la pauta.' },
+  { cuando: '26 y 27 nov', texto: 'Previa y arranque de la pauta.' },
   { cuando: '28 y 29 nov', texto: 'En vivo, con la transmisión.' },
   { cuando: '30 nov al 5 dic', texto: 'Repetición y recap.' },
   { cuando: '12 dic', texto: 'Reporte final.' },
@@ -110,5 +105,4 @@ export const PASOS = [
   { titulo: 'Guiones', cuando: '22 nov', texto: 'Con su aprobación el 22 de noviembre, el 23 les mandamos los guiones.' },
   { titulo: 'Acreditaciones', cuando: '', texto: 'Coordinamos con ustedes las acreditaciones: cuatro creadores y un productor de BIG.' },
   { titulo: 'Collabs y pauta', cuando: '', texto: 'Vemos juntos las collabs, los Partnership Ads y el link de seguimiento a Disney+.' },
-  { titulo: 'Doblaje', cuando: '', texto: 'Consultamos con ustedes si Pablo puede doblar imágenes de la transmisión.' },
 ];

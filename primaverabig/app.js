@@ -1,6 +1,6 @@
-import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN, PASOS } from './datos.js?v=20261120';
-import { svgFlor, dibujar, COLORES } from './flor.js?v=20261120';
-import * as S from './sonido.js?v=20261120';
+import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN, PASOS } from './datos.js?v=20261124';
+import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124';
+import * as S from './sonido.js?v=20261124';
 
 const gsap = window.gsap;
 const REDUCIDO = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -108,7 +108,7 @@ const DIBUJO = {
   story: '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4.2"/><path d="M5.5 20c1.2-3.2 3.7-4.8 6.5-4.8s5.3 1.6 6.5 4.8"/><path d="M3 3.5h18" class="fino"/></svg>',
   recap: '<svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M5 9.5h14M5 14.5h14M9.5 5v14M14.5 5v14" class="fino"/></svg>',
 };
-const NOMBRE_CARTA = { reel: n => `${n} Reel${n > 1 ? 's' : ''}`, story: n => `${n} set${n > 1 ? 's' : ''} de stories`, recap: () => 'Recap' };
+const NOMBRE_CARTA = { reel: n => `${n} Reel${n > 1 ? 's' : ''}`, story: n => `${n} stor${n > 1 ? 'ies' : 'y'}`, recap: () => 'Recap' };
 function mazo(tipo, n) {
   return `<div class="mazo mazo--${tipo}" style="--n:${n}" title="${NOMBRE_CARTA[tipo](n)}">
     <div class="mazo__cartas">${Array.from({ length: n }, (_, i) => `<span class="carta" style="--i:${i}">${DIBUJO[tipo]}</span>`).join('')}</div>
@@ -130,7 +130,6 @@ function armarCampana() {
   }).join('');
   $('.etapa').innerHTML = ETAPAS.map(e => `<div class="etapa__item" data-etapa="${e.id}">
       <h3 class="serif etapa__nombre">${e.nombre}.</h3>
-      <p class="etapa__detalle">${e.detalle}</p>
     </div>`).join('');
   const avatarDe = id => id === 'big' ? AVATAR_BIG : `<span class="av-c"><img src="${CREADORES[id].foto}" alt=""></span>`;
   $('.guion').innerHTML = PIEZAS.map(p => {
@@ -346,7 +345,6 @@ function armarGuion() {
   aparece('.inversion .titulo', en('inversion', -.04), en('inversion', .12), 40);
   aparece('.monto', en('inversion', .02), en('inversion', .14), 50);
   G.fromTo(estadoMonto, { v: 0 }, { v: 1, duration: en('inversion', .44) - en('inversion', .06), immediateRender: true }, en('inversion', .06));
-  aparece('.inversion__panel', en('inversion', .2), en('inversion', .34), 40);
   aparece('.inversion__sub', en('inversion', .1), en('inversion', .22), 30);
   G.fromTo('.entregable', { autoAlpha: 0, x: 90 * M }, { autoAlpha: 1, x: 0, duration: .2, stagger: .055, ease: 'power3.out', immediateRender: true }, en('inversion', .14));
   G.to(['.inversion__izq', '.inversion__der'], { autoAlpha: 0, y: -60 * M, duration: .22, stagger: .05, ease: 'power2.in' }, en('inversion', .88));
@@ -876,7 +874,7 @@ async function arrancar() {
       document.fonts.load('800 20px "Libre Franklin"'), document.fonts.load('400 14px "DM Mono"'),
     ]), .14),
     tarea(imagenes(fotos), .32),
-    tarea(import('./escena.js?v=20261120').then(m => {
+    tarea(import('./escena.js?v=20261124').then(m => {
       escena = m.crearEscena($('.tres'));
       if (!escena) throw new Error('sin WebGL');
     }).catch(() => {

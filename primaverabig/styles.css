@@ -465,7 +465,7 @@ a { color: inherit; }
 .hito__cuando { margin-top: 6px; font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .hito__texto { font: 400 clamp(14px, 1.12vw, 18px)/1.35 var(--sans); color: var(--tenue); transition: color .4s ease; }
 .hito.is-paso .hito__texto { color: var(--tinta); }
-.pasos__lista { position: absolute; left: var(--m); right: var(--m); bottom: 6vh; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.pasos__lista { position: absolute; left: var(--m); right: var(--m); bottom: 6vh; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .paso { display: flex; flex-direction: column; gap: 10px; }
 .paso__titulo { font: 800 clamp(18px, 1.5vw, 25px)/1.1 var(--sans); }
 .paso__texto { font: 400 clamp(14.5px, 1.12vw, 18px)/1.42 var(--sans); }
@@ -649,6 +649,7 @@ a { color: inherit; }
   .hito__cuando { margin: 0; flex: 0 0 6.6em; font-size: 10px; }
   .hito__texto { font-size: 13px; }
   .pasos__lista { grid-template-columns: 1fr 1fr; gap: 8px; bottom: 2.5vh; }
+  .pasos__lista li:last-child { grid-column: 1 / -1; }
   .paso { padding: 12px 13px; gap: 5px; }
   .paso__titulo { font-size: 14.5px; }
   .paso__texto { font-size: 12px; line-height: 1.34; }
