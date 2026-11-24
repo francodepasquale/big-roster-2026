@@ -12,11 +12,11 @@
   <link rel="preload" href="assets/fonts/GTAArtDeco-Regular.woff" as="font" type="font/woff" crossorigin>
   <link rel="preload" href="assets/fonts/GTAArtDeco-Medium.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="assets/vendor/lenis.css">
-  <link rel="stylesheet" href="styles.css?v=32">
+  <link rel="stylesheet" href="styles.css?v=35">
   <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
   <script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/lenis.min.js" defer></script>
-  <script type="module" src="app.js?v=32"></script>
+  <script type="module" src="app.js?v=35"></script>
 </head>
 <body class="is-cargando">
   <svg class="sprite" aria-hidden="true" focusable="false">
@@ -101,6 +101,20 @@
 
     <section class="capa ejemplos" aria-label="Ejemplos"></section>
 
+    <section class="capa equipo" aria-labelledby="t-equipo">
+      <div class="bloque equipo__izq">
+        <div class="tarjeta grupo equipo__cabeza">
+          <h2 id="t-equipo" class="titulo"><span class="l"><span>Los creadores</span></span></h2>
+          <p class="equipo__texto"></p>
+        </div>
+        <div class="tarjeta grupo equipo__presupuesto">
+          <p class="equipo__monto"></p>
+          <p class="equipo__nota">Inversión total</p>
+        </div>
+      </div>
+      <div class="equipo__der"><div class="tarjeta grupo equipo__grilla"><div class="equipo__caras"></div></div></div>
+    </section>
+
     <section class="capa cierre" aria-labelledby="t-cierre">
       <div class="tarjeta cierre__caja">
         <h2 id="t-cierre" class="cierre__titulo"><span class="l"><span class="logotexto" data-texto="¿hablamos?">¿hablamos?</span></span></h2>
@@ -159,6 +173,7 @@
     <section class="tramo" id="portada" data-tramo="portada" style="--largo:90"></section>
     <section class="tramo" id="trend" data-tramo="trend" data-capitulo="El trend" style="--largo:230"></section>
     <section class="tramo" id="ejemplos" data-tramo="ejemplos" data-capitulo="Ejemplos" style="--largo:330"></section>
+    <section class="tramo" id="equipo" data-tramo="equipo" data-capitulo="Los creadores" style="--largo:120"></section>
     <section class="tramo" id="cierre" data-tramo="cierre" style="--largo:130"></section>
   </main>
 </body>
