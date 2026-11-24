@@ -1,6 +1,6 @@
-import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN } from './datos.js?v=20261124e';
-import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124e';
-import * as S from './sonido.js?v=20261124e';
+import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN } from './datos.js?v=20261124f';
+import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124f';
+import * as S from './sonido.js?v=20261124f';
 
 const gsap = window.gsap;
 const REDUCIDO = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -871,7 +871,7 @@ async function arrancar() {
       document.fonts.load('800 20px "Libre Franklin"'), document.fonts.load('400 14px "DM Mono"'),
     ]), .14),
     tarea(imagenes(fotos), .32),
-    tarea(import('./escena.js?v=20261124e').then(m => {
+    tarea(import('./escena.js?v=20261124f').then(m => {
       escena = m.crearEscena($('.tres'));
       if (!escena) throw new Error('sin WebGL');
     }).catch(() => {
