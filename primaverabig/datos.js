@@ -12,7 +12,7 @@ export const ETAPAS = [
   {
     id: 'previa', nombre: 'Previa', fechas: '26 y 27 de noviembre', desde: 4, hasta: 5, color: 'naranja',
     resumen: 'Avisamos que el Primavera se ve en Disney+, con días y horarios.',
-    cartas: [['reel', 2]],
+    cartas: [['reel', 2], ['story', 2]],
   },
   {
     id: 'vivo', nombre: 'En vivo', fechas: '28 y 29 de noviembre', desde: 6, hasta: 7, color: 'celeste',
@@ -22,7 +22,7 @@ export const ETAPAS = [
   {
     id: 'repeticion', nombre: 'Repetición', fechas: '30 de noviembre al 5 de diciembre', desde: 8, hasta: 13, color: 'lila',
     resumen: 'Lo que te perdiste sigue 30 días en Disney+.',
-    cartas: [['reel', 2], ['story', 1], ['recap', 1]],
+    cartas: [['reel', 2], ['story', 1]],
   },
 ];
 
@@ -80,9 +80,9 @@ export const PIEZAS = [
 
 export const DISTRIBUCION = [
   { id: 'collab', titulo: 'Reels en collab', texto: 'Cada Reel aparece en el perfil del creador y en los de Disney+ y Primavera Sound.', quien: 'Orgánico' },
-  { id: 'link', titulo: 'Stories con link', texto: 'Durante las dos jornadas, cada set lleva un link con seguimiento a la transmisión.', quien: 'Tráfico' },
+  { id: 'link', titulo: 'Stories con link', texto: 'Cada story lleva un link con seguimiento a la transmisión.', quien: 'Tráfico' },
   { id: 'ads', titulo: 'Partnership Ads en Meta', texto: 'Concentrada del 26 al 29 de noviembre, sobre los Reels que mejor funcionen. Público propuesto: 18 a 34 años, interés en música en vivo y festivales, fuera del predio.', quien: 'Pauta incluida' },
-  { id: 'tiktok', titulo: 'TikTok en dark', texto: 'Entregamos los 7 Reels y el recap listos para que Disney+ los paute en dark.', quien: 'A cargo de Disney+' },
+  { id: 'tiktok', titulo: 'TikTok en dark', texto: 'Entregamos los 7 Reels listos para que Disney+ los paute en dark.', quien: 'A cargo de Disney+' },
 ];
 
 export const ENTREGABLES = [
@@ -97,7 +97,7 @@ export const PLAN = [
   { cuando: '23 nov', texto: 'Guiones y aprobación de ustedes.' },
   { cuando: '26 y 27 nov', texto: 'Previa y arranque de la pauta.' },
   { cuando: '28 y 29 nov', texto: 'En vivo, con la transmisión.' },
-  { cuando: '30 nov al 5 dic', texto: 'Repetición y recap.' },
+  { cuando: '30 nov al 5 dic', texto: 'Repetición.' },
   { cuando: '12 dic', texto: 'Reporte final.' },
 ];
 

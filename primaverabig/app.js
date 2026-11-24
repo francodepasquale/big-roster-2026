@@ -1,6 +1,6 @@
-import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN, PASOS } from './datos.js?v=20261124';
-import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124';
-import * as S from './sonido.js?v=20261124';
+import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN, PASOS } from './datos.js?v=20261124b';
+import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124b';
+import * as S from './sonido.js?v=20261124b';
 
 const gsap = window.gsap;
 const REDUCIDO = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -106,9 +106,8 @@ const AVATAR_BIG = '<span class="av-c av-c--big"><svg viewBox="0 0 1162.87 1320.
 const DIBUJO = {
   reel: '<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="4"/><path d="M10 9.2v5.6l4.8-2.8z" class="lleno"/></svg>',
   story: '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4.2"/><path d="M5.5 20c1.2-3.2 3.7-4.8 6.5-4.8s5.3 1.6 6.5 4.8"/><path d="M3 3.5h18" class="fino"/></svg>',
-  recap: '<svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M5 9.5h14M5 14.5h14M9.5 5v14M14.5 5v14" class="fino"/></svg>',
 };
-const NOMBRE_CARTA = { reel: n => `${n} Reel${n > 1 ? 's' : ''}`, story: n => `${n} stor${n > 1 ? 'ies' : 'y'}`, recap: () => 'Recap' };
+const NOMBRE_CARTA = { reel: n => `${n} Reel${n > 1 ? 's' : ''}`, story: n => `${n} stor${n > 1 ? 'ies' : 'y'}` };
 function mazo(tipo, n) {
   return `<div class="mazo mazo--${tipo}" style="--n:${n}" title="${NOMBRE_CARTA[tipo](n)}">
     <div class="mazo__cartas">${Array.from({ length: n }, (_, i) => `<span class="carta" style="--i:${i}">${DIBUJO[tipo]}</span>`).join('')}</div>
@@ -186,7 +185,7 @@ function armarDistribucion() {
         <div class="anuncio"><img src="${nacho}" alt=""><p><b>${CREADORES.nacho.usuario}</b><span>Publicidad · con Disney+</span></p></div>
         <div class="ventana" aria-hidden="true">${[22, 23, 24, 25, 26, 27, 28, 29].map(n => `<i class="${n >= 26 ? 'si' : ''}">${n}</i>`).join('')}</div>
       </div>`,
-    tiktok: `<div class="mini mini--tiktok"><div class="abanico">${PIEZAS.map((p, i) => `<img src="${CREADORES[p.creadores[0]].foto}" alt="" style="--i:${i}">`).join('')}<span class="abanico__recap" style="--i:${PIEZAS.length}">${AVATAR_BIG}</span></div></div>`,
+    tiktok: `<div class="mini mini--tiktok"><div class="abanico">${PIEZAS.map((p, i) => `<img src="${CREADORES[p.creadores[0]].foto}" alt="" style="--i:${i}">`).join('')}</div></div>`,
   };
   $('.canales').innerHTML = DISTRIBUCION.map(d => `<article class="panel canal" data-canal="${d.id}">
       ${mini[d.id]}
@@ -335,7 +334,7 @@ function armarGuion() {
   sube('.distribucion .titulo .p__i', en('distribucion', -.04), en('distribucion', .16));
   G.fromTo('.canal', { autoAlpha: 0, y: 110 * M, rotation: i => (i - 1.5) * 3 * M }, { autoAlpha: 1, y: 0, rotation: 0, duration: en('distribucion', .34) - en('distribucion', .08), stagger: .07, ease: 'power3.out', immediateRender: true }, en('distribucion', .08));
   G.fromTo('.mini--collab .avatares > *', { scale: .4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .14, stagger: .05, ease: 'back.out(2)', immediateRender: true }, en('distribucion', .3));
-  const mitad = PIEZAS.length / 2;
+  const mitad = (PIEZAS.length - 1) / 2;
   G.fromTo('.abanico > *', { rotation: 0, x: 0 }, { rotation: i => (i - mitad) * 7, x: i => (i - mitad) * (esMovil() ? 9 : 13), duration: .3, ease: 'power2.out', immediateRender: true }, en('distribucion', .34));
   G.fromTo('.ventana i.si', { scaleY: .2, autoAlpha: .3 }, { scaleY: 1, autoAlpha: 1, duration: .16, stagger: .04, ease: 'power2.out', immediateRender: true }, en('distribucion', .36));
   G.to('.canal', { autoAlpha: 0, y: -60 * M, duration: .22, stagger: .04, ease: 'power2.in' }, en('distribucion', .86));
@@ -874,7 +873,7 @@ async function arrancar() {
       document.fonts.load('800 20px "Libre Franklin"'), document.fonts.load('400 14px "DM Mono"'),
     ]), .14),
     tarea(imagenes(fotos), .32),
-    tarea(import('./escena.js?v=20261124').then(m => {
+    tarea(import('./escena.js?v=20261124b').then(m => {
       escena = m.crearEscena($('.tres'));
       if (!escena) throw new Error('sin WebGL');
     }).catch(() => {
