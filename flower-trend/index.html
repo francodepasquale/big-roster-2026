@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b0b38">
+  <title>Flower in a Hurricane · BIG × Rockstar Games</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Propuesta de BIG para Rockstar Games: un trend con «Flower in a Hurricane» para que siga #1 en Spotify Argentina.">
+  <link rel="icon" href="assets/img/estrella.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/GTAArtDeco-CondensedHeavy.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="assets/fonts/GTAArtDeco-Regular.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="assets/fonts/GTAArtDeco-Medium.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="styles.css?v=31">
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script type="module" src="app.js?v=31"></script>
+</head>
+<body class="is-cargando">
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="estrella" viewBox="0 0 24 24"><path d="M12 1.6L14.94 8.55L22.46 9.2L16.76 14.15L18.47 21.5L12 17.6L5.53 21.5L7.24 14.15L1.54 9.2L9.06 8.55Z"/></symbol>
+  </svg>
+
+  <canvas class="tres" aria-hidden="true"></canvas>
+  <div class="cielo" aria-hidden="true"></div>
+
+  <div class="cargador" role="status" aria-live="polite">
+    <p class="cargador__n" aria-hidden="true">0</p>
+    <button class="activar" type="button" data-activar-sonido><svg class="activar__parlante" viewBox="0 0 46 40" aria-hidden="true"><path class="activar__cuerpo" d="M4 14h7l10-8v28l-10-8H4z"/><path class="activar__onda activar__onda--1" d="M28.95 15.05a7 7 0 0 1 0 9.9"/><path class="activar__onda activar__onda--2" d="M33.19 10.81a13 13 0 0 1 0 18.38"/><path class="activar__onda activar__onda--3" d="M37.44 6.56a19 19 0 0 1 0 26.88"/></svg><span class="activar__texto">Activar sonido</span></button>
+    <p class="sr-only">Cargando la propuesta</p>
+  </div>
+
+  <header class="barra">
+    <span></span>
+    <div class="isla-caja">
+      <button class="isla" type="button" aria-label="Abrir el índice" aria-expanded="false" aria-controls="indice">
+        <span class="isla__capitulo">Portada</span>
+        <span class="isla__estrellas" aria-hidden="true"></span>
+      </button>
+      <nav class="indice" id="indice" aria-label="Índice" inert aria-hidden="true"></nav>
+    </div>
+    <button class="sonido" type="button" aria-pressed="true" aria-label="Sonido">
+      <span class="ondas" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+  </header>
+  <div class="indice-fondo" hidden></div>
+
+  <div class="escenario">
+
+    <section class="capa inicio" aria-label="Inicio">
+      <div class="inicio__caja">
+        <button class="activar" type="button" data-activar-sonido><svg class="activar__parlante" viewBox="0 0 46 40" aria-hidden="true"><path class="activar__cuerpo" d="M4 14h7l10-8v28l-10-8H4z"/><path class="activar__onda activar__onda--1" d="M28.95 15.05a7 7 0 0 1 0 9.9"/><path class="activar__onda activar__onda--2" d="M33.19 10.81a13 13 0 0 1 0 18.38"/><path class="activar__onda activar__onda--3" d="M37.44 6.56a19 19 0 0 1 0 26.88"/></svg><span class="activar__texto">Activar sonido</span></button>
+      </div>
+    </section>
+
+    <section class="capa portada" aria-labelledby="t-portada">
+      <div class="tarjeta portada__caja">
+        <h1 id="t-portada" class="portada__titulo">
+          <span class="l"><span class="logotexto" data-texto="flower in a">flower in a</span></span>
+          <span class="l"><span class="logotexto" data-texto="hurricane">hurricane</span></span>
+        </h1>
+        <div class="portada__pie">
+          <p class="portada__texto">Está #1 en Spotify Argentina. Proponemos un trend con creadores de BIG para que siga ahí.</p>
+        </div>
+        <div class="portada__ranking">
+        <div class="top50">
+          <div class="top50__cabeza"><span class="top50__punto"></span><div><p class="top50__titulo">Top 50</p><p class="top50__pais">Argentina</p></div></div>
+          <ol class="top50__lista">
+            <li class="top50__fila is-primera"><span class="top50__n">1</span><img src="assets/oficial/album-art.jpg" alt="" width="1024" height="1024"><div><p class="top50__tema">Flower in a Hurricane</p><p class="top50__artista">Justice, Tame Impala, SZA, King Gizzard &amp; The Lizard Wizard</p></div></li>
+            <li class="top50__fila is-vacia" aria-hidden="true"><span class="top50__n">2</span><i></i><div><b></b><b></b></div></li>
+            <li class="top50__fila is-vacia" aria-hidden="true"><span class="top50__n">3</span><i></i><div><b></b><b></b></div></li>
+          </ol>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="capa trend" aria-labelledby="t-trend">
+      <div class="bloque trend__texto">
+        <div class="tarjeta grupo trend__cabeza">
+          <div class="trend__titulos">
+            <h2 id="t-trend" class="titulo trend__t1"><span class="l"><span>Normales</span></span><span class="l"><span>hasta el drop.</span></span></h2>
+            <h2 class="titulo trend__t2" aria-hidden="true"><span class="l"><span>En el drop,</span></span><span class="l"><span>Vice City.</span></span></h2>
+          </div>
+          <div class="trend__textos">
+            <p class="trend__p1">Un video corto para TikTok y Reels con la canción. Antes del drop, el creador está como siempre, medio tímido, y cada golpe prende una estrella del nivel de búsqueda.</p>
+            <p class="trend__p2">En el drop se completan las cinco estrellas y aparece vestido de Vice City. Ese cambio es el trend.</p>
+          </div>
+        </div>
+        <div class="tarjeta grupo grupo--onda trend__panel">
+          <div class="onda" aria-hidden="true">
+            <div class="onda__barras"></div>
+            <div class="onda__drop"></div>
+            <div class="onda__cabezal"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="capa ejemplos" aria-label="Ejemplos"></section>
+
+    <section class="capa cierre" aria-labelledby="t-cierre">
+      <div class="tarjeta cierre__caja">
+        <h2 id="t-cierre" class="cierre__titulo"><span class="l"><span class="logotexto" data-texto="¿hablamos?">¿hablamos?</span></span></h2>
+        <p class="cierre__resumen"></p>
+        <a class="boton" data-correo href="mailto:contacto@bigagency.com.ar?subject=Flower%20in%20a%20Hurricane">
+          <span class="boton__circulo" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 14L14 6M7.5 6H14v6.5"/></svg></span>Escribir a BIG
+        </a>
+        <p class="cierre__pie">contacto@bigagency.com.ar</p>
+      </div>
+    </section>
+
+    <div class="telefono" aria-hidden="true">
+      <div class="telefono__pantalla">
+        <div class="t-contenido">
+          <div class="t-antes"><div class="t-mitad t-mitad--a"><img alt=""></div><div class="t-mitad t-mitad--b"><img alt=""></div></div>
+          <div class="t-despues"><div class="t-mitad t-mitad--a"><img alt=""></div><div class="t-mitad t-mitad--b"><img alt=""></div></div>
+          <div class="t-juego"><img class="t-juego__partida" src="assets/oficial/poster.webp" alt="" width="1280" height="720"><video class="t-juego__cam" muted playsinline loop preload="none"></video></div>
+        </div>
+        <div class="t-hud"></div>
+        <p class="t-texto"></p>
+        <p class="t-usuario"></p>
+        <div class="t-progreso"><i></i></div>
+        <div class="t-flash"></div>
+      </div>
+    </div>
+
+    <div class="burbuja" aria-hidden="true">
+      <p class="burbuja__lista"><span class="top50__punto"></span>Top 50 · Argentina</p>
+      <div class="burbuja__fila">
+        <span class="burbuja__n">1</span>
+        <img src="assets/oficial/album-art.jpg" alt="" width="1024" height="1024">
+        <div><p class="burbuja__tema">Flower in a Hurricane</p><p class="burbuja__artista">Justice</p></div>
+      </div>
+      <p class="burbuja__estado"><span class="burbuja__antes">La canción del trend</span><span class="burbuja__despues">Sigue #1</span></p>
+    </div>
+
+  </div>
+
+  <div class="ficha" role="dialog" aria-modal="true" aria-labelledby="ficha-nombre" hidden>
+    <div class="ficha__fondo"></div>
+    <div class="ficha__caja">
+      <div class="ficha__arte"></div>
+      <div class="ficha__datos">
+        <h3 class="ficha__nombre" id="ficha-nombre"></h3>
+        <p class="ficha__formato"></p>
+        <div class="ficha__redes"></div>
+      </div>
+      <button class="ficha__cerrar" type="button" aria-label="Cerrar">×</button>
+    </div>
+  </div>
+
+  <p class="siguiente" aria-hidden="true"><span class="siguiente__texto">Deslizá para empezar</span></p>
+
+  <main class="recorrido">
+    <section class="tramo" id="inicio" data-tramo="inicio" style="--largo:100"></section>
+    <section class="tramo" id="portada" data-tramo="portada" style="--largo:90"></section>
+    <section class="tramo" id="trend" data-tramo="trend" data-capitulo="El trend" style="--largo:230"></section>
+    <section class="tramo" id="ejemplos" data-tramo="ejemplos" data-capitulo="Ejemplos" style="--largo:330"></section>
+    <section class="tramo" id="cierre" data-tramo="cierre" style="--largo:130"></section>
+  </main>
+</body>
+</html>
