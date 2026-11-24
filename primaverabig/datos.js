@@ -93,16 +93,10 @@ export const ENTREGABLES = [
 ];
 
 export const PLAN = [
-  { cuando: '22 nov', texto: 'Aprobación de la propuesta.' },
-  { cuando: '23 nov', texto: 'Guiones y aprobación de ustedes.' },
+  { cuando: '24 nov', texto: 'Aprobación de la propuesta.' },
+  { cuando: '25 nov', texto: 'Guiones y aprobación de ustedes.' },
   { cuando: '26 y 27 nov', texto: 'Previa y arranque de la pauta.' },
   { cuando: '28 y 29 nov', texto: 'En vivo, con la transmisión.' },
   { cuando: '30 nov al 5 dic', texto: 'Repetición.' },
   { cuando: '12 dic', texto: 'Reporte final.' },
-];
-
-export const PASOS = [
-  { titulo: 'Guiones', cuando: '22 nov', texto: 'Con su aprobación el 22 de noviembre, el 23 les mandamos los guiones.' },
-  { titulo: 'Acreditaciones', cuando: '', texto: 'Coordinamos con ustedes las acreditaciones: cuatro creadores y un productor de BIG.' },
-  { titulo: 'Collabs y pauta', cuando: '', texto: 'Vemos juntos las collabs, los Partnership Ads y el link de seguimiento a Disney+.' },
 ];

@@ -462,10 +462,7 @@ a { color: inherit; }
 .hito__cuando { margin-top: 6px; font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; }
 .hito__texto { font: 400 clamp(14px, 1.12vw, 18px)/1.35 var(--sans); color: var(--tenue); transition: color .4s ease; }
 .hito.is-paso .hito__texto { color: var(--tinta); }
-.pasos__lista { position: absolute; left: var(--m); right: var(--m); bottom: 6vh; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.paso { display: flex; flex-direction: column; gap: 10px; }
-.paso__titulo { font: 800 clamp(18px, 1.5vw, 25px)/1.1 var(--sans); }
-.paso__texto { font: 400 clamp(14.5px, 1.12vw, 18px)/1.42 var(--sans); }
+.pasos__mensaje { position: absolute; left: var(--m); bottom: 9vh; max-width: calc(100vw - 2 * var(--m)); font: 700 clamp(20px, 1.9vw, 32px)/1.25 var(--sans); }
 
 .ancla--cierre { left: 50%; top: 9vh; height: 44vh; }
 .cierre__caja { position: absolute; left: 0; right: 0; bottom: 7vh; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; }
@@ -645,11 +642,7 @@ a { color: inherit; }
   .hito__punto { position: absolute; left: -42px; top: 50%; width: 20px; height: 20px; margin-top: -10px; box-shadow: inset 0 0 0 5px var(--papel); }
   .hito__cuando { margin: 0; flex: 0 0 6.6em; font-size: 10px; }
   .hito__texto { font-size: 13px; }
-  .pasos__lista { grid-template-columns: 1fr 1fr; gap: 8px; bottom: 2.5vh; }
-  .pasos__lista li:last-child { grid-column: 1 / -1; }
-  .paso { padding: 12px 13px; gap: 5px; }
-  .paso__titulo { font-size: 14.5px; }
-  .paso__texto { font-size: 12px; line-height: 1.34; }
+  .pasos__mensaje { right: var(--m); bottom: 5vh; font-size: 18px; }
 
   .ancla--cierre { top: 12vh; height: 36vh; }
   .cierre__caja { bottom: 6vh; gap: 16px; padding: 0 var(--m); }

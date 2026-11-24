@@ -1,6 +1,6 @@
-import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN, PASOS } from './datos.js?v=20261124d';
-import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124d';
-import * as S from './sonido.js?v=20261124d';
+import { CREADORES, ETAPAS, PIEZAS, DISTRIBUCION, ENTREGABLES, PLAN } from './datos.js?v=20261124e';
+import { svgFlor, dibujar, COLORES } from './flor.js?v=20261124e';
+import * as S from './sonido.js?v=20261124e';
 
 const gsap = window.gsap;
 const REDUCIDO = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -203,7 +203,6 @@ function armarInversion() {
 
 function armarPasos() {
   $('.plan').innerHTML = `<div class="plan__linea"><i></i></div>` + PLAN.map((p, i) => `<div class="hito${i === 0 ? ' hito--primero' : i === PLAN.length - 1 ? ' hito--ultimo' : ''}" style="--x:${i / (PLAN.length - 1)}"><span class="hito__punto"></span><span class="hito__cuando">${p.cuando}</span><span class="hito__texto">${p.texto}</span></div>`).join('');
-  $('.pasos__lista').innerHTML = PASOS.map(p => `<li class="panel paso"><h3 class="paso__titulo">${p.titulo}</h3><p class="paso__texto">${p.texto}</p></li>`).join('');
 }
 
 function ajustarLineup() {
@@ -353,9 +352,8 @@ function armarGuion() {
   sube('.pasos__titulo .p__i', en('pasos', -.04), en('pasos', .16));
   aparece('.plan', en('pasos', .06), en('pasos', .16), 40);
   G.fromTo(estadoPlan, { v: 0 }, { v: 1, duration: en('pasos', .5) - en('pasos', .14), immediateRender: true }, en('pasos', .14));
-  aparece('.pasos__lista', en('pasos', .5), en('pasos', .58), 30);
-  G.fromTo('.pasos__lista li', { autoAlpha: 0, y: 40 * M }, { autoAlpha: 1, y: 0, duration: .14, stagger: .05, ease: 'power2.out', immediateRender: true }, en('pasos', .53));
-  G.to(['.pasos__titulo', '.plan', '.pasos__lista'], { autoAlpha: 0, y: -60 * M, duration: .2, stagger: .04, ease: 'power2.in' }, en('pasos', .9));
+  aparece('.pasos__mensaje', en('pasos', .5), en('pasos', .6), 30);
+  G.to(['.pasos__titulo', '.plan', '.pasos__mensaje'], { autoAlpha: 0, y: -60 * M, duration: .2, stagger: .04, ease: 'power2.in' }, en('pasos', .9));
   sale('pasos', en('pasos', .97), en('cierre', .05));
 
   entra('cierre', en('cierre', 0), en('cierre', .1));
@@ -873,7 +871,7 @@ async function arrancar() {
       document.fonts.load('800 20px "Libre Franklin"'), document.fonts.load('400 14px "DM Mono"'),
     ]), .14),
     tarea(imagenes(fotos), .32),
-    tarea(import('./escena.js?v=20261124d').then(m => {
+    tarea(import('./escena.js?v=20261124e').then(m => {
       escena = m.crearEscena($('.tres'));
       if (!escena) throw new Error('sin WebGL');
     }).catch(() => {
