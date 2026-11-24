@@ -214,7 +214,7 @@ a { color: inherit; }
 @keyframes seguir { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); transform-origin: top; } 46% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
 .desafio__pregunta { position: absolute; left: var(--m); top: calc(var(--barra) + 8vh); width: max-content; max-width: calc(100vw - 2 * var(--m)); font-size: clamp(40px, 5.3vw, 96px); line-height: .97; }
-.desafio__panel { position: absolute; left: var(--m); top: 58vh; max-width: min(31em, 46vw); font: 400 clamp(16px, 1.32vw, 21px)/1.42 var(--sans); }
+.desafio__panel { position: absolute; left: var(--m); top: 58vh; width: max-content; max-width: calc(100vw - 2 * var(--m)); font: 400 clamp(15px, 1.2vw, 19px)/1.42 var(--sans); }
 .ancla--desafio { left: 79vw; top: 36vh; height: 50vh; }
 .desafio__tres { position: absolute; left: var(--m); top: max(calc(var(--barra) + 8vh + clamp(42px, 6.1vw, 108px) * 1.9), 38vh); width: min(50vw, 52em); }
 .desafio__bajada { margin: 0 0 .9em; font: 500 clamp(15px, 1.2vw, 19px)/1.35 var(--sans); color: var(--tinta); }
@@ -540,7 +540,7 @@ a { color: inherit; }
   .portada__seguir { bottom: 2.4vh; }
 
   .desafio__pregunta { top: calc(var(--barra) + 4vh); font-size: 8.4vw; }
-  .desafio__panel { top: auto; bottom: 7vh; max-width: none; right: var(--m); font-size: 16px; }
+  .desafio__panel { top: auto; bottom: 7vh; width: auto; max-width: none; right: var(--m); font-size: 16px; }
   .ancla--desafio { left: 50vw; top: 41vh; height: 26vh; }
   .desafio__tres { top: calc(var(--barra) + 4vh + 8.4vw * 3.3); width: calc(100vw - 2 * var(--m)); }
   .desafio__bajada { font-size: 14px; margin-bottom: .6em; }
