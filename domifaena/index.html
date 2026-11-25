@@ -490,6 +490,11 @@ body {
   .mk-community .mk-pd-hero-row { grid-template-columns: 1fr 1fr; }
   .mk-community .mk-pd-charts { grid-template-columns: 1fr; gap: 22px; }
 }
+.mk-shows { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mk-show { height: 92px; border-radius: 16px; background: var(--fondo); display: grid; place-items: center; padding: 18px; }
+.mk-show img { max-width: 78%; max-height: 100%; display: block; }
+.mk-show--rumis { background: #EB7BE1; }
+.mk-show--rumis img { max-width: 64%; }
 </style>
 
 <div class="mk-bg" aria-hidden="true"><svg viewBox="0 0 1464 1080" preserveAspectRatio="xMidYMid slice">
@@ -624,10 +629,17 @@ body {
         <div class="mk-stat"><div class="mk-stat-value">6.4<small>K</small></div><div class="mk-stat-label">YouTube</div></div>
       </div>
 
-      <div class="mk-pd-charts" style="grid-template-columns:1fr;">
+      <div class="mk-pd-charts">
         <div>
           <div class="mk-pd-section-title">Reparto de la comunidad</div>
           <div class="mk-barlist"><div class="mk-barlist-row" title="50.2%"><span class="mk-barlist-label">Instagram</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:50.2%"></div></div><span class="mk-barlist-value">50.2%</span></div><div class="mk-barlist-row" title="49.2%"><span class="mk-barlist-label">TikTok</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:49.2%"></div></div><span class="mk-barlist-value">49.2%</span></div><div class="mk-barlist-row" title="0.6%"><span class="mk-barlist-label">YouTube</span><div class="mk-barlist-track"><div class="mk-barlist-fill" style="width:0.6%"></div></div><span class="mk-barlist-value">0.6%</span></div></div>
+        </div>
+        <div>
+          <div class="mk-pd-section-title">Programas</div>
+          <div class="mk-shows">
+            <div class="mk-show mk-show--rumis"><img src="assets/logos/rumis.svg" alt="Rumis"></div>
+            <div class="mk-show"><img src="assets/logos/luzu.png" alt="Luzu TV"></div>
+          </div>
         </div>
       </div>
     </article>
