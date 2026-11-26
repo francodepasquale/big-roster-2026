@@ -25,7 +25,7 @@ const easeOut = t => 1 - Math.pow(1 - t, 3);
 const ENTER = 0.86, LAND = 0.3;
 const TONES = {portada: 0x1a2c63, idea: 0xb07a08, recreo: 0x3a2a50, pelao: 0x8a7a5a, previa: 0x1a2c63, teaser: 0x2a3a44,
   draft: 0x3a2050, ultimo: 0x4a3018, equipaciones: 0x4a2a1a, pretemporada: 0x2a4a52, cara: 0x2a4a52, evento: 0x2a4a52,
-  marca: 0x9a7008, pitazo: 0x6a4a40};
+  marca: 0x9a7008, plantel: 0x8a7a5a, presupuesto: 0x1a2c63, pitazo: 0x6a4a40};
 
 const state = {paused: reducedMotion.matches, ready: false, ball: null, staticMode: params.has('static'),
   intro: null, hop: null, replay: false, hintShown: false, interacted: false};
@@ -561,6 +561,27 @@ function runPanYQueso() {
 }
 onOpen.recreo = runPanYQueso;
 $('.pyq-replay').addEventListener('click', runPanYQueso);
+
+// El presupuesto: marcador de estadio. Cada rodillo da dos vueltas y frena en su cifra; al final se prende el «+ IVA».
+const scoreSection = $('#presupuesto'), reels = $$('.reel', scoreSection);
+reels.forEach((reel, k) => {
+  reel.innerHTML = Array.from({length: 30}, (_, n) => `<i>${n % 10}</i>`).join('');
+  reel.style.setProperty('--delay', `${(k * 0.11).toFixed(2)}s`);
+  reel.style.setProperty('--spin', `${(1.5 + k * 0.08).toFixed(2)}s`);
+});
+let scoreTimers = [];
+onOpen.presupuesto = () => {
+  scoreTimers.forEach(clearTimeout);
+  scoreSection.classList.remove('is-spun', 'is-lit');
+  if (state.paused) {
+    reels.forEach(reel => reel.style.setProperty('--spin', '0s'));
+    scoreSection.classList.add('is-spun', 'is-lit');
+    return;
+  }
+  void scoreSection.offsetWidth;
+  scoreTimers = [setTimeout(() => scoreSection.classList.add('is-spun'), 650),
+    setTimeout(() => scoreSection.classList.add('is-lit'), 650 + 1500 + reels.length * 190)];
+};
 
 // Las equipaciones: la sección queda fija y cada lámpara ilumina su camiseta según el scroll.
 // Etapas: Villano, Vieja Gloria, El que no quería venir, Estratega y, al final, las cuatro.
