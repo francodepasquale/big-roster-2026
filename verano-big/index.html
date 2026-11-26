@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e8dbc4">
+  <title>Verano 2027 · Todos a la costa · BIG</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Este verano hagamos algo BIG: dónde y cuándo va a estar cada creador en la costa.">
+  <meta property="og:title" content="Verano 2027 · Todos a la costa · BIG">
+  <meta property="og:description" content="Este verano hagamos algo BIG: todos a la costa.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/damion.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=20261125a">
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script type="module" src="app.js?v=20261125a"></script>
+</head>
+<body class="is-cargando sin-barra">
+  <h1 class="sr-only">Verano 2027 · Todos a la costa. Este verano hagamos algo BIG.</h1>
+
+  <!-- de fondo: una foto de la escena si no hay WebGL -->
+  <div class="respaldo" aria-hidden="true"><img class="respaldo__img" src="assets/img/respaldo.webp" alt="" loading="lazy" decoding="async"><img class="respaldo__img respaldo__img--portada" src="assets/img/respaldo-portada.webp" alt="" loading="lazy" decoding="async"></div>
+  <canvas class="tres" aria-hidden="true"></canvas>
+
+  <!-- la carga: la vista general se revela como una foto instantánea -->
+  <div class="revelado" aria-hidden="true">
+    <div class="revelado__fondo"></div>
+    <div class="revelado__marco">
+      <span class="revelado__velo"></span>
+      <svg class="revelado__fechador" viewBox="0 0 120 30" aria-hidden="true"></svg>
+      <span class="revelado__pie"><span class="revelado__mano">Verano 2027</span><img src="assets/img/big-isologo.svg" alt="" width="98" height="109"></span>
+    </div>
+  </div>
+  <p class="sr-only" role="status" aria-live="polite" data-carga-texto>Cargando</p>
+
+  <header class="barra">
+    <a class="logo vidrio" href="#" aria-label="BIG · volver a la portada" data-tip="Portada"><img src="assets/img/big-isologo.svg" alt="" width="98" height="109"></a>
+    <nav class="isla vidrio" aria-label="Capítulos"></nav>
+    <button class="sonido vidrio" type="button" aria-pressed="true" aria-label="Sonido" data-tip="Sonido">
+      <span class="ondas" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <main class="escenario">
+
+    <!-- el diario: los tres números van impresos en la doble página (en el 3D, o plana si no hay WebGL) -->
+    <section class="capa" data-capa="diario" aria-label="El diario">
+      <figure class="plano plano--diario solo-plano" aria-hidden="true" data-plano="diario"></figure>
+      <p class="sr-only" data-diario-texto>Último momento. Este verano hagamos algo BIG: todos a la costa.</p>
+    </section>
+
+    <!-- el mapa: la temporada -->
+    <section class="capa" data-capa="mapa" aria-labelledby="t-temporada">
+      <figure class="plano plano--mapa solo-plano" aria-hidden="true" data-plano="mapa"></figure>
+      <div class="recuadro temporada" data-scroll-libre>
+        <div class="recuadro__cabeza"><h2 id="t-temporada" class="recuadro__titulo recuadro__titulo--grande">La temporada</h2><span class="recuadro__dato" data-tip="Creadores" data-total></span></div>
+        <div class="recuadro__panel temporada__panel">
+          <div class="grilla" role="table" aria-labelledby="t-temporada" data-grilla></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- las fotos: en el 3D (y como hoja de contactos si no hay WebGL) -->
+    <section class="capa" data-capa="fotos" aria-label="Los creadores">
+      <div class="contactos solo-plano" data-contactos></div>
+      <ul class="sr-only" data-fotos-lista></ul>
+    </section>
+
+    <!-- la ficha -->
+    <section class="capa" data-capa="ficha" aria-label="Ficha del creador">
+      <figure class="ficha-foto solo-plano" aria-hidden="true"><canvas data-ficha-foto></canvas></figure>
+      <div class="ficha-caja">
+        <article class="recuadro ficha" aria-live="polite" data-scroll-libre></article>
+        <div class="ficha-flechas">
+          <button class="redondo vidrio" type="button" data-ficha="-1" aria-label="Creador anterior" data-tip="Anterior"><svg aria-hidden="true"><use href="#i-ant"/></svg></button>
+          <button class="redondo vidrio" type="button" data-cerrar-ficha aria-label="Volver a las fotos" data-tip="Volver"><svg aria-hidden="true"><use href="#i-cruz"/></svg></button>
+          <button class="redondo vidrio" type="button" data-ficha="1" aria-label="Creador siguiente" data-tip="Siguiente"><svg aria-hidden="true"><use href="#i-sig"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- el celular: la charla -->
+    <section class="capa" data-capa="celular" aria-label="¿Hablamos?">
+      <div class="charla-plana solo-plano" aria-hidden="true" data-charla-plana></div>
+      <p class="sr-only" data-charla-texto></p>
+    </section>
+
+    <!-- el atardecer: la propuesta completa y «Escribir a BIG» -->
+    <section class="capa" data-capa="final" aria-labelledby="t-final">
+      <div class="recuadro final">
+        <div class="recuadro__cabeza"><h2 id="t-final" class="recuadro__titulo recuadro__titulo--grande">Este verano, hagamos algo BIG.</h2></div>
+        <div class="recuadro__panel">
+          <ul class="filas" data-final></ul>
+        </div>
+        <div class="recuadro__pie">
+          <span class="estado"><i></i><a href="mailto:contacto@bigagency.com.ar" data-correo-texto>contacto@bigagency.com.ar</a></span>
+          <a class="boton-pill" data-correo href="mailto:contacto@bigagency.com.ar">Escribir a BIG<svg aria-hidden="true"><use href="#i-flecha"/></svg></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- el mando: atrás, salir a la vista general y adelante, siempre a mano (en la ficha lo reemplazan sus flechas) -->
+  <nav class="mando vidrio" aria-label="Navegación">
+    <button class="redondo" type="button" data-mando="atras" aria-label="Anterior" data-tip="Anterior"><svg aria-hidden="true"><use href="#i-ant"/></svg></button>
+    <button class="redondo" type="button" data-mando="salir" aria-label="Volver a la lona" data-tip="Volver a la lona"><svg aria-hidden="true"><use href="#i-cruz"/></svg></button>
+    <button class="redondo mando__sig" type="button" data-mando="adelante" aria-label="Siguiente" data-tip="Siguiente"><svg class="mando__icono" aria-hidden="true"><use href="#i-diario"/></svg><svg aria-hidden="true"><use href="#i-sig"/></svg></button>
+  </nav>
+  <div class="tip" role="tooltip" aria-hidden="true"></div>
+</body>
+</html>
