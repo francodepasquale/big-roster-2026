@@ -412,12 +412,12 @@ em{font-style:normal}
 .presupuesto .display .script{color:var(--yellow)}
 .scoreboard{position:relative;padding:6px;border-radius:18px;background:rgba(255,241,214,.06)}
 .sb-panel{position:relative;padding:clamp(14px,1.6vw,22px) clamp(18px,2vw,30px) clamp(12px,1.4vw,18px);border-radius:13px;background:#060b1c}
-.sb-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:12px;font:400 clamp(11px,.8vw,13px)/1 var(--varsity);letter-spacing:.06em;text-transform:uppercase;color:rgba(255,241,214,.6)}
+.sb-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:12px;font:600 clamp(11px,.8vw,13px)/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,241,214,.6)}
 .sb-head img{height:clamp(14px,1.1vw,18px);width:auto}
-.sb-score{display:flex;align-items:flex-end;justify-content:center;gap:3px;font:400 clamp(30px,3.2vw,54px)/1 var(--varsity);color:var(--yellow)}
-.sb-sign{margin-right:.1em}
-.sb-dot{width:.3em;color:var(--yellow)}
-.digit{position:relative;display:block;width:.74em;height:1.12em;overflow:hidden;border-radius:.08em;background:#0e1430}
+.sb-score{display:flex;align-items:flex-end;justify-content:center;gap:0;font:700 clamp(30px,3.2vw,54px)/1 var(--body);font-variant-numeric:tabular-nums;color:var(--yellow)}
+.sb-sign{margin-right:.12em;line-height:1.12}
+.sb-dot{width:.26em;line-height:1.12;color:var(--yellow)}
+.digit{position:relative;display:block;width:.6em;height:1.12em;overflow:hidden}
 .reel{position:absolute;left:0;right:0;top:.06em;display:flex;flex-direction:column;align-items:center;translate:0 calc(var(--at,var(--n))*-1em);transition:translate var(--spin,1.8s) cubic-bezier(.16,1,.3,1) var(--delay,0s)}
 .reel i{display:block;height:1em;line-height:1em;font-style:normal}
 .js .presupuesto:not(.is-spun) .reel{--at:0;transition:none}
@@ -606,7 +606,7 @@ em{font-style:normal}
   .plantel-frame{display:block;--cw:auto}
   .squad{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;margin-top:28px;max-width:420px}
   .plantel-spot{left:auto;right:var(--pad);top:84px;bottom:auto;width:18vw}
-  .sb-score{font-size:8.2vw;gap:2px}
+  .sb-score{font-size:9vw}
   .sb-panel{padding:14px 14px 12px}
   .presupuesto-spot{width:12vw}
   .pitazo .stage{min-height:100svh}
