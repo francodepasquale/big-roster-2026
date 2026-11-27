@@ -25,7 +25,7 @@ const easeOut = t => 1 - Math.pow(1 - t, 3);
 const ENTER = 0.86, LAND = 0.3;
 const TONES = {portada: 0x1a2c63, idea: 0xb07a08, recreo: 0x3a2a50, pelao: 0x8a7a5a, previa: 0x1a2c63, teaser: 0x2a3a44,
   draft: 0x3a2050, ultimo: 0x4a3018, equipaciones: 0x4a2a1a, pretemporada: 0x2a4a52, cara: 0x2a4a52, evento: 0x2a4a52,
-  marca: 0x9a7008, plantel: 0x8a7a5a, calendario: 0x9a7008, presupuesto: 0x1a2c63, pitazo: 0x6a4a40};
+  marca: 0x9a7008, plantel: 0x8a7a5a, calendario: 0x9a7008, entregables: 0x1a2c63, presupuesto: 0x1a2c63, pitazo: 0x6a4a40};
 
 const state = {paused: reducedMotion.matches, ready: false, ball: null, staticMode: params.has('static'),
   intro: null, hop: null, replay: false, hintShown: false, interacted: false};
