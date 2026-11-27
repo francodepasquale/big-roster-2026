@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2257a8">
+  <title>Verano 2027 · Todos a la costa · BIG</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Este verano hagamos algo BIG: los 29 creadores, dónde y cuándo va a estar cada uno en la costa.">
+  <meta property="og:title" content="Verano 2027 · Todos a la costa · BIG">
+  <meta property="og:description" content="Este verano hagamos algo BIG: todos a la costa.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/damion.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=20261127a">
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script type="module" src="app.js?v=20261127a"></script>
+</head>
+<body class="is-cargando sin-barra oficina" data-parada="portada">
+  <h1 class="sr-only">Verano 2027 · Todos a la costa. Este verano hagamos algo BIG.</h1>
+
+  <!-- de fondo: la escena 3D (o una foto de la escena si no hay WebGL) -->
+  <!-- (fotos de la escena hechas con materiales/pruebas/respaldo.mjs; lazy: con WebGL no se cargan porque no se muestran) -->
+  <div class="respaldo" aria-hidden="true">
+    <picture class="respaldo__img respaldo__img--portada"><source media="(max-width: 760px), (max-aspect-ratio: 4/5)" srcset="assets/img/respaldo-portada-alto.webp"><img src="assets/img/respaldo-portada.webp" alt="" loading="lazy" decoding="async"></picture>
+    <picture class="respaldo__img respaldo__img--toalla"><source media="(max-width: 760px), (max-aspect-ratio: 4/5)" srcset="assets/img/respaldo-toalla-alto.webp"><img src="assets/img/respaldo-toalla.webp" alt="" loading="lazy" decoding="async"></picture>
+  </div>
+  <canvas class="tres" aria-hidden="true"></canvas>
+  <div class="persianas" aria-hidden="true"></div>
+
+  <!-- la mesa: el mapa y las cartas, apoyados sobre la toalla (mesa.js) -->
+  <div class="mesa" data-mesa>
+    <figure class="mapa" aria-hidden="true" data-mapa><svg class="mapa__lineas" data-lineas viewBox="0 0 1000 1481" preserveAspectRatio="none"></svg></figure>
+    <div class="velo" data-velo aria-hidden="true"></div>
+  </div>
+
+  <header class="barra">
+    <a class="logo vidrio" href="#portada" aria-label="BIG · volver a la portada" data-tip="Portada"><img src="assets/img/big-isologo.svg" alt="" width="98" height="109"></a>
+    <nav class="isla vidrio" aria-label="Capítulos" data-isla></nav>
+    <button class="sonido vidrio" type="button" aria-pressed="true" aria-label="Sonido" data-tip="Sonido">
+      <span class="ondas" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <main class="escenario">
+    <!-- 0 · modo verano: los dos interruptores de Comercial (Oficina prendido, Verano apagado). La carga corre en el fechador -->
+    <section class="capa" data-capa="portada" aria-label="Modo verano">
+      <div class="recuadro interruptores" data-interruptores>
+        <div class="recuadro__cabeza">
+          <img class="interruptores__b" src="assets/img/big-isologo.svg" alt="BIG" width="98" height="109">
+          <span class="recuadro__dato"><svg class="fechador" viewBox="0 0 66 22" aria-hidden="true" data-fechador></svg><span class="sr-only" role="status" aria-live="polite" data-carga-texto>Cargando</span></span>
+        </div>
+        <div class="recuadro__panel">
+          <div class="fila">
+            <span class="icono-caja" style="--c:#5b6670"><svg class="i" aria-hidden="true"><use href="#i-maletin"/></svg></span>
+            <span class="fila__titulo" id="t-oficina">Oficina</span>
+            <button class="liq" type="button" role="switch" aria-checked="true" aria-labelledby="t-oficina" data-interruptor="oficina"><span class="liq__gota"></span></button>
+          </div>
+          <div class="fila">
+            <span class="icono-caja" style="--c:#e0a40e"><svg class="i" aria-hidden="true"><use href="#i-sol"/></svg></span>
+            <span class="fila__titulo" id="t-verano">Verano</span>
+            <button class="liq liq--verano" type="button" role="switch" aria-checked="false" aria-labelledby="t-verano" data-interruptor="verano" disabled><span class="liq__gota"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 · Llegamos a la playa: tres cartas con los números -->
+    <section class="capa" data-capa="playa" aria-labelledby="t-playa">
+      <div class="titulo-carta vidrio"><h2 id="t-playa">Llegamos a la playa.</h2></div>
+      <div class="zona zona--numeros" data-zona="numeros"></div>
+      <div class="zona zona--mazo" data-zona="mazo-playa"></div>
+      <p class="sr-only" data-numeros-texto></p>
+    </section>
+
+    <!-- 2 · ¿A dónde nos vamos?: el mapa con las pilas de cartas y el recuadro del destino -->
+    <section class="capa" data-capa="mapa" aria-labelledby="t-mapa">
+      <div class="zona zona--mapa" data-zona="mapa"></div>
+      <div class="recuadro destino" data-destino>
+        <div class="recuadro__cabeza"><h2 id="t-mapa" class="recuadro__titulo recuadro__titulo--grande">¿A dónde nos vamos?</h2><span class="recuadro__dato" data-destino-dato></span></div>
+        <div class="recuadro__panel destino__lugares" role="group" aria-label="Destinos" data-lugares></div>
+        <div class="recuadro__panel destino__panel" data-scroll-libre><ul class="filas" data-destino-lista></ul></div>
+        <div class="recuadro__pie">
+          <span class="estado" style="--c:#A8794E"><i></i><span>Todos disponibles para viajar</span></span>
+          <button class="boton-pill" type="button" data-ir="llevalo">Llevalo a la costa<svg aria-hidden="true"><use href="#i-despegue"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · Llevalo a la costa: las cartas de CABA en abanico y el pasaje -->
+    <section class="capa" data-capa="llevalo" aria-labelledby="t-llevalo">
+      <div class="zona zona--mapa" data-zona="mapa-llevalo"></div>
+      <div class="zona zona--mano" data-zona="mano"></div>
+      <div class="recuadro pasaje" data-pasaje>
+        <div class="recuadro__cabeza"><h2 id="t-llevalo" class="recuadro__titulo recuadro__titulo--grande">¿A dónde lo llevamos?</h2><span class="recuadro__dato" data-pasaje-dato></span></div>
+        <div class="recuadro__panel"><div class="filas" data-pasaje-filas></div></div>
+        <div class="recuadro__pie" data-pasaje-pie></div>
+      </div>
+    </section>
+
+    <!-- 4 · ¿Quién está cuándo?: un sol que elige el día, las cartas de los que están y el calendario -->
+    <section class="capa" data-capa="cuando" aria-labelledby="t-cuando">
+      <div class="zona zona--dia" data-zona="dia"></div>
+      <div class="zona zona--fuera" data-zona="fuera-cuando"></div>
+      <div class="recuadro cuando" data-cuando>
+        <div class="recuadro__cabeza"><h2 id="t-cuando" class="recuadro__titulo recuadro__titulo--grande">¿Quién está cuándo?</h2><span class="recuadro__dato" data-dia-dato></span></div>
+        <div class="recuadro__panel cuando__dia" data-dia-panel></div>
+        <div class="recuadro__panel cuando__panel" data-scroll-libre><div class="calendario" role="table" aria-label="Calendario de la temporada" data-calendario></div></div>
+        <div class="recuadro__pie cuando__pie" data-cuando-pie></div>
+      </div>
+    </section>
+
+    <!-- 5 · El carrete del verano: el mazo, carta por carta -->
+    <section class="capa" data-capa="carrete" aria-labelledby="t-carrete">
+      <div class="zona zona--pila" data-zona="pila"></div>
+      <div class="recuadro carrete" data-carrete>
+        <div class="recuadro__cabeza"><h2 id="t-carrete" class="recuadro__titulo recuadro__titulo--grande">El carrete del verano.</h2><span class="recuadro__dato" data-carrete-dato></span></div>
+        <div class="recuadro__panel" aria-live="polite"><div class="filas" data-carrete-filas></div></div>
+        <div class="recuadro__panel carrete__tira" role="group" aria-label="Los 29" data-tira></div>
+        <div class="recuadro__pie">
+          <span class="carrete__flechas">
+            <button class="redondo vidrio" type="button" data-carrete-paso="-1" aria-label="Anterior" data-tip="Anterior"><svg aria-hidden="true"><use href="#i-ant"/></svg></button>
+            <button class="redondo vidrio" type="button" data-carrete-paso="1" aria-label="Siguiente" data-tip="Siguiente"><svg aria-hidden="true"><use href="#i-sig"/></svg></button>
+          </span>
+          <button class="boton-pill" type="button" data-ver-ficha>Ver su ficha<svg aria-hidden="true"><use href="#i-flecha"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Las fichas: las 29 cartas repartidas por destino, los filtros y la ficha de cada uno -->
+    <section class="capa" data-capa="fichas" aria-labelledby="t-fichas">
+      <div class="titulo-carta titulo-carta--filtros vidrio">
+        <h2 id="t-fichas">Las fichas.</h2>
+        <div class="filtros" role="radiogroup" aria-label="Filtrar las fichas" data-filtros></div>
+      </div>
+      <div class="zona zona--grilla" data-zona="grilla"></div>
+      <div class="zona zona--fuera" data-zona="fuera-fichas"></div>
+      <div class="zona zona--grande" data-zona="grande"></div>
+      <div class="ficha-caja" data-ficha-caja>
+        <article class="recuadro ficha" aria-live="polite" data-ficha data-scroll-libre></article>
+        <div class="ficha-flechas">
+          <button class="redondo vidrio" type="button" data-ficha-paso="-1" aria-label="Creador anterior" data-tip="Anterior"><svg aria-hidden="true"><use href="#i-ant"/></svg></button>
+          <button class="redondo vidrio" type="button" data-cerrar-ficha aria-label="Volver a las fichas" data-tip="Volver"><svg aria-hidden="true"><use href="#i-cruz"/></svg></button>
+          <button class="redondo vidrio" type="button" data-ficha-paso="1" aria-label="Creador siguiente" data-tip="Siguiente"><svg aria-hidden="true"><use href="#i-sig"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · ¿Qué hacen este verano?: las activaciones como cartas y la charla que arma el plan -->
+    <section class="capa" data-capa="plan" aria-labelledby="t-plan">
+      <div class="zona zona--acciones" data-zona="acciones"></div>
+      <div class="zona zona--mazo" data-zona="mazo-plan"></div>
+      <div class="recuadro plan" data-plan>
+        <div class="recuadro__cabeza"><h2 id="t-plan" class="recuadro__titulo recuadro__titulo--grande">¿Qué hacen este verano?</h2></div>
+        <div class="recuadro__panel plan__charla" data-scroll-libre><div class="charla" aria-live="polite" data-charla></div></div>
+      </div>
+    </section>
+
+    <!-- 8 · Todos a la costa: el título al atardecer y un solo mail con todo -->
+    <section class="capa" data-capa="cierre" aria-labelledby="t-cierre">
+      <div class="recuadro cierre" data-cierre>
+        <div class="recuadro__cabeza cierre__cabeza"><h2 id="t-cierre" class="recuadro__titulo recuadro__titulo--grande">Nosotros ya tenemos planes.</h2><p class="cierre__mano">¿Ustedes?</p></div>
+        <div class="recuadro__panel cierre__panel" data-scroll-libre><ul class="filas" data-cierre-filas></ul></div>
+        <div class="recuadro__pie">
+          <span class="estado"><i></i><span>contacto@bigagency.com.ar</span></span>
+          <a class="boton-pill" href="mailto:contacto@bigagency.com.ar" data-correo>Contactanos<svg aria-hidden="true"><use href="#i-flecha"/></svg></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- el mando: atrás y adelante (con el ícono del capítulo que viene) -->
+  <nav class="mando vidrio" aria-label="Navegación">
+    <button class="redondo" type="button" data-mando="atras" aria-label="Anterior" data-tip="Anterior"><svg aria-hidden="true"><use href="#i-ant"/></svg></button>
+    <button class="redondo mando__sig" type="button" data-mando="adelante" aria-label="Siguiente" data-tip="Siguiente"><svg class="mando__icono" aria-hidden="true"><use href="#i-binoculares"/></svg><svg aria-hidden="true"><use href="#i-sig"/></svg></button>
+  </nav>
+  <div class="tip" role="tooltip" aria-hidden="true"></div>
+</body>
+</html>
